@@ -6,6 +6,7 @@ use App\Http\Requests\PeriodeStoreRequest;
 use App\Http\Requests\PeriodeUpdateRequest;
 use App\Models\Periode;
 use App\Imports\PeriodesImport;
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -15,7 +16,7 @@ class PeriodeController extends Controller
 {
     public function index(Request $request)
     {
-        $periodes = Periode::all();
+        $periodes = Periode::whereNull('deleted_on')->get();
 
         return view('periode.index', [
             'periodes' => $periodes,
@@ -63,7 +64,8 @@ class PeriodeController extends Controller
 
     public function destroy(Request $request, Periode $periode)
     {
-        $periode->delete();
+        $periode->deleted_on = Carbon::now();
+          $periode->save();
 
         return redirect()->route('periodes.index')->with('success', 'période supprimée avec succès');
     }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\SourceFinancementStoreRequest;
 use App\Http\Requests\SourceFinancementUpdateRequest;
 use App\Models\SourceFinancement;
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -13,7 +14,7 @@ class SourceFinancementController extends Controller
 {
     public function index(Request $request)
     {
-        $sourceFinancements = SourceFinancement::all();
+        $sourceFinancements = SourceFinancement::whereNull('deleted_on')->get();
 
         return view('sourceFinancement.index', [
             'sourceFinancements' => $sourceFinancements,
@@ -61,7 +62,8 @@ class SourceFinancementController extends Controller
 
     public function destroy(Request $request, SourceFinancement $sourceFinancement)
     {
-        $sourceFinancement->delete();
+        $sourceFinancement->deleted_on = Carbon::now();
+          $sourceFinancement->save();
 
         return redirect()->route('source_financements.index')->with('success', 'source de financement supprimée avec succès');
     }

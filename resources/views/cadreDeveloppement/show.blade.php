@@ -1,7 +1,14 @@
 @extends('layouts.app')
 @section('content')
 <div class="container-fluid">
-    <div class="row">
+
+	<span style="color: red; font-size: 24px;">
+		@if (session('error'))
+        	{{ session('error') }}
+    	@endif
+</span>
+
+<div class="row">
         <!-- Détails du Cadre de Développement -->
         <div class="col-md-12 col-lg-12">
             <div class="card mb-4">

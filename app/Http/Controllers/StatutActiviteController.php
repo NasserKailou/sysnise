@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StatutActiviteStoreRequest;
 use App\Http\Requests\StatutActiviteUpdateRequest;
 use App\Models\StatutActivite;
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -13,7 +14,7 @@ class StatutActiviteController extends Controller
 {
     public function index(Request $request)
     {
-        $statutActivites = StatutActivite::all();
+        $statutActivites = StatutActivite::whereNull('deleted_on')->get();
 
         return view('statutActivite.index', [
             'statutActivites' => $statutActivites,
@@ -61,7 +62,9 @@ class StatutActiviteController extends Controller
 
     public function destroy(Request $request, StatutActivite $statutActivite)
     {
-        $statutActivite->delete();
+        $statutActivite->deleted_on = Carbon::now();
+          $statutActivite->save();
+
 
         return redirect()->route('statut_activites.index')->with('success', 'statut activite supprimé avec succès');
     }

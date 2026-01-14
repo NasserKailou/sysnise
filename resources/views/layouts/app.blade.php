@@ -108,9 +108,10 @@
 				  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
 				</div>
 			  @endif
-			  @if($errors->any())
+			
+			  @if(session('error'))
 				<div class="alert alert-danger alert-dismissible fade show" role="alert">
-				  <strong>Échec :</strong> veuillez corriger les erreurs ci-dessous.
+				  <strong>Échec :</strong> veuillez corriger les erreurs ci-dessous. <br> {{ session('error') }}
 				  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
 				</div>
 			  @endif

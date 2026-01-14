@@ -23,6 +23,7 @@ class CadreDeveloppement extends Model
         'annee_fin',
         'description',
         'cadre_developpement_id',
+        'user_id',
     ];
 
     /**

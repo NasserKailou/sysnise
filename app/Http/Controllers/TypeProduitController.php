@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\TypeProduitStoreRequest;
 use App\Http\Requests\TypeProduitUpdateRequest;
 use App\Models\TypeProduit;
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -13,7 +14,7 @@ class TypeProduitController extends Controller
 {
     public function index(Request $request)
     {
-        $typeProduits = TypeProduit::all();
+        $typeProduits = TypeProduit::whereNull('deleted_on')->get();
 
         return view('typeProduit.index', [
             'typeProduits' => $typeProduits,
@@ -61,7 +62,8 @@ class TypeProduitController extends Controller
 
     public function destroy(Request $request, TypeProduit $typeProduit)
     {
-        $typeProduit->delete();
+        $typeProduit->deleted_on = Carbon::now();
+          $typeProduit->save();
 
         return redirect()->route('type_produits.index')->with('success', 'type produit supprimé avec succès');
     }

@@ -10,26 +10,38 @@ use Illuminate\View\View;
 
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\CadreLogiqueImport;
+use Session;
 
 class CadreLogiqueController extends Controller
 {
     public function index($cadre_developpement_id)
     {
-        $cadreDeveloppement = CadreDeveloppement::findOrFail($cadre_developpement_id);
-		$indicateurs = Indicateur::all();
-		$cadre_logiques = CadreLogique::getHierarchyByCadreDeveloppement($cadre_developpement_id);
-		$breadcrumb = 'Cadres stratégiques > Cadre de Résultat';
-        return view('cadreLogique.index', compact('breadcrumb','cadreDeveloppement', 'cadre_logiques','indicateurs'));
+
+        //$cadreDeveloppement = CadreDeveloppement::findOrFail($cadre_developpement_id);
+
+        $cadreDeveloppement = CadreDeveloppement::find($cadre_developpement_id);
+
+        if (
+            !$cadreDeveloppement || $cadreDeveloppement->user_id !== auth()->id()
+        ) {
+            Session::flash('error', 'Accès non autorisé');
+            return redirect()->back();//->with('error', 'Accès non autorisé');
+        }
+
+        $indicateurs = Indicateur::all();
+        $cadre_logiques = CadreLogique::getHierarchyByCadreDeveloppement($cadre_developpement_id);
+        $breadcrumb = 'Cadres stratégiques > Cadre de Résultat';
+        return view('cadreLogique.index', compact('breadcrumb', 'cadreDeveloppement', 'cadre_logiques', 'indicateurs'));
     }
-	
-	public function showUploadForm($cadre_developpement_id)
+
+    public function showUploadForm($cadre_developpement_id)
     {
         $cadreDeveloppement = CadreDeveloppement::findOrFail($cadre_developpement_id);
-		
-        return view('cadreLogique.upload', compact('cadreDeveloppement',));
+
+        return view('cadreLogique.upload', compact('cadreDeveloppement', ));
     }
-	
-	public function upload(Request $request)
+
+    public function upload(Request $request)
     {
         $request->validate([
             'fichier' => 'required|file|mimes:xlsx,xls',
@@ -43,6 +55,6 @@ class CadreLogiqueController extends Controller
 
         return back()->with('success', 'Import du cadre logique effectué avec succès.');
     }
-	
+
 
 }

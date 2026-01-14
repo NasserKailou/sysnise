@@ -6,6 +6,7 @@ use App\Http\Requests\UniteIndicateurStoreRequest;
 use App\Http\Requests\UniteIndicateurUpdateRequest;
 use App\Models\UniteIndicateur;
 use App\Imports\UniteIndicateursImport;
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -15,7 +16,7 @@ class UniteIndicateurController extends Controller
 {
     public function index(Request $request)
     {
-        $uniteIndicateurs = UniteIndicateur::all();
+        $uniteIndicateurs = UniteIndicateur::whereNull('deleted_on')->get();
 
         return view('uniteIndicateur.index', [
             'uniteIndicateurs' => $uniteIndicateurs,
@@ -62,7 +63,8 @@ class UniteIndicateurController extends Controller
 
     public function destroy(Request $request, UniteIndicateur $uniteIndicateur)
     {
-        $uniteIndicateur->delete();
+       $uniteIndicateur->deleted_on = Carbon::now();
+          $uniteIndicateur->save();
 
         return redirect()->route('unite_indicateurs.index')->with('success', 'unité supprimée avec succès');
     }

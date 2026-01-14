@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\NatureFinancementStoreRequest;
 use App\Http\Requests\NatureFinancementUpdateRequest;
 use App\Models\NatureFinancement;
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -13,7 +14,7 @@ class NatureFinancementController extends Controller
 {
     public function index(Request $request)
     {
-        $natureFinancements = NatureFinancement::all();
+        $natureFinancements = NatureFinancement::whereNull('deleted_on')->get();
 
         return view('natureFinancement.index', [
             'natureFinancements' => $natureFinancements,
@@ -61,7 +62,8 @@ class NatureFinancementController extends Controller
 
     public function destroy(Request $request, NatureFinancement $natureFinancement)
     {
-        $natureFinancement->delete();
+        $natureFinancement->deleted_on = Carbon::now();
+          $natureFinancement->save();
 
         return redirect()->route('nature_financements.index')->with('success', 'nature de financement supprimée avec succès');
     }
