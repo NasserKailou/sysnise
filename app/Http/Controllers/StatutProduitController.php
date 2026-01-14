@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StatutProduitStoreRequest;
 use App\Http\Requests\StatutProduitUpdateRequest;
 use App\Models\StatutProduit;
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -13,7 +14,7 @@ class StatutProduitController extends Controller
 {
     public function index(Request $request)
     {
-        $statutProduits = StatutProduit::all();
+        $statutProduits = StatutProduit::whereNull('deleted_on')->get();
 
         return view('statutProduit.index', [
             'statutProduits' => $statutProduits,
@@ -61,7 +62,8 @@ class StatutProduitController extends Controller
 
     public function destroy(Request $request, StatutProduit $statutProduit)
     {
-        $statutProduit->delete();
+        $statutProduit->deleted_on = Carbon::now();
+          $statutProduit->save();
 
         return redirect()->route('statut_produits.index')->with('success', 'statut produit supprimé avec succès');
     }

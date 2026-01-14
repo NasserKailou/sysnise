@@ -6,6 +6,7 @@ use App\Http\Requests\SourceIndicateurStoreRequest;
 use App\Http\Requests\SourceIndicateurUpdateRequest;
 use App\Models\SourceIndicateur;
 use App\Imports\SourceIndicateursImport;
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -15,7 +16,7 @@ class SourceIndicateurController extends Controller
 {
     public function index(Request $request)
     {
-        $sourceIndicateurs = SourceIndicateur::all();
+        $sourceIndicateurs = SourceIndicateur::whereNull('deleted_on')->get();
 
         return view('sourceIndicateur.index', [
             'sourceIndicateurs' => $sourceIndicateurs,
@@ -66,7 +67,8 @@ class SourceIndicateurController extends Controller
 
     public function destroy(Request $request, SourceIndicateur $sourceIndicateur)
     {
-        $sourceIndicateur->delete();
+        $sourceIndicateur->deleted_on = Carbon::now();
+          $sourceIndicateur->save();
 
         return redirect()->route('source_indicateurs.index')->with('success', 'source de donnée supprimée avec succès');
 

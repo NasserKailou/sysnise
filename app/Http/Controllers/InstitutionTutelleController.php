@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\InstitutionTutelleStoreRequest;
 use App\Http\Requests\InstitutionTutelleUpdateRequest;
 use App\Models\InstitutionTutelle;
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -13,7 +14,7 @@ class InstitutionTutelleController extends Controller
 {
     public function index(Request $request)
     {
-        $institutionTutelles = InstitutionTutelle::all();
+        $institutionTutelles = InstitutionTutelle::whereNull('deleted_on')->get();
 
         return view('institutionTutelle.index', [
             'institutionTutelles' => $institutionTutelles,
@@ -61,7 +62,8 @@ class InstitutionTutelleController extends Controller
 
     public function destroy(Request $request, InstitutionTutelle $institutionTutelle)
     {
-        $institutionTutelle->delete();
+       $institutionTutelle->deleted_on = Carbon::now();
+          $institutionTutelle->save();
 
         return redirect()->route('institution_tutelles.index')->with('success', 'niveau de financement supprimée avec succès');
     }

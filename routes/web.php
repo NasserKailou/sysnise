@@ -11,7 +11,7 @@ use App\Http\Controllers\Admin\UserRoleController;
 
 Route::get('/', [App\Http\Controllers\DonneeIndicateurController::class, 'extractionDonneesForm'])->name('donneeIndicateur.extractionDonnees.form');
 
-//Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth'])->group(function () {
 Route::get('/zones/upload', [App\Http\Controllers\ZoneController::class, 'showUploadForm'])->name('zones.showUploadForm');
 Route::post('/zones/upload', [App\Http\Controllers\ZoneController::class, 'upload'])->name('zones.upload');
 Route::resource('zones', App\Http\Controllers\ZoneController::class);
@@ -45,7 +45,7 @@ Route::resource('type_activites', App\Http\Controllers\TypeActiviteController::c
 Route::resource('statut_projets', App\Http\Controllers\StatutProjetController::class);
 Route::resource('etudes', App\Http\Controllers\EtudeController::class);
 
-//});
+});
 
 //Route::middleware(['role:admin'])->group(function () {
 	

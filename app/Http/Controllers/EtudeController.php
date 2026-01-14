@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\EtudeStoreRequest;
 use App\Http\Requests\EtudeUpdateRequest;
 use App\Models\Etude;
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -13,7 +14,7 @@ class EtudeController extends Controller
 {
     public function index(Request $request)
     {
-        $etudes = Etude::all();
+        $etudes = Etude::whereNull('deleted_on')->get();
 
         return view('etude.index', [
             'etudes' => $etudes,
@@ -61,7 +62,8 @@ class EtudeController extends Controller
 
     public function destroy(Request $request, Etude $etude)
     {
-        $etude->delete();
+        $etude->deleted_on = Carbon::now();
+          $etude->save();
 
         return redirect()->route('etudes.index')->with('success', 'période supprimée avec succès');
     }

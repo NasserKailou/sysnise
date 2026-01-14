@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\BailleurStoreRequest;
 use App\Http\Requests\BailleurUpdateRequest;
 use App\Models\Bailleur;
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -13,7 +14,7 @@ class BailleurController extends Controller
 {
     public function index(Request $request)
     {
-        $bailleurs = Bailleur::all();
+        $bailleurs = Bailleur::whereNull('deleted_on')->get();
 
         return view('bailleur.index', [
             'bailleurs' => $bailleurs,
@@ -61,7 +62,8 @@ class BailleurController extends Controller
 
     public function destroy(Request $request, Bailleur $bailleur)
     {
-        $bailleur->delete();
+        $bailleur->deleted_on = Carbon::now();
+          $bailleur->save();
 
         return redirect()->route('bailleurs.index')->with('success', 'Bailleur supprimé avec succès');
     }

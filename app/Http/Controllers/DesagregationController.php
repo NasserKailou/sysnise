@@ -6,6 +6,7 @@ use App\Http\Requests\DesagregationStoreRequest;
 use App\Http\Requests\DesagregationUpdateRequest;
 use App\Models\Desagregation;
 use App\Models\TypeDesagregation;
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -14,7 +15,7 @@ class DesagregationController extends Controller
 {
     public function index(Request $request)
     {
-        $desagregations = Desagregation::all();
+        $desagregations = Desagregation::whereNull('deleted_on')->get();
 		$typeDesagregations = TypeDesagregation::all();
 
         return view('desagregation.index', [
@@ -67,7 +68,8 @@ class DesagregationController extends Controller
 
     public function destroy(Request $request, Desagregation $desagregation)
     {
-        $desagregation->delete();
+       $desagregation->deleted_on = Carbon::now();
+          $desagregation->save();
 
         return redirect()->route('desagregations.index')->with('success', 'désagrégation supprimée avec succès');
     }

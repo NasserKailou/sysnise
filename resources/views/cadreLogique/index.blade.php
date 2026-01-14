@@ -8,9 +8,9 @@
 		    ul.horizontal-fix li a {
 		        padding: .84rem 2.14rem;
 		        }
-		        
+
 		.ztree li span.button.add {margin-left:2px; margin-right: -1px; background-position:-144px 0; vertical-align:top; *vertical-align:middle}
-		
+
 		.ztree{
 			overflow-y: scroll;
 			height: 500px;
@@ -23,7 +23,7 @@
 
 		/* Augmenter l’espacement vertical entre les lignes */
 		/*.ztree li {
-			line-height: 18px;  
+			line-height: 18px;
 			padding: 4px 3;
 			white-space: normal !important
 		}*/
@@ -32,7 +32,7 @@
 			display: inline-block; /* garde l'alignement avec l'icône */
 			word-break: break-word; /* coupe les mots trop longs */
 		}
-		
+
 		/* Champ de saisie lors de l’édition */
 		.ztree li input.rename {
 			font-size: 16px;
@@ -40,7 +40,7 @@
 			height: 28px;
 			padding: 4px 8px;
 		}
-		
+
 		div#rMenu {position:absolute; visibility:hidden; top:0; background-color: #555;text-align: left;padding: 2px;width: 200px;height: 130px;}
 		div#rMenu ul li{
 			margin: 1px 0;
@@ -49,17 +49,17 @@
 			list-style: none outside none;
 			background-color: #DFDFDF;
 			margin-left: -32px
-			
+
 		}
 		div#rMenu li:hover {
 			background-color: #007bff; /* ou ta couleur de choix */
 			color: #fff; /* texte blanc sur fond bleu */
 		}
-		
+
 		/* ========================================
 		   NOUVEAU STYLE POUR LES ZONES REDIMENSIONNABLES
 		   ======================================== */
-		
+
 		.resize-container {
 			display: flex;
 			width: 100%;
@@ -71,7 +71,7 @@
 			background: #fff;
 			box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 		}
-		
+
 		.resize-panel {
 			position: relative;
 			display: flex;
@@ -79,7 +79,7 @@
 			overflow: hidden;
 			background: #fff;
 		}
-		
+
 		.resize-panel-header {
 			padding: 15px;
 			background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -92,25 +92,25 @@
 			border-bottom: 3px solid #f8f9fa;
 			box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 		}
-		
+
 		.resize-panel-header.panel-1 {
 			background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 		}
-		
+
 		.resize-panel-header.panel-2 {
 			background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
 		}
-		
+
 		.resize-panel-header.panel-3 {
 			background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
 		}
-		
+
 		.resize-panel-body {
 			flex: 1;
 			overflow: auto;
 			padding: 10px;
 		}
-		
+
 		.resize-handle {
 			width: 8px;
 			background: #e9ecef;
@@ -119,11 +119,11 @@
 			flex-shrink: 0;
 			transition: background 0.2s;
 		}
-		
+
 		.resize-handle:hover {
 			background: #007bff;
 		}
-		
+
 		.resize-handle::before {
 			content: '';
 			position: absolute;
@@ -135,37 +135,37 @@
 			background: rgba(0,0,0,0.1);
 			border-radius: 2px;
 		}
-		
+
 		.header-icons {
 			display: flex;
 			gap: 10px;
 		}
-		
+
 		.header-icons a {
 			color: white;
 			text-decoration: none;
 			font-size: 18px;
 			transition: transform 0.2s;
 		}
-		
+
 		.header-icons a:hover {
 			transform: scale(1.2);
 		}
-		
+
 		.search-box {
 			margin-bottom: 10px;
 		}
-		
+
 		.search-box input {
 			border-radius: 20px;
 			border: 1px solid #dee2e6;
 			padding: 8px 15px;
 		}
-		
+
 		.search-box .btn {
 			border-radius: 0 20px 20px 0;
 		}
-		
+
 		/* Amélioration du zTree */
 		.ztree {
 			overflow-y: auto;
@@ -173,36 +173,36 @@
 			scrollbar-width: thin;
 			scrollbar-color: #007bff #f1f1f1;
 		}
-		
+
 		.ztree::-webkit-scrollbar {
 			width: 8px;
 		}
-		
+
 		.ztree::-webkit-scrollbar-track {
 			background: #f1f1f1;
 			border-radius: 10px;
 		}
-		
+
 		.ztree::-webkit-scrollbar-thumb {
 			background: #007bff;
 			border-radius: 10px;
 		}
-		
+
 		.ztree::-webkit-scrollbar-thumb:hover {
 			background: #0056b3;
 		}
-		
+
 		/* Animation pour le drag & drop */
 		.tmpzTreeMove_arrow {
 			opacity: 0.8;
 		}
-		
+
 		.ztree li a.curSelectedNode {
 			background-color: #007bff !important;
 			color: white !important;
 			border: 1px solid #0056b3;
 		}
-		
+
 		.page-title {
 			font-size: 24px;
 			font-weight: 700;
@@ -215,16 +215,16 @@
 			box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 		}
 		</style>
-		
+
 		<script type="text/javascript">
 	  var zNodesIndicateur =[
 		  { id:0, pId:0, name:"/", open:true}
 	  ];
 	  var zNodescadre_logique =[
 			{ id:0, pId:0, name:"/", open:true}
-			
+
 		];
-	  
+
 	  var zNodesIndicateurSelectionnes =[];
 	</script>
 
@@ -247,9 +247,9 @@
 	</script>
 
 
-	
+
 	<script type="text/javascript">
-			
+
 			var tempNode = null;
 			var settingcadre_logique = {
 					view: {
@@ -290,7 +290,7 @@
 						onDrop: onDropcadre_logique
 					}
 				};
-				
+
 				// Fonction avant le drag
 				function beforeDragcadre_logique(treeId, treeNodes) {
 					// Empêcher de déplacer la racine
@@ -301,7 +301,7 @@
 					}
 					return true;
 				}
-				
+
 				// Fonction avant le drop
 				function beforeDropcadre_logique(treeId, treeNodes, targetNode, moveType) {
 					// Empêcher de déposer sur la racine
@@ -311,12 +311,12 @@
 					}
 					return true;
 				}
-				
+
 				// Fonction après le drop - Mise à jour en base de données
 				function onDropcadre_logique(event, treeId, treeNodes, targetNode, moveType) {
 					var movedNode = treeNodes[0];
 					var newParentId = null;
-					
+
 					// Déterminer le nouveau parent_id
 					if (moveType === "inner") {
 						// Déposé à l'intérieur d'un nœud
@@ -325,10 +325,10 @@
 						// Déposé avant ou après un nœud (même niveau)
 						newParentId = targetNode.pId || 0;
 					}
-					
+
 					// Si déposé sous la racine (id=0), le parent_id doit être null en base
 					var parentIdForDb = (newParentId === 0) ? null : newParentId;
-					
+
 					console.log("Déplacement du nœud:", {
 						nodeId: movedNode.id,
 						nodeName: movedNode.name,
@@ -336,7 +336,7 @@
 						newParentId: newParentId,
 						moveType: moveType
 					});
-					
+
 					// Mettre à jour en base de données via AJAX
 					$.ajax({
 						url: '/api/cadre_mesure_resultats/' + movedNode.id + '/update-parent',
@@ -349,7 +349,7 @@
 							console.log("Parent mis à jour avec succès", response);
 							// Mettre à jour le nœud local
 							movedNode.pId = newParentId;
-							
+
 							// Afficher une notification de succès
 							showNotification('success', 'Déplacement réussi', 'L\'élément a été déplacé avec succès.');
 						},
@@ -357,13 +357,13 @@
 							console.error("Erreur lors de la mise à jour du parent:", xhr.responseText);
 							// Afficher une notification d'erreur
 							showNotification('error', 'Erreur', 'Impossible de déplacer l\'élément. ' + xhr.responseText);
-							
+
 							// Recharger l'arbre pour annuler le déplacement visuel
 							location.reload();
 						}
 					});
 				}
-				
+
 				// Fonction pour afficher des notifications
 				function showNotification(type, title, message) {
 					// Utiliser un simple alert pour l'instant (peut être remplacé par un toast)
@@ -374,9 +374,9 @@
 						console.log(title + ': ' + message);
 					}
 				}
-				
-				
-				
+
+
+
 				function beforeClickcadre_logique(treeId, treeNode, clickFlag) {
 					return (treeNode.click != false);
 				}
@@ -441,7 +441,7 @@
 				}
 
 				/*function onClickcadre_logique(event, treeId, treeNode, clickFlag) {
-					
+
 					$.ajax({
 						url: '/api/cadre_mesure_resultats/'+treeNode.id+'/indicateurs',
 						type: 'GET',
@@ -453,24 +453,24 @@
 									name: item.intitule   // affichage
 								};
 							});
-							
+
 							var notSelectedIndicators = data.notSelected.map(function(item) {
 								return {
 									id: item.id,
 									pId: 0,               // racine
 									name: item.intitule   // affichage
 								};
-							}); 
-							
+							});
+
 							$.fn.zTree.init($("#liste_indicateur_selectionnes"), settingIndicateur, selectedIndicators);
 							$.fn.zTree.init($("#liste_indicateur"), settingIndicateur, notSelectedIndicators);
-							
+
 						},
 						error: function (xhr) {
 							console.error("Erreur :", xhr.responseText);
 						}
 					});
-					
+
 				}*/
 				var log, className = "dark";
 				function beforeEditNamecadre_logique(treeId, treeNode) {
@@ -478,7 +478,7 @@
 					zTree.selectNode(treeNode);
 					setTimeout(function() {
 							zTree.editName(treeNode);
-							
+
 						}, 0);
 					return false;
 				}
@@ -492,11 +492,11 @@
 						}, 0);
 						return false;
 					}
-						
+
 					return true;
 				}
 				function onRenamecadre_logique(e, treeId, treeNode, isCancel) {
-					
+
 					if(tempNode != null)
 					{
 						cadre_developpement_id = $('#cadre_developpement_id').val();
@@ -517,7 +517,7 @@
 								console.error("Erreur :", xhr.responseText);
 							}
 						});
-						
+
 						tempNode = null;
 					}
 					else
@@ -540,7 +540,7 @@
 								console.error("Erreur :", xhr.responseText);
 							}
 						});
-						
+
 					}
 				}
 				function beforeRemovecadre_logique(treeId, treeNode) {
@@ -559,14 +559,14 @@
 							},
 							success: function (id) {
 								console.log("Suppression réussie :");
-								
+
 							},
 							error: function (xhr) {
 								console.error("Erreur :", xhr.responseText);
 							}
 						});
-					
-					
+
+
 				}
 				var newCount = 0;
 				function addHoverDomcadre_logique(treeId, treeNode) {
@@ -576,7 +576,7 @@
 						+ "' title='ajouter un élément' onfocus='this.blur();'></span>";
 					sObj.after(addStr);
 					var btn = $("#addBtn_"+treeNode.tId);
-					
+
 					if (btn) btn.bind("click", function(){
 						if(treeNode.children != null)
 							var indice = treeNode.children.length;
@@ -588,23 +588,23 @@
 						var newNode = {id:newCount, pId:treeNode.id, name:newNode_name};
 						zTree.addNodes(treeNode, newNode);
 						tempNode = newNode;
-						
+
 						last_node = treeNode.children[indice];
 						zTree.selectNode(last_node);
 						setTimeout(function(dat) {
 									zTree.editName(last_node);
 								}, 0);
-								
+
 						return false;
-						
+
 					});
-					
-					
+
+
 				};
 				function removeHoverDomcadre_logique(treeId, treeNode) {
 					$("#addBtn_"+treeNode.tId).unbind().remove();
 				};
-				
+
 				function showRemoveBtn(treeId, treeNode) {
 					return !treeNode.isFirstNode;
 				}
@@ -634,7 +634,7 @@
 						+ "' title='ajouter un élément' onfocus='this.blur();'></span>";
 					sObj.after(addStr);
 					var btn = $("#addBtn_"+treeNode.tId);
-					
+
 					if (btn) btn.bind("click", function(){
 						if(treeNode.children != null)
 							var indice = treeNode.children.length;
@@ -646,29 +646,29 @@
 						var newNode = {id:newCount, pId:treeNode.id, name:newNode_name};
 						zTree.addNodes(treeNode, newNode);
 						tempNode = newNode;
-						
+
 						last_node = treeNode.children[indice];
 						zTree.selectNode(last_node);
 						setTimeout(function(dat) {
 									zTree.editName(last_node);
 								}, 0);
-								
+
 						return false;
-						
+
 					});
-					
-					
+
+
 				};
 				function removeHoverDomcadre_logique(treeId, treeNode) {
 					$("#addBtn_"+treeNode.tId).unbind().remove();
 				};
-				
+
 			var settingIndicateur = {
 				view: {
 					showIcon: showIconForTree,
 					addHoverDom: addHoverDomIndicateur,
 					removeHoverDom: removeHoverDomIndicateur
-					
+
 				},
 				data: {
 					simpleData: {
@@ -691,24 +691,24 @@
 					beforeRename: beforeRenameIndicateur,
 					onRemove: onRemoveIndicateur,
 					onRename: onRenameIndicateur
-					
-					
+
+
 				}
 			};
-			
-			
-			
-			
+
+
+
+
 			function beforeClickIndicateur(treeId, treeNode, clickFlag) {
 				return (treeNode.click != false);
 			}
 			function onClickIndicateur(event, treeId, treeNode, clickFlag) {
-				
+
 			}
 			function beforeDblClickIndicateur(treeId, treeNode) {
 				return (treeNode.click != false);
 			};
-			
+
 			function onDblClickIndicateur(event, treeId, treeNode) {
 				var cadre_logiqueTreeObj = $.fn.zTree.getZTreeObj("liste_cadre_logique");
 				var cadre_logiqueTreeNodes = cadre_logiqueTreeObj.getSelectedNodes();
@@ -719,12 +719,12 @@
 					var treeNodes = sourceTreeObj.getSelectedNodes();
 
 					var destinationTreeObj = $.fn.zTree.getZTreeObj("liste_indicateur_selectionnes");
-					
+
 					var params =[];
-					
+
 					if(cadre_logiqueLength > 0)
 					{
-						
+
 							var indicateur = treeNodes[0];
 							if(indicateur.name != "/")
 							{
@@ -745,11 +745,11 @@
 										console.error("Erreur :", xhr.responseText);
 									}
 								});
-							
+
 							}
-							
+
 					}
-					
+
 				}
 				else if(treeId == "liste_indicateur_selectionnes")
 				{
@@ -757,19 +757,19 @@
 					var treeNodes = sourceTreeObj.getSelectedNodes();
 
 					var destinationTreeObj = $.fn.zTree.getZTreeObj("liste_indicateur");
-					
+
 					var params =[];
-					
+
 					if(cadre_logiqueLength > 0)
 					{
-						
+
 							var indicateur = treeNodes[0];
 							/*destinationTreeObj.addNodes(destinationTreeObj.getNodes()[0], indicateur);
 							sourceTreeObj.removeNode(indicateur);*/
-							
+
 							destinationTreeObj.addNodes(null, indicateur);
 							sourceTreeObj.removeNode(indicateur);
-							
+
 							$.ajax({
 								url: '/api/cadre_mesure_resultats/'+cadre_logiqueTreeNodes[0].id+'/'+indicateur.id,
 								type: 'DELETE',
@@ -781,17 +781,17 @@
 									console.error("Erreur :", xhr.responseText);
 								}
 							});
-							
+
 					}
-					
+
 				}
-				
+
 			};
-			
+
 			function showIconForTree(treeId, treeNode) {
 				/*return !treeNode.isParent;*/
 			};
-			
+
 			function beforeEditNameIndicateur(treeId, treeNode) {
 				var zTree = $.fn.zTree.getZTreeObj("liste_indicateur");
 				zTree.selectNode(treeNode);
@@ -810,11 +810,11 @@
 					}, 0);
 					return false;
 				}
-					
+
 				return true;
 			}
 			function onRenameIndicateur(e, treeId, treeNode, isCancel) {
-				
+
 				if(tempNode != null)
 				{
 					$.ajax({
@@ -832,7 +832,7 @@
 							console.error("Erreur :", xhr.responseText);
 						}
 					});
-					
+
 					tempNode = null;
 				}
 				else
@@ -852,7 +852,7 @@
 							console.error("Erreur :", xhr.responseText);
 						}
 					});
-					
+
 				}
 			}
 			function beforeRemoveIndicateur(treeId, treeNode) {
@@ -877,7 +877,7 @@
 						}
 					});
 			}
-			
+
 			var newCount = 0;
 			function addHoverDomIndicateur(treeId, treeNode) {
 				if(treeNode.id == 0){
@@ -887,7 +887,7 @@
 					+ "' title='ajouter un élément' onfocus='this.blur();'></span>";
 				sObj.after(addStr);
 				var btn = $("#addBtn_"+treeNode.tId);
-				
+
 				if (btn) btn.bind("click", function(){
 					if(treeNode.children != null)
 						var indice = treeNode.children.length;
@@ -904,17 +904,17 @@
 					setTimeout(function() {
 						zTree.editName(last_node);
 					}, 0);
-							
+
 					return false;
-					
+
 				});
-				
-			}	
+
+			}
 			};
 			function removeHoverDomIndicateur(treeId, treeNode) {
 				$("#addBtn_"+treeNode.tId).unbind().remove();
 			};
-			
+
 			function OnRightClick(event, treeId, treeNode) {
 				// Vérifie que le clic droit concerne uniquement le zTree du cadre logique
 				if (treeId !== "liste_cadre_logique") {
@@ -992,7 +992,7 @@
 
 		<!-- Zone redimensionnable moderne avec 3 panneaux -->
 		<div class="resize-container">
-			
+
 			<!-- PANNEAU 1 : Cadre de Résultat -->
 			<div class="resize-panel" id="panel-1" style="flex: 1;">
 				<div class="resize-panel-header panel-1">
@@ -1076,14 +1076,14 @@
 					<ul id="liste_indicateur_selectionnes" class="ztree"></ul>
 				</div>
 			</div>
-			
+
 		</div>
-		
+
 		<script>
 		// Script pour le redimensionnement des panneaux
 		document.addEventListener('DOMContentLoaded', function() {
 			const handles = document.querySelectorAll('.resize-handle');
-			
+
 			handles.forEach(handle => {
 				let isResizing = false;
 				let startX = 0;
@@ -1091,34 +1091,34 @@
 				let startWidthRight = 0;
 				let leftPanel = null;
 				let rightPanel = null;
-				
+
 				handle.addEventListener('mousedown', function(e) {
 					isResizing = true;
 					startX = e.clientX;
-					
+
 					// Détermine les panneaux à gauche et à droite
 					leftPanel = handle.previousElementSibling;
 					rightPanel = handle.nextElementSibling;
-					
-					if (leftPanel && rightPanel && 
-					    leftPanel.classList.contains('resize-panel') && 
+
+					if (leftPanel && rightPanel &&
+					    leftPanel.classList.contains('resize-panel') &&
 					    rightPanel.classList.contains('resize-panel')) {
 						startWidthLeft = leftPanel.offsetWidth;
 						startWidthRight = rightPanel.offsetWidth;
-						
+
 						// Ajoute un overlay pour éviter les problèmes avec iframe/zTree
 						document.body.style.cursor = 'col-resize';
 						document.body.style.userSelect = 'none';
 					}
 				});
-				
+
 				document.addEventListener('mousemove', function(e) {
 					if (!isResizing || !leftPanel || !rightPanel) return;
-					
+
 					const diff = e.clientX - startX;
 					const newWidthLeft = startWidthLeft + diff;
 					const newWidthRight = startWidthRight - diff;
-					
+
 					// Largeurs minimales : 250px
 					if (newWidthLeft >= 250 && newWidthRight >= 250) {
 						const totalWidth = newWidthLeft + newWidthRight;
@@ -1126,7 +1126,7 @@
 						rightPanel.style.flex = `0 0 ${newWidthRight}px`;
 					}
 				});
-				
+
 				document.addEventListener('mouseup', function() {
 					if (isResizing) {
 						isResizing = false;
@@ -1139,7 +1139,7 @@
 			});
 		});
 		</script>
-		
+
 		<script>
 			var zTree, rMenu;
 			$(document).ready(function () {
@@ -1149,61 +1149,61 @@
 				rMenu = $("#rMenu");
 				zTree = $.fn.zTree.getZTreeObj("liste_cadre_logique");
 				$(".toast").toast();
-				
+
 				$('#search_cadre_logique').keypress(function(){
 			    	 if($(this).val() != "")
-			    	 { 
+			    	 {
 			    		 var treeObj = $.fn.zTree.getZTreeObj("liste_cadre_logique");
 					      var nodes = treeObj.getNodesByParamFuzzy("name", $(this).val(), null);
-					      $.fn.zTree.init($("#liste_cadre_logique"), settingcadre_logique, nodes); 
+					      $.fn.zTree.init($("#liste_cadre_logique"), settingcadre_logique, nodes);
 			    	 }else
 			    	{
 			    		$.fn.zTree.init($("#liste_cadre_logique"), settingcadre_logique, zNodescadre_logique);
 			    	}
-					 
+
 			      });
 				$('#search_indicateur').keypress(function(){
 			    	 if($(this).val() != "")
-			    	 { 
+			    	 {
 			    		 var treeObj = $.fn.zTree.getZTreeObj("liste_indicateur");
 					      var nodes = treeObj.getNodesByParamFuzzy("name", $(this).val(), null);
-					      $.fn.zTree.init($("#liste_indicateur"), settingIndicateur, nodes); 
+					      $.fn.zTree.init($("#liste_indicateur"), settingIndicateur, nodes);
 			    	 }else
 			    	{
 			    		 $.fn.zTree.init($("#liste_indicateur"), settingIndicateur, zNodesIndicateur);
 			    	}
-					 
+
 			      });
 				$('#search_indicateur_selectionnes').keypress(function(){
 			    	 if($(this).val() != "")
-			    	 { 
+			    	 {
 			    		 var treeObj = $.fn.zTree.getZTreeObj("liste_indicateur_selectionnes");
 					      var nodes = treeObj.getNodesByParamFuzzy("name", $(this).val(), null);
-					      $.fn.zTree.init($("#liste_indicateur_selectionnes"), settingIndicateur, nodes); 
+					      $.fn.zTree.init($("#liste_indicateur_selectionnes"), settingIndicateur, nodes);
 			    	 }else
 			    	{
 			    		 $.fn.zTree.init($("#liste_indicateur_selectionnes"), settingIndicateur, zNodesIndicateurSelectionnes);
-							
+
 			    	}
-					 
+
 			      });
-				
-				
+
+
 				$('#transfererIndicateurDisponibleVersSelectionne').click(function(){
 					var cadre_logiqueTreeObj = $.fn.zTree.getZTreeObj("liste_cadre_logique");
 					var cadre_logiqueTreeNodes = cadre_logiqueTreeObj.getSelectedNodes();
 					var cadre_logiqueLength = cadre_logiqueTreeNodes.length;
-					
+
 					var sourceTreeObj = $.fn.zTree.getZTreeObj("liste_indicateur");
 					var treeNodes = sourceTreeObj.getSelectedNodes();
 					var l=treeNodes.length;
-					
+
 					var destinationTreeObj = $.fn.zTree.getZTreeObj("liste_indicateur_selectionnes");
-					
-					
+
+
 					if(cadre_logiqueLength > 0)
 					{
-				
+
 						let associations = [];
 						let cadreLogiqueId = cadre_logiqueTreeNodes[0].id;
 						while (l>0) {
@@ -1211,15 +1211,15 @@
 							destinationTreeObj.addNodes(null, indicateur);
 							sourceTreeObj.removeNode(indicateur);
 							l--;
-							
+
 							associations.push({
 								indicateur_id: indicateur.id,
 								cadre_logique_id: cadreLogiqueId
 							});
-							
+
 						}
-						
-							
+
+
 						$.ajax({
 							url: '/api/cadre_mesure_resultats/storeBatch',
 							type: 'POST',
@@ -1233,23 +1233,23 @@
 							}
 						});
 					}
-					
+
 				});
-				
+
 				$('#transfererIndicateurSelectionneVersDisponible').click(function(){
 					var cadre_logiqueTreeObj = $.fn.zTree.getZTreeObj("liste_cadre_logique");
 					var cadre_logiqueTreeNodes = cadre_logiqueTreeObj.getSelectedNodes();
 					var cadre_logiqueLength = cadre_logiqueTreeNodes.length;
-					
+
 					var sourceTreeObj = $.fn.zTree.getZTreeObj("liste_indicateur_selectionnes");
 					var treeNodes = sourceTreeObj.getSelectedNodes();
 					var l=treeNodes.length;
-					
+
 					var destinationTreeObj = $.fn.zTree.getZTreeObj("liste_indicateur");
-					
+
 					var params =[];
 					var p = 0;
-					
+
 					if(cadre_logiqueLength > 0)
 					{
 						let associations = [];
@@ -1277,9 +1277,9 @@
 							}
 						});
 					}
-					
+
 				});
-				
+
 				$('#infosIndicateurDisponible').click(function(){
 					/*typecadre_logique_code = $('#typecadre_logique_code').val();*/
 					var sourceTreeObj = $.fn.zTree.getZTreeObj("liste_indicateur");
@@ -1290,10 +1290,10 @@
 						$('#popup').html(dat);
 						$("#myModal").modal('show');
 					});
-					
+
 				});
-				
-				
+
+
 				$('#uniteIndicateurDisponible').click(function(){
 					var sourceTreeObj = $.fn.zTree.getZTreeObj("liste_indicateur");
 					var treeNodes = sourceTreeObj.getSelectedNodes();
@@ -1302,9 +1302,9 @@
 						$('#popup').html(dat);
 						$("#myModal").modal('show');
 					});
-					
+
 				});
-				
+
 				$('#desagregationIndicateurDisponible').click(function(){
 					var sourceTreeObj = $.fn.zTree.getZTreeObj("liste_indicateur");
 					var treeNodes = sourceTreeObj.getSelectedNodes();
@@ -1313,52 +1313,52 @@
 						$('#popup').html(dat);
 						$("#myModal").modal('show');
 					});
-					
+
 				});
-				
+
 				$('#uploadIndicateur').click(function(){
-					
+
 					$.get('/indicateurs/upload',function(dat){
 						$('#popup').html(dat);
 						$("#myModal").modal('show');
 					});
-					
+
 				});
-				
+
 				$('#uploadCadreLogique').click(function(){
 					cadre_developpement_id = $('#cadre_developpement_id').val();
 					$.get('/cadre_developpements/'+cadre_developpement_id+'/cadres_logiques_upload',function(dat){
 						$('#popup').html(dat);
 						$("#myModal").modal('show');
 					});
-					
+
 				});
-			
+
 			$('#showHypotheseRique').click(function(){
 					var sourceTreeObj = $.fn.zTree.getZTreeObj("liste_cadre_logique");
 					var treeNodes = sourceTreeObj.getSelectedNodes();
 					var cadre_logique = treeNodes[0];
 					window.location.href = '/cadre_logiques/'+cadre_logique.id+'/hypothese_risques/';
-					
+
 				});
 			$('#showProduit').click(function(){
 					var sourceTreeObj = $.fn.zTree.getZTreeObj("liste_cadre_logique");
 					var treeNodes = sourceTreeObj.getSelectedNodes();
 					var cadre_logique = treeNodes[0];
 					window.location.href = '/cadre_logiques/'+cadre_logique.id+'/produits/';
-					
+
 				});
 			$('#showActivite').click(function(){
 					var sourceTreeObj = $.fn.zTree.getZTreeObj("liste_cadre_logique");
 					var treeNodes = sourceTreeObj.getSelectedNodes();
 					var cadre_logique = treeNodes[0];
 					window.location.href = '/cadre_logiques/'+cadre_logique.id+'/activites/';
-					
-				});	
-			      
+
+				});
+
 		  });
 
-		</script>  
+		</script>
 </div>
 <div id="rMenu">
 	<ul>
@@ -1389,5 +1389,5 @@ $(document).Toasts('create', {
   title: 'Test',
   body: 'Toast OK'
 });
-</script>  
+</script>
 @endsection
