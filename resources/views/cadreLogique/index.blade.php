@@ -328,12 +328,16 @@
 
 					// Si déposé sous la racine (id=0), le parent_id doit être null en base
 					var parentIdForDb = (newParentId === 0) ? null : newParentId;
+					
+					// Récupérer le cadre_developpement_id depuis l'input caché
+					var cadreDeveloppementId = $('#cadre_developpement_id').val();
 
 					console.log("Déplacement du nœud:", {
 						nodeId: movedNode.id,
 						nodeName: movedNode.name,
 						oldParentId: movedNode.pId,
 						newParentId: newParentId,
+						cadreDeveloppementId: cadreDeveloppementId,
 						moveType: moveType
 					});
 
@@ -342,7 +346,8 @@
 						url: '/api/cadre_mesure_resultats/' + movedNode.id + '/update-parent',
 						type: 'PUT',
 						data: JSON.stringify({
-							parent_id: parentIdForDb
+							parent_id: parentIdForDb,
+							cadre_developpement_id: cadreDeveloppementId
 						}),
 						contentType: 'application/json',
 						success: function(response) {
