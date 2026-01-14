@@ -170,6 +170,7 @@ class DonneeIndicateurController extends Controller
 				'commentaire_valeur_indicateur_id' => $request->commentaire_valeur_indicateur_id[$i] ?? null,
 				],[
 				'valeur'                         => $request->valeur[$i],
+				'statut'                         => DonneeIndicateur::STATUT_EN_ATTENTE, // Statut par défaut
 			]);
 			
 			$desagregations = array_filter(explode('_', $request->desagregation_id[$i] ?? ''));
@@ -178,7 +179,7 @@ class DonneeIndicateurController extends Controller
 			}
 		}
 
-		return redirect()->back()->with('success', 'Données enregistrées avec succès !');
+		return redirect()->back()->with('success', 'Données enregistrées avec succès ! Elles sont en attente de validation.');
 	}
 	
 	public function store2(Request $request)
@@ -228,6 +229,7 @@ class DonneeIndicateurController extends Controller
 				'unite_indicateur_id'               => $request->unite_indicateur_id[$i],
 				'commentaire_valeur_indicateur_id'  => $request->commentaire_valeur_indicateur_id[$i] ?? null,
 				'valeur'                            => $request->valeur[$i],
+				'statut'                            => DonneeIndicateur::STATUT_EN_ATTENTE, // Statut par défaut
 			]);
 		}
 
@@ -420,7 +422,8 @@ class DonneeIndicateurController extends Controller
 							'commentaire_valeur_indicateur_id' => $commentaire_valeur_indicateur_id
 						],
 						[
-							'valeur' => $valeur
+							'valeur' => $valeur,
+							'statut' => DonneeIndicateur::STATUT_EN_ATTENTE, // Statut par défaut
 						]
 					);
 
@@ -445,7 +448,134 @@ class DonneeIndicateurController extends Controller
 		}
 	}
 
+	/**
+	 * Afficher la liste des données en attente de validation
+	 */
+	public function indexValidation()
+	{
+		$donnees = DonneeIndicateur::with([
+			'natureDonnee',
+			'indicateur',
+			'zone',
+			'periode',
+			'sourceIndicateur',
+			'uniteIndicateur',
+			'commentaireValeurIndicateur',
+			'desagregations'
+		])
+		->enAttente()
+		->orderBy('created_at', 'desc')
+		->paginate(50);
 
+		$breadcrumb = 'Cadre Stratégique > Validation des données';
+		
+		return view('donneeIndicateur.validation', compact('donnees', 'breadcrumb'));
+	}
+
+	/**
+	 * Valider une donnée individuelle
+	 */
+	public function valider($id)
+	{
+		$donnee = DonneeIndicateur::findOrFail($id);
+		
+		if ($donnee->valider()) {
+			return redirect()->back()->with('success', 'Donnée validée avec succès !');
+		}
+		
+		return redirect()->back()->with('error', 'Erreur lors de la validation.');
+	}
+
+	/**
+	 * Rejeter une donnée individuelle
+	 */
+	public function rejeter($id)
+	{
+		$donnee = DonneeIndicateur::findOrFail($id);
+		
+		if ($donnee->rejeter()) {
+			return redirect()->back()->with('success', 'Donnée rejetée avec succès !');
+		}
+		
+		return redirect()->back()->with('error', 'Erreur lors du rejet.');
+	}
+
+	/**
+	 * Validation globale de toutes les données en attente
+	 */
+	public function validerGlobal(Request $request)
+	{
+		$donneesIds = $request->input('donnees_ids', []);
+		
+		if (empty($donneesIds)) {
+			return redirect()->back()->with('error', 'Aucune donnée sélectionnée.');
+		}
+
+		try {
+			DB::beginTransaction();
+			
+			$count = DonneeIndicateur::whereIn('id', $donneesIds)
+				->enAttente()
+				->update(['statut' => DonneeIndicateur::STATUT_VALIDE]);
+			
+			DB::commit();
+			
+			return redirect()->back()->with('success', "$count donnée(s) validée(s) avec succès !");
+			
+		} catch (\Exception $e) {
+			DB::rollBack();
+			return redirect()->back()->with('error', 'Erreur lors de la validation globale : ' . $e->getMessage());
+		}
+	}
+
+	/**
+	 * Validation globale de TOUTES les données en attente (sans sélection)
+	 */
+	public function validerTout()
+	{
+		try {
+			DB::beginTransaction();
+			
+			$count = DonneeIndicateur::enAttente()
+				->update(['statut' => DonneeIndicateur::STATUT_VALIDE]);
+			
+			DB::commit();
+			
+			return redirect()->back()->with('success', "Toutes les données en attente ($count) ont été validées avec succès !");
+			
+		} catch (\Exception $e) {
+			DB::rollBack();
+			return redirect()->back()->with('error', 'Erreur lors de la validation globale : ' . $e->getMessage());
+		}
+	}
+
+	/**
+	 * Rejeter plusieurs données
+	 */
+	public function rejeterGlobal(Request $request)
+	{
+		$donneesIds = $request->input('donnees_ids', []);
+		
+		if (empty($donneesIds)) {
+			return redirect()->back()->with('error', 'Aucune donnée sélectionnée.');
+		}
+
+		try {
+			DB::beginTransaction();
+			
+			$count = DonneeIndicateur::whereIn('id', $donneesIds)
+				->enAttente()
+				->update(['statut' => DonneeIndicateur::STATUT_REJETE]);
+			
+			DB::commit();
+			
+			return redirect()->back()->with('success', "$count donnée(s) rejetée(s) avec succès !");
+			
+		} catch (\Exception $e) {
+			DB::rollBack();
+			return redirect()->back()->with('error', 'Erreur lors du rejet global : ' . $e->getMessage());
+		}
+	}
 
 	
 	
