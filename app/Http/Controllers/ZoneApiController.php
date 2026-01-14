@@ -7,6 +7,7 @@ use App\Http\Requests\ZoneUpdateRequest;
 use App\Http\Resources\ZoneCollection;
 use App\Http\Resources\ZoneResource;
 use App\Models\Zone;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -14,7 +15,7 @@ class ZoneApiController extends Controller
 {
     public function index(Request $request)
     {
-        $zones = Zone::all();
+        $zones = Zone::whereNull('deleted_on')->get();
 		return response()->json($zones);
     }
 
@@ -60,7 +61,8 @@ class ZoneApiController extends Controller
 
     public function destroy(Request $request, Zone $zone)
     {
-        $zone->delete();
+        $zone->deleted_on = Carbon::now();
+          $zone->save();
 
         return response()->noContent();
     }

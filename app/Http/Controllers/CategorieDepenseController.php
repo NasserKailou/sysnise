@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CategorieDepenseStoreRequest;
 use App\Http\Requests\CategorieDepenseUpdateRequest;
 use App\Models\CategorieDepense;
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -13,7 +14,7 @@ class CategorieDepenseController extends Controller
 {
     public function index(Request $request)
     {
-        $categorieDepenses = CategorieDepense::all();
+        $categorieDepenses = CategorieDepense::whereNull('deleted_on')->get();
 
         return view('categorieDepense.index', [
             'categorieDepenses' => $categorieDepenses,
@@ -61,7 +62,8 @@ class CategorieDepenseController extends Controller
 
     public function destroy(Request $request, CategorieDepense $categorieDepense)
     {
-        $categorieDepense->delete();
+         $categorieDepense->deleted_on = Carbon::now();
+          $categorieDepense->save();
 
         return redirect()->route('categorie_depenses.index')->with('success', 'catégotrie dépense supprimée avec succès');
     }

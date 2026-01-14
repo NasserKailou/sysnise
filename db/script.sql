@@ -1757,3 +1757,70 @@ ADD CONSTRAINT fk_cadre_developpement_user
 FOREIGN KEY (user_id)
 REFERENCES users(id)
 ON DELETE SET NULL;
+
+
+ALTER TABLE nature_donnees
+ADD COLUMN deleted_on timestamp null;
+
+
+ALTER TABLE source_financements
+ADD COLUMN deleted_on timestamp null;
+
+ALTER TABLE type_desagregations
+ADD COLUMN deleted_on timestamp null;
+
+ALTER TABLE desagregations
+ADD COLUMN deleted_on timestamp null;
+
+ALTER TABLE periodes
+ADD COLUMN deleted_on timestamp null;
+
+
+ALTER TABLE unite_indicateurs
+ADD COLUMN deleted_on timestamp null;
+
+ALTER TABLE zones
+ADD COLUMN deleted_on timestamp null;
+
+ALTER TABLE statut_produits
+ADD COLUMN deleted_on timestamp null;
+
+
+ALTER TABLE type_produits
+ADD COLUMN deleted_on timestamp null;
+
+ALTER TABLE statut_activites
+ADD COLUMN deleted_on timestamp null;
+
+ALTER TABLE type_activites
+ADD COLUMN deleted_on timestamp null;
+
+ALTER TABLE commentaire_valeur_indicateurs
+ADD COLUMN deleted_on timestamp null;
+
+ALTER TABLE institution_tutelles
+ADD COLUMN deleted_on timestamp null;
+
+ALTER TABLE statut_projets
+ADD COLUMN deleted_on timestamp null;
+
+ALTER TABLE population_cibles
+ADD COLUMN deleted_on timestamp null;
+
+ALTER TABLE etudes
+ADD COLUMN deleted_on timestamp null;
+
+ALTER TABLE source_indicateurs
+ADD COLUMN deleted_on timestamp null;
+
+ALTER TABLE bailleurs
+ADD COLUMN deleted_on timestamp null;
+
+ALTER TABLE statut_financements
+ADD COLUMN deleted_on timestamp null;
+
+ALTER TABLE categorie_depenses
+ADD COLUMN deleted_on timestamp null;
+
+ALTER TABLE nature_financements
+ADD COLUMN deleted_on timestamp null;

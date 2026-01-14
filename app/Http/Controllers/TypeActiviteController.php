@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\TypeActiviteStoreRequest;
 use App\Http\Requests\TypeActiviteUpdateRequest;
 use App\Models\TypeActivite;
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -13,7 +14,7 @@ class TypeActiviteController extends Controller
 {
     public function index(Request $request)
     {
-        $typeActivites = TypeActivite::all();
+        $typeActivites = TypeActivite::whereNull('deleted_on')->get();
 
         return view('typeActivite.index', [
             'typeActivites' => $typeActivites,
@@ -61,7 +62,8 @@ class TypeActiviteController extends Controller
 
     public function destroy(Request $request, TypeActivite $typeActivite)
     {
-        $typeActivite->delete();
+        $typeActivite->deleted_on = Carbon::now();
+          $typeActivite->save();
 
         return redirect()->route('type_activites.index')->with('success', 'type activite supprimé avec succès');
     }

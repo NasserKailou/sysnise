@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\NatureDonneeStoreRequest;
 use App\Http\Requests\NatureDonneeUpdateRequest;
 use App\Models\NatureDonnee;
+use Carbon\Carbon;
+use Date;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -13,7 +15,7 @@ class NatureDonneeController extends Controller
 {
     public function index(Request $request)
     {
-        $natureDonnees = NatureDonnee::all();
+        $natureDonnees = NatureDonnee::whereNull('deleted_on')->get();
 
         return view('natureDonnee.index', [
             'natureDonnees' => $natureDonnees,
@@ -61,7 +63,8 @@ class NatureDonneeController extends Controller
 
     public function destroy(Request $request, NatureDonnee $natureDonnee)
     {
-        $natureDonnee->delete();
+          $natureDonnee->deleted_on = Carbon::now();
+          $natureDonnee->save();
 
         return redirect()->route('nature_donnees.index')->with('success', 'nature donnée supprimée avec succès');
     }

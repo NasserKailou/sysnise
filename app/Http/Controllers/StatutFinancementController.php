@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StatutFinancementStoreRequest;
 use App\Http\Requests\StatutFinancementUpdateRequest;
 use App\Models\StatutFinancement;
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -13,7 +14,7 @@ class StatutFinancementController extends Controller
 {
     public function index(Request $request)
     {
-        $statutFinancements = StatutFinancement::all();
+        $statutFinancements = StatutFinancement::whereNull('deleted_on')->get();
 
         return view('statutFinancement.index', [
             'statutFinancements' => $statutFinancements,
@@ -61,7 +62,8 @@ class StatutFinancementController extends Controller
 
     public function destroy(Request $request, StatutFinancement $statutFinancement)
     {
-        $statutFinancement->delete();
+        $statutFinancement->deleted_on = Carbon::now();
+          $statutFinancement->save();
 
         return redirect()->route('statut_financements.index')->with('success', 'statut de financement supprimée avec succès');
     }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CommentaireValeurIndicateurStoreRequest;
 use App\Http\Requests\CommentaireValeurIndicateurUpdateRequest;
 use App\Models\CommentaireValeurIndicateur;
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -13,7 +14,7 @@ class CommentaireValeurIndicateurController extends Controller
 {
     public function index(Request $request)
     {
-        $commentaireValeurIndicateurs = CommentaireValeurIndicateur::all();
+        $commentaireValeurIndicateurs = CommentaireValeurIndicateur::whereNull('deleted_on')->get();
 
         return view('commentaireValeurIndicateur.index', [
             'commentaireValeurIndicateurs' => $commentaireValeurIndicateurs,
@@ -60,7 +61,8 @@ class CommentaireValeurIndicateurController extends Controller
 
     public function destroy(Request $request, CommentaireValeurIndicateur $commentaireValeurIndicateur)
     {
-        $commentaireValeurIndicateur->delete();
+         $commentaireValeurIndicateur->deleted_on = Carbon::now();
+          $commentaireValeurIndicateur->save();
 
         return redirect()->route('commentaire_valeur_indicateurs.index')->with('success', 'commentaire valeur supprimé avec succès');
     }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\TypeDesagregationStoreRequest;
 use App\Http\Requests\TypeDesagregationUpdateRequest;
 use App\Models\TypeDesagregation;
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -13,7 +14,7 @@ class TypeDesagregationController extends Controller
 {
        public function index(Request $request)
     {
-        $typeDesagregations = TypeDesagregation::all();
+        $typeDesagregations = TypeDesagregation::whereNull('deleted_on')->get();
 
         return view('typeDesagregation.index', [
             'typeDesagregations' => $typeDesagregations,
@@ -60,7 +61,8 @@ class TypeDesagregationController extends Controller
 
     public function destroy(Request $request, TypeDesagregation $typeDesagregation)
     {
-        $typeDesagregation->delete();
+        $typeDesagregation->deleted_on = Carbon::now();
+          $typeDesagregation->save();
 
         return redirect()->route('type_desagregations.index')->with('success', 'type désagrégation supprimé avec succès');
     }

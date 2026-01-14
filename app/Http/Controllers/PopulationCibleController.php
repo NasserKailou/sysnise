@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PopulationCibleStoreRequest;
 use App\Http\Requests\PopulationCibleUpdateRequest;
 use App\Models\PopulationCible;
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -13,7 +14,7 @@ class PopulationCibleController extends Controller
 {
     public function index(Request $request)
     {
-        $populationCibles = PopulationCible::all();
+        $populationCibles = PopulationCible::whereNull('deleted_on')->get();
 
         return view('populationCible.index', [
             'populationCibles' => $populationCibles,
@@ -61,7 +62,8 @@ class PopulationCibleController extends Controller
 
     public function destroy(Request $request, PopulationCible $populationCible)
     {
-        $populationCible->delete();
+       $populationCible->deleted_on = Carbon::now();
+          $populationCible->save();
 
         return redirect()->route('population_cibles.index')->with('success', 'mode de financement supprimée avec succès');
     }
