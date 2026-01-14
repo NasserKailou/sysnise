@@ -1,0 +1,36 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('donnee_indicateurs', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('nature_donnee_id');
+            $table->foreignId('indicateur_id');
+            $table->foreignId('zone_id');
+            $table->foreignId('periode_id');
+            $table->foreignId('desagregation_id');
+            $table->foreignId('source_indicateur_id');
+            $table->foreignId('unite_indicateur_id');
+            $table->foreignId('commentaire_valeur_indicateur_id')->nullable();
+            $table->double('valeur');
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('donnee_indicateurs');
+    }
+};

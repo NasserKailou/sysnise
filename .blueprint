@@ -1,0 +1,195 @@
+created:
+    - app/Http/Controllers/ZoneController.php
+    - app/Http/Controllers/CadreDeveloppementController.php
+    - app/Http/Controllers/PieceJointeController.php
+    - app/Http/Controllers/CadreLogiqueController.php
+    - app/Http/Controllers/CadreDeveloppementPieceJointeController.php
+    - app/Http/Controllers/OrientationCadreDeveloppementController.php
+    - app/Http/Controllers/IndicateurController.php
+    - app/Http/Controllers/DonneeIndicateurController.php
+    - app/Http/Controllers/TypeDesagregationController.php
+    - app/Http/Controllers/DesagregationController.php
+    - app/Http/Controllers/NatureDonneeController.php
+    - app/Http/Controllers/PeriodeController.php
+    - app/Http/Controllers/SourceIndicateurController.php
+    - app/Http/Controllers/UniteIndicateurController.php
+    - app/Http/Controllers/CommentaireValeurIndicateurController.php
+    - database/factories/ZoneFactory.php
+    - database/factories/CadreDeveloppementFactory.php
+    - database/factories/PieceJointeFactory.php
+    - database/factories/CadreLogiqueFactory.php
+    - database/factories/OrientationCadreDeveloppementFactory.php
+    - database/factories/IndicateurFactory.php
+    - database/factories/DonneeIndicateurFactory.php
+    - database/factories/DesagregationFactory.php
+    - database/factories/TypeDesagregationFactory.php
+    - database/factories/NatureDonneeFactory.php
+    - database/factories/PeriodeFactory.php
+    - database/factories/SourceIndicateurFactory.php
+    - database/factories/UniteIndicateurFactory.php
+    - database/factories/CommentaireValeurIndicateurFactory.php
+    - database/migrations/2025_08_28_123720_create_zones_table.php
+    - database/migrations/2025_08_28_123721_create_cadre_developpements_table.php
+    - database/migrations/2025_08_28_123722_create_piece_jointes_table.php
+    - database/migrations/2025_08_28_123723_create_cadre_logiques_table.php
+    - database/migrations/2025_08_28_123724_create_orientation_cadre_developpements_table.php
+    - database/migrations/2025_08_28_123725_create_indicateurs_table.php
+    - database/migrations/2025_08_28_123726_create_donnee_indicateurs_table.php
+    - database/migrations/2025_08_28_123727_create_desagregations_table.php
+    - database/migrations/2025_08_28_123728_create_type_desagregations_table.php
+    - database/migrations/2025_08_28_123729_create_nature_donnees_table.php
+    - database/migrations/2025_08_28_123730_create_periodes_table.php
+    - database/migrations/2025_08_28_123731_create_source_indicateurs_table.php
+    - database/migrations/2025_08_28_123732_create_unite_indicateurs_table.php
+    - database/migrations/2025_08_28_123733_create_commentaire_valeur_indicateurs_table.php
+    - app/Models/Zone.php
+    - app/Models/CadreDeveloppement.php
+    - app/Models/PieceJointe.php
+    - app/Models/CadreLogique.php
+    - app/Models/OrientationCadreDeveloppement.php
+    - app/Models/Indicateur.php
+    - app/Models/DonneeIndicateur.php
+    - app/Models/Desagregation.php
+    - app/Models/TypeDesagregation.php
+    - app/Models/NatureDonnee.php
+    - app/Models/Periode.php
+    - app/Models/SourceIndicateur.php
+    - app/Models/UniteIndicateur.php
+    - app/Models/CommentaireValeurIndicateur.php
+    - database/seeders/ZoneSeeder.php
+    - database/seeders/CadreDeveloppementSeeder.php
+    - database/seeders/IndicateurSeeder.php
+    - database/seeders/DesagregationSeeder.php
+    - database/seeders/TypeDesagregationSeeder.php
+    - database/seeders/NatureDonneeSeeder.php
+    - database/seeders/PeriodeSeeder.php
+    - database/seeders/SourceIndicateurSeeder.php
+    - database/seeders/UniteIndicateurSeeder.php
+    - database/seeders/CommentaireValeurIndicateurSeeder.php
+    - tests/Feature/Http/Controllers/ZoneControllerTest.php
+    - tests/Feature/Http/Controllers/CadreDeveloppementControllerTest.php
+    - tests/Feature/Http/Controllers/PieceJointeControllerTest.php
+    - tests/Feature/Http/Controllers/CadreLogiqueControllerTest.php
+    - tests/Feature/Http/Controllers/CadreDeveloppementPieceJointeControllerTest.php
+    - tests/Feature/Http/Controllers/OrientationCadreDeveloppementControllerTest.php
+    - tests/Feature/Http/Controllers/IndicateurControllerTest.php
+    - tests/Feature/Http/Controllers/DonneeIndicateurControllerTest.php
+    - tests/Feature/Http/Controllers/TypeDesagregationControllerTest.php
+    - tests/Feature/Http/Controllers/DesagregationControllerTest.php
+    - tests/Feature/Http/Controllers/NatureDonneeControllerTest.php
+    - tests/Feature/Http/Controllers/PeriodeControllerTest.php
+    - tests/Feature/Http/Controllers/SourceIndicateurControllerTest.php
+    - tests/Feature/Http/Controllers/UniteIndicateurControllerTest.php
+    - tests/Feature/Http/Controllers/CommentaireValeurIndicateurControllerTest.php
+    - app/Http/Requests/ZoneStoreRequest.php
+    - app/Http/Requests/ZoneUpdateRequest.php
+    - app/Http/Requests/CadreDeveloppementStoreRequest.php
+    - app/Http/Requests/CadreDeveloppementUpdateRequest.php
+    - app/Http/Requests/PieceJointeStoreRequest.php
+    - app/Http/Requests/PieceJointeUpdateRequest.php
+    - app/Http/Requests/CadreLogiqueStoreRequest.php
+    - app/Http/Requests/CadreLogiqueUpdateRequest.php
+    - app/Http/Requests/CadreDeveloppementPieceJointeStoreRequest.php
+    - app/Http/Requests/CadreDeveloppementPieceJointeUpdateRequest.php
+    - app/Http/Requests/OrientationCadreDeveloppementStoreRequest.php
+    - app/Http/Requests/OrientationCadreDeveloppementUpdateRequest.php
+    - app/Http/Requests/IndicateurStoreRequest.php
+    - app/Http/Requests/IndicateurUpdateRequest.php
+    - app/Http/Requests/DonneeIndicateurStoreRequest.php
+    - app/Http/Requests/DonneeIndicateurUpdateRequest.php
+    - app/Http/Requests/TypeDesagregationStoreRequest.php
+    - app/Http/Requests/TypeDesagregationUpdateRequest.php
+    - app/Http/Requests/DesagregationStoreRequest.php
+    - app/Http/Requests/DesagregationUpdateRequest.php
+    - app/Http/Requests/NatureDonneeStoreRequest.php
+    - app/Http/Requests/NatureDonneeUpdateRequest.php
+    - app/Http/Requests/PeriodeStoreRequest.php
+    - app/Http/Requests/PeriodeUpdateRequest.php
+    - app/Http/Requests/SourceIndicateurStoreRequest.php
+    - app/Http/Requests/SourceIndicateurUpdateRequest.php
+    - app/Http/Requests/UniteIndicateurStoreRequest.php
+    - app/Http/Requests/UniteIndicateurUpdateRequest.php
+    - app/Http/Requests/CommentaireValeurIndicateurStoreRequest.php
+    - app/Http/Requests/CommentaireValeurIndicateurUpdateRequest.php
+    - resources/views/zone/index.blade.php
+    - resources/views/zone/create.blade.php
+    - resources/views/zone/show.blade.php
+    - resources/views/zone/edit.blade.php
+    - resources/views/cadreDeveloppement/index.blade.php
+    - resources/views/cadreDeveloppement/create.blade.php
+    - resources/views/cadreDeveloppement/show.blade.php
+    - resources/views/cadreDeveloppement/edit.blade.php
+    - resources/views/pieceJointe/index.blade.php
+    - resources/views/pieceJointe/create.blade.php
+    - resources/views/pieceJointe/show.blade.php
+    - resources/views/pieceJointe/edit.blade.php
+    - resources/views/cadreLogique/index.blade.php
+    - resources/views/cadreLogique/create.blade.php
+    - resources/views/cadreLogique/show.blade.php
+    - resources/views/cadreLogique/edit.blade.php
+    - resources/views/cadreDeveloppementPieceJointe/index.blade.php
+    - resources/views/cadreDeveloppementPieceJointe/create.blade.php
+    - resources/views/cadreDeveloppementPieceJointe/show.blade.php
+    - resources/views/cadreDeveloppementPieceJointe/edit.blade.php
+    - resources/views/orientationCadreDeveloppement/index.blade.php
+    - resources/views/orientationCadreDeveloppement/create.blade.php
+    - resources/views/orientationCadreDeveloppement/show.blade.php
+    - resources/views/orientationCadreDeveloppement/edit.blade.php
+    - resources/views/indicateur/index.blade.php
+    - resources/views/indicateur/create.blade.php
+    - resources/views/indicateur/show.blade.php
+    - resources/views/indicateur/edit.blade.php
+    - resources/views/donneeIndicateur/index.blade.php
+    - resources/views/donneeIndicateur/create.blade.php
+    - resources/views/donneeIndicateur/show.blade.php
+    - resources/views/donneeIndicateur/edit.blade.php
+    - resources/views/typeDesagregation/index.blade.php
+    - resources/views/typeDesagregation/create.blade.php
+    - resources/views/typeDesagregation/show.blade.php
+    - resources/views/typeDesagregation/edit.blade.php
+    - resources/views/desagregation/index.blade.php
+    - resources/views/desagregation/create.blade.php
+    - resources/views/desagregation/show.blade.php
+    - resources/views/desagregation/edit.blade.php
+    - resources/views/natureDonnee/index.blade.php
+    - resources/views/natureDonnee/create.blade.php
+    - resources/views/natureDonnee/show.blade.php
+    - resources/views/natureDonnee/edit.blade.php
+    - resources/views/periode/index.blade.php
+    - resources/views/periode/create.blade.php
+    - resources/views/periode/show.blade.php
+    - resources/views/periode/edit.blade.php
+    - resources/views/sourceIndicateur/index.blade.php
+    - resources/views/sourceIndicateur/create.blade.php
+    - resources/views/sourceIndicateur/show.blade.php
+    - resources/views/sourceIndicateur/edit.blade.php
+    - resources/views/uniteIndicateur/index.blade.php
+    - resources/views/uniteIndicateur/create.blade.php
+    - resources/views/uniteIndicateur/show.blade.php
+    - resources/views/uniteIndicateur/edit.blade.php
+    - resources/views/commentaireValeurIndicateur/index.blade.php
+    - resources/views/commentaireValeurIndicateur/create.blade.php
+    - resources/views/commentaireValeurIndicateur/show.blade.php
+    - resources/views/commentaireValeurIndicateur/edit.blade.php
+updated:
+    - routes/web.php
+models:
+    Region: { nom: 'string:255', code: 'string:255' }
+    Departement: { nom: 'string:255', code: 'string:255', region_id: 'id:region' }
+    Commune: { nom: 'string:255', code: 'string:255', departement_id: 'id:departement' }
+    Localite: { nom: 'string:255', code: 'string:255', commune_id: 'id:commune' }
+    Zone: { nom: 'string:255', code: 'string:255 nullable', latitude: 'double nullable', longitude: 'double nullable', zone_id: 'id:zone nullable', niveau: integer }
+    CadreDeveloppement: { intitule: 'string:255', structure_responsable: 'string:255 nullable', periode_debut: 'string:255 nullable', periode_fin: 'string:255 nullable', description: 'longtext nullable', cadre_developpement_id: 'id:cadre_developpement nullable', relationships: { hasMany: PieceJointe } }
+    PieceJointe: { intitule: 'string:255', lien: 'string:255' }
+    CadreDeveloppementPieceJointe: { cadre_developpement_id: 'id:cadre_developpement', piece_jointe_id: 'id:piece_jointe' }
+    CadreLogique: { intitule: 'string:255', niveau: integer, cadre_logique_id: 'id:cadre_logique nullable' }
+    OrientationCadreDeveloppement: { intitule: 'string:255', cadre_developpement_id: 'id:cadre_developpement', cadre_logique_id: 'id:cadre_logique' }
+    Indicateur: { code: 'string:255 nullable', intitule: 'string:255', definition: 'string:255 nullable', donnees_requises: 'string:255 nullable', methode_calcul: 'string:255 nullable', methode_collecte: 'string:255 nullable', source: 'string:255 nullable', commentaire_limite: 'string:255 nullable', niveau_desagregation: 'string:255 nullable', periodicite: 'string:255 nullable', unite: 'string:255 nullable', echelle: 'string:255 nullable', lien_avec_cadre_developpement: 'string:255 nullable' }
+    DonneeIndicateur: { nature_donnee_id: 'id:nature_donnee', indicateur_id: 'id:indicateur', zone_id: 'id:zone', periode_id: 'id:periode', desagregation_id: 'id:desagregation', source_indicateur_id: 'id:source_indicateur', unite_indicateur_id: 'id:unite_indicateur', commentaire_valeur_indicateur_id: 'id:commentaire_valeur_indicateur nullable', valeur: double }
+    Desagregation: { intitule: 'string:255 unique', type_desagregation_id: 'id:type_desagregation' }
+    TypeDesagregation: { intitule: 'string:255 unique' }
+    NatureDonnee: { intitule: 'string:255 unique' }
+    Periode: { intitule: 'string:255 unique' }
+    SourceIndicateur: { intitule: 'string:255 unique' }
+    UniteIndicateur: { intitule: 'string:255 unique' }
+    CommentaireValeurIndicateur: { intitule: 'string:255 unique', description: 'string:255 nullable' }

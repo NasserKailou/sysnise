@@ -1,0 +1,29 @@
+<?php
+
+namespace App\Exports;
+
+use App\Models\Periode;
+use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithTitle;
+
+class PeriodesSheetExport implements FromCollection, WithHeadings, WithTitle
+{
+    public function collection()
+    {
+		return Periode::select('intitule', 'id')->get();
+    }
+	
+	public function headings(): array
+    {
+        return [
+            'Intitulé',
+			'Id'
+        ];
+    }
+
+    public function title(): string
+    {
+        return 'Periodes'; 
+    }
+}

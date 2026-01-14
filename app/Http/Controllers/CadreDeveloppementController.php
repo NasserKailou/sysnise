@@ -1,0 +1,84 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Support\Facades\DB;
+use App\Http\Requests\CadreDeveloppementStoreRequest;
+use App\Http\Requests\CadreDeveloppementUpdateRequest;
+use App\Models\CadreDeveloppement;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\View\View;
+
+class CadreDeveloppementController extends Controller
+{
+    public function index(Request $request)
+    {
+        $cadreDeveloppements = CadreDeveloppement::where('type_cadre_developpement_id', 1)->get();
+
+        return view('cadreDeveloppement.index', [
+            'breadcrumb' => 'Cadres stratégiques > Liste des cadres',
+			'cadreDeveloppements' => $cadreDeveloppements,
+        ]);
+    }
+
+    public function create(Request $request)
+    {
+		$chaineLogiques = DB::table('view_cadre_logique')->get();
+		return view('cadreDeveloppement.create',[
+            'breadcrumb' => 'Cadres stratégiques > Nouveau',
+			'chaineLogiques' => $chaineLogiques,	
+        ]);
+    }
+
+    public function store(CadreDeveloppementStoreRequest $request)
+    {
+		$cadreDeveloppement = CadreDeveloppement::create($request->validated());
+		//Récupérer les IDs de Positionnement stratégique envoyés depuis la vue
+		$cadreLogiqueIds = array_filter(explode(',', $request->input('chaine_logique_ids', '')));
+		$cadreDeveloppement->alignementStrategiques()->attach($cadreLogiqueIds);
+
+        return redirect()->route('cadre_developpements.index')->with('success', 'cadre de développement créé avec succès');
+    }
+
+    public function show(Request $request, CadreDeveloppement $cadreDeveloppement)
+    {
+        return view('cadreDeveloppement.show', [
+            'cadreDeveloppement' => $cadreDeveloppement,
+			'breadcrumb' => 'Cadres stratégiques > Pièces Jointes',
+		]);
+    }
+
+    public function edit(Request $request, CadreDeveloppement $cadreDeveloppement)
+    {
+		$chaineLogiques = DB::table('view_cadre_logique')->get();
+		// Récupérer les actions/cadre logique d'alignement
+		$chaineLogiqueNames = $cadreDeveloppement->alignementStrategiques->pluck('intitule')->implode(', ');
+		$chaineLogiqueIds = $cadreDeveloppement->alignementStrategiques->pluck('id')->implode(',');
+		
+        return view('cadreDeveloppement.edit', [
+            'breadcrumb' => 'Cadres stratégiques > Mise à jour',
+			'cadreDeveloppement' => $cadreDeveloppement,
+			'chaineLogiques' => $chaineLogiques,
+			'chaineLogiqueNames' => $chaineLogiqueNames,
+			'chaineLogiqueIds' => $chaineLogiqueIds,
+        ]);
+    }
+
+    public function update(CadreDeveloppementUpdateRequest $request, CadreDeveloppement $cadreDeveloppement)
+    {
+        $cadreDeveloppement->update($request->validated());
+		//Synchroniser les positionnements stratégiques sans créer de doublons
+		$chaineLogiqueIds = array_filter(explode(',', $request->input('chaine_logique_ids', '')));
+		$cadreDeveloppement->alignementStrategiques()->sync($chaineLogiqueIds);
+        return redirect()->route('cadre_developpements.index')->with('success', 'cadre de développement modifié avec succès');
+
+    }
+
+    public function destroy(Request $request, CadreDeveloppement $cadreDeveloppement)
+    {
+        $cadreDeveloppement->delete();
+
+        return redirect()->route('cadre_developpements.index')->with('success', 'cadre de développement supprimé avec succès');
+    }
+}
