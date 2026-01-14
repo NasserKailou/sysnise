@@ -25,6 +25,7 @@ class DonneeIndicateur extends Model
         'commentaire_valeur_indicateur_id',
         'valeur',
         'statut',
+        'commentaire_rejet',
     ];
 
     /**
@@ -96,15 +97,17 @@ class DonneeIndicateur extends Model
     public function valider(): bool
     {
         $this->statut = self::STATUT_VALIDE;
+        $this->commentaire_rejet = null; // Réinitialiser le commentaire lors de la validation
         return $this->save();
     }
 
     /**
      * Rejeter cette donnée
      */
-    public function rejeter(): bool
+    public function rejeter(string $commentaire = null): bool
     {
         $this->statut = self::STATUT_REJETE;
+        $this->commentaire_rejet = $commentaire;
         return $this->save();
     }
 

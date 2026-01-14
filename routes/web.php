@@ -173,6 +173,8 @@ Route::post('/donnee_indicateurs/matriceSaisie', [App\Http\Controllers\DonneeInd
 
 // Routes de validation des données
 Route::get('/donnee_indicateurs/validation', [App\Http\Controllers\DonneeIndicateurController::class, 'indexValidation'])->name('donneeIndicateur.validation.index');
+Route::get('/donnee_indicateurs/validees', [App\Http\Controllers\DonneeIndicateurController::class, 'indexValidees'])->name('donneeIndicateur.validees.index');
+Route::get('/donnee_indicateurs/rejetees', [App\Http\Controllers\DonneeIndicateurController::class, 'indexRejetees'])->name('donneeIndicateur.rejetees.index');
 Route::post('/donnee_indicateurs/{id}/valider', [App\Http\Controllers\DonneeIndicateurController::class, 'valider'])->name('donneeIndicateur.valider');
 Route::post('/donnee_indicateurs/{id}/rejeter', [App\Http\Controllers\DonneeIndicateurController::class, 'rejeter'])->name('donneeIndicateur.rejeter');
 Route::post('/donnee_indicateurs/valider-global', [App\Http\Controllers\DonneeIndicateurController::class, 'validerGlobal'])->name('donneeIndicateur.valider.global');

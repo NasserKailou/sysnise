@@ -489,11 +489,15 @@ class DonneeIndicateurController extends Controller
 	/**
 	 * Rejeter une donnée individuelle
 	 */
-	public function rejeter($id)
+	public function rejeter(Request $request, $id)
 	{
+		$request->validate([
+			'commentaire_rejet' => 'nullable|string|max:1000',
+		]);
+
 		$donnee = DonneeIndicateur::findOrFail($id);
 		
-		if ($donnee->rejeter()) {
+		if ($donnee->rejeter($request->commentaire_rejet)) {
 			return redirect()->back()->with('success', 'Donnée rejetée avec succès !');
 		}
 		
@@ -554,6 +558,10 @@ class DonneeIndicateurController extends Controller
 	 */
 	public function rejeterGlobal(Request $request)
 	{
+		$request->validate([
+			'commentaire_rejet' => 'nullable|string|max:1000',
+		]);
+
 		$donneesIds = $request->input('donnees_ids', []);
 		
 		if (empty($donneesIds)) {
@@ -565,7 +573,10 @@ class DonneeIndicateurController extends Controller
 			
 			$count = DonneeIndicateur::whereIn('id', $donneesIds)
 				->enAttente()
-				->update(['statut' => DonneeIndicateur::STATUT_REJETE]);
+				->update([
+					'statut' => DonneeIndicateur::STATUT_REJETE,
+					'commentaire_rejet' => $request->commentaire_rejet
+				]);
 			
 			DB::commit();
 			
@@ -575,6 +586,54 @@ class DonneeIndicateurController extends Controller
 			DB::rollBack();
 			return redirect()->back()->with('error', 'Erreur lors du rejet global : ' . $e->getMessage());
 		}
+	}
+
+	/**
+	 * Afficher la liste des données validées
+	 */
+	public function indexValidees()
+	{
+		$donnees = DonneeIndicateur::with([
+			'natureDonnee',
+			'indicateur',
+			'zone',
+			'periode',
+			'sourceIndicateur',
+			'uniteIndicateur',
+			'commentaireValeurIndicateur',
+			'desagregations'
+		])
+		->valide()
+		->orderBy('updated_at', 'desc')
+		->paginate(50);
+
+		$breadcrumb = 'Cadre Stratégique > Données validées';
+		
+		return view('donneeIndicateur.validees', compact('donnees', 'breadcrumb'));
+	}
+
+	/**
+	 * Afficher la liste des données rejetées
+	 */
+	public function indexRejetees()
+	{
+		$donnees = DonneeIndicateur::with([
+			'natureDonnee',
+			'indicateur',
+			'zone',
+			'periode',
+			'sourceIndicateur',
+			'uniteIndicateur',
+			'commentaireValeurIndicateur',
+			'desagregations'
+		])
+		->rejete()
+		->orderBy('updated_at', 'desc')
+		->paginate(50);
+
+		$breadcrumb = 'Cadre Stratégique > Données rejetées';
+		
+		return view('donneeIndicateur.rejetees', compact('donnees', 'breadcrumb'));
 	}
 
 	
