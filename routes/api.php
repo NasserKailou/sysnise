@@ -17,6 +17,7 @@ Route::post('/composante_indicateurs/storeBatch',[App\Http\Controllers\Composant
 Route::post('/composante_indicateurs/deleteBatch',[App\Http\Controllers\ComposanteIndicateurApiController::class, 'deleteBatch']);
 
 Route::apiResource('cadre_logiques', App\Http\Controllers\CadreLogiqueApiController::class);
+Route::put('/cadre_mesure_resultats/{id}/update-parent', [App\Http\Controllers\CadreLogiqueApiController::class, 'updateParent']);
 
 Route::apiResource('orientation-cadre-developpements', App\Http\Controllers\OrientationCadreDeveloppementController::class);
 

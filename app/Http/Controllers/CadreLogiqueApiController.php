@@ -67,4 +67,44 @@ class CadreLogiqueApiController extends Controller
 
         return response()->noContent();
     }
+
+    /**
+     * Mettre à jour le parent_id d'un cadre logique (pour le drag & drop)
+     */
+    public function updateParent(Request $request, $id)
+    {
+        $cadreLogique = CadreLogique::findOrFail($id);
+        
+        // Le parent_id peut être null (si déposé à la racine)
+        $parentId = $request->input('parent_id');
+        
+        // Valider que le parent_id existe si non null
+        if ($parentId !== null) {
+            $parentExists = CadreLogique::where('id', $parentId)->exists();
+            if (!$parentExists) {
+                return response()->json([
+                    'error' => 'Le parent spécifié n\'existe pas'
+                ], 404);
+            }
+            
+            // Empêcher la création de cycles (un nœud ne peut pas être son propre parent)
+            if ($parentId == $id) {
+                return response()->json([
+                    'error' => 'Un élément ne peut pas être son propre parent'
+                ], 422);
+            }
+        }
+        
+        $cadreLogique->cadre_logique_id = $parentId;
+        $cadreLogique->save();
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Parent mis à jour avec succès',
+            'data' => [
+                'id' => $cadreLogique->id,
+                'cadre_logique_id' => $cadreLogique->cadre_logique_id
+            ]
+        ]);
+    }
 }
