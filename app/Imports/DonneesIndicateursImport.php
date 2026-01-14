@@ -57,7 +57,8 @@ class DonneesIndicateursImport implements ToModel, WithHeadingRow
                     'periode_id' => $periode_id,
                 ],
                 [
-                    'valeur' => $row['valeur']
+                    'valeur' => $row['valeur'],
+                    'statut' => DonneeIndicateur::STATUT_EN_ATTENTE, // Statut par défaut
                 ]
             );
 			

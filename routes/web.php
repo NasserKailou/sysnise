@@ -171,6 +171,16 @@ Route::get('/donnee_indicateurs/parametreSaisie', [App\Http\Controllers\DonneeIn
 Route::post('/donnee_indicateurs/parametreSaisie', [App\Http\Controllers\DonneeIndicateurController::class, 'matriceSaisie'])->name('donneeIndicateur.parametreSaisie');
 Route::post('/donnee_indicateurs/matriceSaisie', [App\Http\Controllers\DonneeIndicateurController::class, 'saveMatriceSaisie'])->name('donneeIndicateur.matriceSaisie.store');
 
+// Routes de validation des données
+Route::get('/donnee_indicateurs/validation', [App\Http\Controllers\DonneeIndicateurController::class, 'indexValidation'])->name('donneeIndicateur.validation.index');
+Route::get('/donnee_indicateurs/validees', [App\Http\Controllers\DonneeIndicateurController::class, 'indexValidees'])->name('donneeIndicateur.validees.index');
+Route::get('/donnee_indicateurs/rejetees', [App\Http\Controllers\DonneeIndicateurController::class, 'indexRejetees'])->name('donneeIndicateur.rejetees.index');
+Route::post('/donnee_indicateurs/{id}/valider', [App\Http\Controllers\DonneeIndicateurController::class, 'valider'])->name('donneeIndicateur.valider');
+Route::post('/donnee_indicateurs/{id}/rejeter', [App\Http\Controllers\DonneeIndicateurController::class, 'rejeter'])->name('donneeIndicateur.rejeter');
+Route::post('/donnee_indicateurs/valider-global', [App\Http\Controllers\DonneeIndicateurController::class, 'validerGlobal'])->name('donneeIndicateur.valider.global');
+Route::post('/donnee_indicateurs/valider-tout', [App\Http\Controllers\DonneeIndicateurController::class, 'validerTout'])->name('donneeIndicateur.valider.tout');
+Route::post('/donnee_indicateurs/rejeter-global', [App\Http\Controllers\DonneeIndicateurController::class, 'rejeterGlobal'])->name('donneeIndicateur.rejeter.global');
+
 Route::get('/export_data_template', function () {
     return Excel::download(new DataTemplateExport, 'data_template.xlsx');
 });

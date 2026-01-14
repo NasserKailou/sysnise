@@ -24,6 +24,8 @@ class DonneeIndicateur extends Model
         'unite_indicateur_id',
         'commentaire_valeur_indicateur_id',
         'valeur',
+        'statut',
+        'commentaire_rejet',
     ];
 
     /**
@@ -44,6 +46,102 @@ class DonneeIndicateur extends Model
             'commentaire_valeur_indicateur_id' => 'integer',
             'valeur' => 'double',
         ];
+    }
+
+    /**
+     * Constantes pour les statuts
+     */
+    const STATUT_EN_ATTENTE = 'en_attente';
+    const STATUT_VALIDE = 'valide';
+    const STATUT_REJETE = 'rejete';
+
+    /**
+     * Obtenir tous les statuts disponibles
+     */
+    public static function getStatuts(): array
+    {
+        return [
+            self::STATUT_EN_ATTENTE => 'En attente',
+            self::STATUT_VALIDE => 'Validé',
+            self::STATUT_REJETE => 'Rejeté',
+        ];
+    }
+
+    /**
+     * Scope pour filtrer les données en attente
+     */
+    public function scopeEnAttente($query)
+    {
+        return $query->where('statut', self::STATUT_EN_ATTENTE);
+    }
+
+    /**
+     * Scope pour filtrer les données validées
+     */
+    public function scopeValide($query)
+    {
+        return $query->where('statut', self::STATUT_VALIDE);
+    }
+
+    /**
+     * Scope pour filtrer les données rejetées
+     */
+    public function scopeRejete($query)
+    {
+        return $query->where('statut', self::STATUT_REJETE);
+    }
+
+    /**
+     * Valider cette donnée
+     */
+    public function valider(): bool
+    {
+        $this->statut = self::STATUT_VALIDE;
+        $this->commentaire_rejet = null; // Réinitialiser le commentaire lors de la validation
+        return $this->save();
+    }
+
+    /**
+     * Rejeter cette donnée
+     */
+    public function rejeter(string $commentaire = null): bool
+    {
+        $this->statut = self::STATUT_REJETE;
+        $this->commentaire_rejet = $commentaire;
+        return $this->save();
+    }
+
+    /**
+     * Remettre en attente cette donnée
+     */
+    public function mettreEnAttente(): bool
+    {
+        $this->statut = self::STATUT_EN_ATTENTE;
+        return $this->save();
+    }
+
+    /**
+     * Vérifier si la donnée est en attente
+     */
+    public function estEnAttente(): bool
+    {
+        return $this->statut === self::STATUT_EN_ATTENTE;
+    }
+
+    /**
+     * Vérifier si la donnée est validée
+     */
+    public function estValide(): bool
+    {
+        return $this->statut === self::STATUT_VALIDE;
+    }
+
+    /**
+     * Vérifier si la donnée est rejetée
+     */
+    public function estRejete(): bool
+    {
+        return $this->statut === self::STATUT_REJETE;
     }
 
     public function natureDonnee(): BelongsTo

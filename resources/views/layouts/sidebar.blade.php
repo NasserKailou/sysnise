@@ -202,6 +202,33 @@
                       <p>Saisie réalisation</p>
                     </a>
                   </li>
+				  
+				  <!-- Nouveau : Menus de validation des données -->
+				  <li class="nav-header">VALIDATION DES DONNÉES</li>
+				  
+				  <li class="nav-item">
+                    <a href="/donnee_indicateurs/validation" class="nav-link">
+                      <i class="nav-icon fas fa-clock text-warning"></i>
+                      <p>Données en attente</p>
+                    </a>
+                  </li>
+				  
+				  <li class="nav-item">
+                    <a href="/donnee_indicateurs/validees" class="nav-link">
+                      <i class="nav-icon fas fa-check-circle text-success"></i>
+                      <p>Données validées</p>
+                    </a>
+                  </li>
+				  
+				  <li class="nav-item">
+                    <a href="/donnee_indicateurs/rejetees" class="nav-link">
+                      <i class="nav-icon fas fa-times-circle text-danger"></i>
+                      <p>Données rejetées</p>
+                    </a>
+                  </li>
+				  
+				  <li class="nav-header">EXTRACTION</li>
+				  
 				  <li class="nav-item">
                     <a href="/donnee_indicateurs/extractionDonnees" class="nav-link">
                       <i class="nav-icon bi bi-graph-up"></i>

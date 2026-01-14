@@ -11,10 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('niveau_financements', function (Blueprint $table) {
-            $table->id();
-            $table->string('intitule', 255)->unique();
-            $table->timestamps();
+        Schema::table('donnee_indicateurs', function (Blueprint $table) {
+            $table->text('commentaire_rejet')->nullable()->after('statut')->comment('Commentaire en cas de rejet de la donnée');
         });
     }
 
@@ -23,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('niveau_financements');
+        Schema::table('donnee_indicateurs', function (Blueprint $table) {
+            $table->dropColumn('commentaire_rejet');
+        });
     }
 };
