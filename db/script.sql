@@ -1745,7 +1745,7 @@ SELECT
 FROM hierarchy
 ORDER BY cadre_developpement_id, niveau, id;
 
-   
+
 
 
 
@@ -1824,3 +1824,9 @@ ADD COLUMN deleted_on timestamp null;
 
 ALTER TABLE nature_financements
 ADD COLUMN deleted_on timestamp null;
+
+ALTER TABLE donnee_indicateurs
+ADD COLUMN statut character varying(50) null;
+
+ALTER TABLE donnee_indicateurs
+ADD COLUMN commentaire_rejet text null;
