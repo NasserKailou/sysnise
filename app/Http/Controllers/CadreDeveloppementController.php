@@ -9,13 +9,15 @@ use App\Models\CadreDeveloppement;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Session;
 
 class CadreDeveloppementController extends Controller
 {
     public function index(Request $request)
     {
-        $cadreDeveloppements = CadreDeveloppement::where('type_cadre_developpement_id', 1)->get();
-
+        $cadreDeveloppements = CadreDeveloppement::where('type_cadre_developpement_id', 1)
+            ->where('user_id', auth()->id())
+            ->get();
         return view('cadreDeveloppement.index', [
             'breadcrumb' => 'Cadres stratégiques > Liste des cadres',
 			'cadreDeveloppements' => $cadreDeveloppements,
@@ -33,7 +35,10 @@ class CadreDeveloppementController extends Controller
 
     public function store(CadreDeveloppementStoreRequest $request)
     {
-		$cadreDeveloppement = CadreDeveloppement::create($request->validated());
+        $data = $request->validated();
+        $data['user_id'] = auth()->id();
+
+		$cadreDeveloppement = CadreDeveloppement::create($data);
 		//Récupérer les IDs de Positionnement stratégique envoyés depuis la vue
 		$cadreLogiqueIds = array_filter(explode(',', $request->input('chaine_logique_ids', '')));
 		$cadreDeveloppement->alignementStrategiques()->attach($cadreLogiqueIds);
@@ -43,6 +48,15 @@ class CadreDeveloppementController extends Controller
 
     public function show(Request $request, CadreDeveloppement $cadreDeveloppement)
     {
+        
+
+        if (
+             $cadreDeveloppement->user_id !== auth()->id()
+        ) {
+            Session::flash('error', 'Accès non autorisé');
+            return redirect()->back();//->with('error', 'Accès non autorisé');
+        }
+
         return view('cadreDeveloppement.show', [
             'cadreDeveloppement' => $cadreDeveloppement,
 			'breadcrumb' => 'Cadres stratégiques > Pièces Jointes',

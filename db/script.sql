@@ -1746,3 +1746,14 @@ FROM hierarchy
 ORDER BY cadre_developpement_id, niveau, id;
 
    
+
+
+
+ALTER TABLE cadre_developpements
+ADD COLUMN user_id BIGINT;
+
+ALTER TABLE cadre_developpements
+ADD CONSTRAINT fk_cadre_developpement_user
+FOREIGN KEY (user_id)
+REFERENCES users(id)
+ON DELETE SET NULL;

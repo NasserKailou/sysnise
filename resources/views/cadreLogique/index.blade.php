@@ -736,6 +736,11 @@
 		@endif
 
 
+		<span style="color: red; font-size: 24px;">
+		@if (session('error'))
+        	{{ session('error') }}
+    	@endif
+</span>
 		<table id="tab" style="width:100%;">
 			<thead>
 				<tr >
