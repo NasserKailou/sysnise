@@ -808,8 +808,9 @@ class ProjetController extends Controller
 		// Sauvegarder le fichier
         $data['rapport_achevement'] = $request->file('rapport_achevement')->store('pieces', 'public');
 		$data['rapport_cloture'] = $request->file('rapport_cloture')->store('pieces', 'public');
-
+		$data['projet_id'] = $projet->id;
 		$clotureProjet = ClotureProjet::create($data);
+		
         return redirect()->back()->with('success', 'Projet clôturé avec succès.');
     
 	}
