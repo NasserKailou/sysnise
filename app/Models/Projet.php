@@ -43,6 +43,7 @@ class Projet extends Model
 		'Partenaires',
 		'periode_prorogation',
 		'duree_prorogation',
+        'user_id',
     ];
 
     /**
