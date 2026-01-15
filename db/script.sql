@@ -1465,7 +1465,7 @@ CREATE TABLE users
     CONSTRAINT users_email_unique UNIQUE (email)
 );
 INSERT INTO users (id, name, email, email_verified_at, password, remember_token, created_at, updated_at) VALUES
-(1,	'abass',	'abass.atacorp@gmail.com',	NULL,	'$2y$12$zFB64bIUNXOLyTfE1qlkauOz30d6DnvcoXhBN0b//IqeVD7cb.X7W',	NULL,	NULL,	NULL);
+(1,	'sysnise',	'dev@sysnise.ne',	NULL,	'$2y$12$zFB64bIUNXOLyTfE1qlkauOz30d6DnvcoXhBN0b//IqeVD7cb.X7W',	NULL,	NULL,	NULL);
 
 CREATE TABLE roles
 (

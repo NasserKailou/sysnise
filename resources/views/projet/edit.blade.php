@@ -267,31 +267,31 @@
 					</div>
 				</div>
 				<div class="row mb-3">
-					<div id="annee_demarrage" class="col-md-3" style="display: {{ $projet->statut_projet_id == 1 ? 'block' : 'none' }}">>
+					<div id="annee_demarrage" class="col-md-3" style="display: {{ $projet->statut_projet_id == 1 ? 'block' : 'none' }}">
 					  <label class="form-label">Année démarrage</label>
 					  <input name="annee_demarrage" type="integer" class="form-control" value="{{ old('annee_demarrage', $projet->annee_demarrage) }}">
 					</div>
-					<div id="div_date_debut_prevue" class="col-md-3" style="display: {{ $projet->statut_projet_id != 2 ? 'block' : 'none' }}">>
+					<div id="div_date_debut_prevue" class="col-md-3" style="display: {{ $projet->statut_projet_id != 2 ? 'block' : 'none' }}">
 					  <label class="form-label">Date de début</label>
 					  <input id="date_debut_prevue" name="date_debut_prevue" type="date" class="form-control" value="{{ old('date_debut_prevue', $projet->date_debut_prevue) }}">
 					</div>
-					<div id="div_date_fin_prevue" class="col-md-3" style="display: {{ $projet->statut_projet_id != 2 ? 'block' : 'none' }}">>
+					<div id="div_date_fin_prevue" class="col-md-3" style="display: {{ $projet->statut_projet_id != 2 ? 'block' : 'none' }}">
 					  <label class="form-label">Date de fin</label>
 					  <input id="date_fin_prevue" name="date_fin_prevue" type="date" class="form-control" value="{{ old('date_fin_prevue', $projet->date_fin_prevue) }}">
 					</div>
-					<div  class="execution_projet col-md-3" style="display: {{ $projet->statut_projet_id == 3 ? 'block' : 'none' }}">>
+					<div  class="execution_projet col-md-3" style="display: {{ $projet->statut_projet_id == 3 ? 'block' : 'none' }}">
 					  <label class="form-label">Date d’approbation </label>
 					  <input name="date_approbation" type="date" class="form-control" value="{{ old('date_approbation', $projet->date_approbation) }}">
 					</div>
-					<div  class="execution_projet col-md-3" style="display: {{ $projet->statut_projet_id == 3 ? 'block' : 'none' }}">>
+					<div  class="execution_projet col-md-3" style="display: {{ $projet->statut_projet_id == 3 ? 'block' : 'none' }}">
 					  <label class="form-label">Date de signature  </label>
 					  <input name="date_signature" type="date" class="form-control" value="{{ old('date_signature', $projet->date_signature) }}">
 					</div>
-					<div  class="execution_projet col-md-3" style="display: {{ $projet->statut_projet_id == 3 ? 'block' : 'none' }}">>
+					<div  class="execution_projet col-md-3" style="display: {{ $projet->statut_projet_id == 3 ? 'block' : 'none' }}">
 					  <label class="form-label">Date de mise en vigueur  </label>
 					  <input name="date_mise_en_vigueur" type="date" class="form-control" value="{{ old('date_mise_en_vigueur', $projet->date_mise_en_vigueur) }}">
 					</div>
-					<div  class="execution_projet col-md-3" style="display: {{ $projet->statut_projet_id == 3 ? 'block' : 'none' }}">>
+					<div  class="execution_projet col-md-3" style="display: {{ $projet->statut_projet_id == 3 ? 'block' : 'none' }}">
 					  <label class="form-label">Date de démarrage effectif</label>
 					  <input name="date_demarrage_effectif" type="date" class="form-control" value="{{ old('date_demarrage_effectif', $projet->date_demarrage_effectif) }}">
 					</div>
@@ -321,15 +321,15 @@
 							</div>
 						</div>
 					</div>
-					<div class="execution_projet col-md-4" style="display: {{ $projet->statut_projet_id == 3 ? 'block' : 'none' }}">>
+					<div class="execution_projet col-md-4" style="display: {{ $projet->statut_projet_id == 3 ? 'block' : 'none' }}">
 					  <label class="form-label">Partenaires de fonds </label>
 					  <input name="partenaires" type="text" class="form-control" value="{{ old('partenaires', $projet->partenaires) }}">
 					</div>
-					<div  class="execution_projet col-md-4" style="display: {{ $projet->statut_projet_id == 3 ? 'block' : 'none' }}">>
+					<div  class="execution_projet col-md-4" style="display: {{ $projet->statut_projet_id == 3 ? 'block' : 'none' }}">
 					  <label class="form-label">période prorogation (si applicable)</label>
 					  <input name="periode_prorogation" type="date" class="form-control" value="{{ old('periode_prorogation', $projet->periode_prorogation) }}">
 					</div>
-					<div  class="execution_projet col-md-4" style="display: {{ $projet->statut_projet_id == 3 ? 'block' : 'none' }}">>
+					<div  class="execution_projet col-md-4" style="display: {{ $projet->statut_projet_id == 3 ? 'block' : 'none' }}">
 					  <label class="form-label"> nouvelle durée prorogation (si applicable)</label>
 					  <input name="duree_prorogation" type="date" class="form-control" value="{{ old('duree_prorogation', $projet->duree_prorogation) }}">
 					</div>

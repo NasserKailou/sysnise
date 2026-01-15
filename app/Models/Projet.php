@@ -64,7 +64,7 @@ class Projet extends Model
 	
 	public function statutProjet(): BelongsTo
     {
-        return $this->belongsTo(statutProjet::class);
+        return $this->belongsTo(StatutProjet::class);
     }
 
     public function priorite(): BelongsTo

@@ -106,7 +106,7 @@
 							</td>
 
 							<td>
-								<input type="number" name="valeur[]" class="form-control" required style="width:80px">
+								<input type="number" step="any" name="valeur[]" class="form-control" required style="width:80px">
 							</td>
 
 							<td class="text-center table-icons">

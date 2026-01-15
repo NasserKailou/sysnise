@@ -17,13 +17,13 @@
 				  @if ($projet->cadreDeveloppement)<li><a class="dropdown-item" href="{{ route('projets.editCadreProjet', ['projet' => $projet->id]) }}">Modification du cadre</a></li>@endif
 				  @if ($projet->cadreDeveloppement)<li><a class="dropdown-item" href="{{ route('cadre_developpements.cadres_logiques.index', ['cadre_developpement' => $projet->cadreDeveloppement->id]) }}">Edition du cadre logique</a></li>@endif
 				</ul>
-			  <a href="{{ route('projets.composantes.index', ['projet' => $projet->id]) }}" class="btn btn-outline-secondary">Activités et Produits</a>
-			  <a href="#" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Financement</a>
+			  <a href="{{ route('projets.composantes.index', ['projet' => $projet->id]) }}" class="btn btn-outline-secondary">Composantes et Produits</a>
+			  <a href="#" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Situation Financière</a>
 				<ul class="dropdown-menu">
 				  <li><a class="dropdown-item" href="{{ route('projets.rechercheFinancements', ['projet' => $projet->id]) }}">Recherche Financement</a></li>
 				  <li><a class="dropdown-item" href="{{ route('projets.planFinancements', ['projet' => $projet->id]) }}">Plan Financement</a></li>
 				</ul>
-			  @if ($projet->statutProjet->id == 4)<a href="#" class="btn btn-outline-secondary">Clôture </a>@endif
+			  <a href="{{ route('projets.clotureProjets', ['projet' => $projet->id]) }}"" class="btn btn-outline-secondary">Clôture </a>
 			  @if ($projet->statutProjet->id == 4)<a href="#" class="btn btn-outline-secondary">Evaluation </a>@endif
 			</div>
 			

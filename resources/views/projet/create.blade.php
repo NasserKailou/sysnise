@@ -238,10 +238,8 @@
 						</select>
 					</div>
 					<div class="col-md-3">
-					  <label class="form-label">Priorité 
-						<span style="color: red;">*</span>
-					  </label>
-					   <select name="priorite_id" class="form-select @error('priorite') is-invalid @enderror" required>
+					  <label class="form-label">Priorité </label>
+					   <select name="priorite_id" class="form-select @error('priorite') is-invalid @enderror">
 							<option value="">-- Sélectionner la priorité --</option>
 							@foreach($priorites as $priorite)
 								<option value="{{ $priorite->id }}">
@@ -253,7 +251,7 @@
 				</div>
 				<div class="row mb-3">
 					<div class="col-md-6">
-					  <label class="form-label">Ministères/Institutions 
+					  <label class="form-label">Ministères/Institutions de tutelle 
 						<span style="color: red;">*</span>
 					  </label>
 					   <select name="institution_tutelle_id" class="form-select @error('priorite') is-invalid @enderror" required>
@@ -265,12 +263,8 @@
 							@endforeach
 						</select>
 					</div>
-					<div class="col-md-3">
-					  <label class="form-label">Direction/agence</label>
-					  <input name="direction_agence" type="text" class="form-control">
-					</div>
-					<div class="col-md-3">
-					  <label class="form-label">Contact Direction/agence</label>
+					<div class="col-md-6">
+					  <label class="form-label">Contact</label>
 					  <input name="contact" type="text" class="form-control">
 					</div>
 				</div>
@@ -295,7 +289,7 @@
 					  <label class="form-label">Date de signature  </label>
 					  <input name="date_signature" type="date" class="form-control">
 					</div>
-					<div  class="execution_projet col-md-3" style="display:none">
+					<div  class="execution_projet col-md-3 mt-3" style="display:none">
 					  <label class="form-label">Date de mise en vigueur  </label>
 					  <input name="date_mise_en_vigueur" type="date" class="form-control">
 					</div>
@@ -307,17 +301,17 @@
 					  <label class="form-label">durée(mois)</label>
 					  <input id="duree" name="duree" type="integer" class="form-control">
 					</div>
-					<div class="col-md-3">
+					<div class="col-md-3 mt-3">
 					  <label class="form-label">coût du projet (FCFA)</label>
 					  <input name="cout" type="integer" class="form-control">
 					</div>
 					
-					<div class="col-md-9">
+					<div class="col-md-9 mt-3">
 						<div class="mb-3">
 							<label class="form-label">Coût du projet (DEVlSE)</label>
 							<div class="input-group">
 								<input type="number" class="form-control" name="cout_devise" placeholder="Saisir le montant">
-								<select name="priorite_id" class="form-select @error('priorite') is-invalid @enderror" required>
+								<select name="priorite_id" class="form-select @error('priorite') is-invalid @enderror">
 									<option value="">-- Sélectionner la dévise --</option>
 									@foreach($devises as $devise)
 										<option value="{{ $devise->id }}">
@@ -329,22 +323,22 @@
 						</div>
 					</div>
 
-					<div class="execution_projet col-md-4" style="display:none">
-					  <label class="form-label">Partenaires de fonds </label>
+					<div class="execution_projet col-md-4 mt-3" style="display:none">
+					  <label class="form-label">PTFs</label>
 					  <input name="partenaires" type="text" class="form-control">
 					</div>
-					<div  class="execution_projet col-md-4" style="display:none">
+					<div  class="execution_projet col-md-4 mt-3" style="display:none">
 					  <label class="form-label">période prorogation (si applicable)</label>
 					  <input name="periode_prorogation" type="date" class="form-control">
 					</div>
-					<div  class="execution_projet col-md-4" style="display:none">
-					  <label class="form-label"> nouvelle durée prorogation (si applicable)</label>
+					<div  class="execution_projet col-md-4 mt-3" style="display:none">
+					  <label class="form-label"> durée prorogation (si applicable)</label>
 					  <input name="duree_prorogation" type="date" class="form-control">
 					</div>
 					
 				</div>
-				<div class="row">
-					<div class="row mb-3">
+				<div class="row mt-3">
+					<div class="row">
 						<div class="col-md-12">
 						  <label class="form-label">Projet lié</label>
 						   <select name="projet_id" class="form-select @error('projet') is-invalid @enderror">
@@ -359,8 +353,8 @@
 						</div>
 					</div>
 				</div>
-				<div class="row">
-					<div class="row mb-3">
+				<div class="row mt-3">
+					<div class="row">
 						<div class="col-md-12">
 							<label class="form-label">Zones d'intervention</label>
 							<input id="zone_ids" name="zone_ids" type="hidden" class="form-control" readonly value=""/>
@@ -377,8 +371,8 @@
 						</div>
 					</div>
 				</div>
-				<div class="row">
-					<div class="row mb-3">
+				<div class="row mt-3">
+					<div class="row">
 						<div class="col-md-12">
 							<label class="form-label">Positionnement stratégique</label>
 							<input id="chaine_logique_ids" name="chaine_logique_ids" type="hidden" class="form-control" readonly value=""/>
