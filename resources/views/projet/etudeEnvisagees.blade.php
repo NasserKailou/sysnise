@@ -14,8 +14,10 @@
 				<div class="row">
 					<div class="row mb-3">
 						<div class="col-md-6">
-						  <label class="form-label">Etude</label>
-						   <select name="etude_id" class="form-select @error('Etude') is-invalid @enderror">
+						  <label class="form-label">Etude 
+							<span style="color: red;">*</span>
+						  </label>
+						   <select name="etude_id" class="form-select @error('Etude') is-invalid @enderror" required>
 								<option value="">-- Sélectionner une étude --</option>
 								@foreach($etudes as $etude)
 									<option value="{{ $etude->id }}">
@@ -25,8 +27,10 @@
 							</select>
 						</div>
 						<div class="col-md-6">
-						  <label class="form-label">Source de Financement</label>
-						   <select name="source_financement_id" class="form-select @error('Etude') is-invalid @enderror">
+						  <label class="form-label">Source de Financement 
+							<span style="color: red;">*</span>
+						  </label>
+						   <select name="source_financement_id" class="form-select @error('Etude') is-invalid @enderror" required>
 								<option value="">-- Sélectionner une source de financement --</option>
 								@foreach($sourceFinancements as $source)
 									<option value="{{ $source->id }}">

@@ -14,8 +14,10 @@
 				<div class="row">
 					<div class="row mb-3">
 						<div class="col-md-6">
-						  <label class="form-label">Source de Financement</label>
-						   <select name="source_financement_id" class="form-select @error('Etude') is-invalid @enderror">
+						  <label class="form-label">Source de Financement 
+							<span style="color: red;">*</span>
+						  </label>
+						   <select name="source_financement_id" class="form-select @error('Etude') is-invalid @enderror" required>
 								<option value="">-- Sélectionner une source de financement --</option>
 								@foreach($sourceFinancements as $source)
 									<option value="{{ $source->id }}">
@@ -25,8 +27,10 @@
 							</select>
 						</div>
 						<div class="col-md-6">
-						  <label class="form-label">Bailleur</label>
-						   <select name="bailleur_id" class="form-select @error('PFT') is-invalid @enderror">
+						  <label class="form-label">Bailleur 
+							<span style="color: red;">*</span>
+						  </label>
+						   <select name="bailleur_id" class="form-select @error('PFT') is-invalid @enderror" required>
 								<option value="">-- Sélectionner un Bailleur --</option>
 								@foreach($bailleurs as $bailleur)
 									<option value="{{ $bailleur->id }}">
@@ -36,8 +40,10 @@
 							</select>
 						</div>
 						<div class="col-md-6">
-						  <label class="form-label">Statut Financement</label>
-						   <select name="statut_financement_id" class="form-select @error('statutFinancement') is-invalid @enderror">
+						  <label class="form-label">Statut Financement 
+							<span style="color: red;">*</span>
+						  </label>
+						   <select name="statut_financement_id" class="form-select @error('statutFinancement') is-invalid @enderror" required>
 								<option value="">-- Sélectionner un statut --</option>
 								@foreach($statutFinancements as $statut)
 									<option value="{{ $statut->id }}">
@@ -47,8 +53,10 @@
 							</select>
 						</div>
 						<div class="col-md-6">
-						  <label class="form-label">Nature Financement</label>
-						   <select name="nature_financement_id" class="form-select @error('natureFinancement') is-invalid @enderror">
+						  <label class="form-label">Nature Financement 
+							<span style="color: red;">*</span>
+						  </label>
+						   <select name="nature_financement_id" class="form-select @error('natureFinancement') is-invalid @enderror" required>
 								<option value="">-- Sélectionner une nature --</option>
 								@foreach($natureFinancements as $nature)
 									<option value="{{ $nature->id }}">
@@ -58,8 +66,10 @@
 							</select>
 						</div>
 						<div class="col-md-12">
-						  <label class="form-label">Montant (FCFA)</label>
-						  <input name="montant" type="number" class="form-control">
+						  <label class="form-label">Montant (FCFA) 
+							<span style="color: red;">*</span>
+						  </label>
+						  <input name="montant" type="number" class="form-control" required>
 						</div>
 					</div>
 				</div>

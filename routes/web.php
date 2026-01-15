@@ -34,6 +34,7 @@ Route::resource('nature_financements', App\Http\Controllers\NatureFinancementCon
 Route::resource('statut_financements', App\Http\Controllers\StatutFinancementController::class);
 Route::resource('categorie_depenses', App\Http\Controllers\CategorieDepenseController::class);
 Route::resource('bailleurs', App\Http\Controllers\BailleurController::class);
+Route::resource('devises', App\Http\Controllers\DeviseController::class);
 
 Route::resource('priorites', App\Http\Controllers\PrioriteController::class);
 Route::resource('institution_tutelles', App\Http\Controllers\InstitutionTutelleController::class);
@@ -99,19 +100,34 @@ Route::resource('etudes', App\Http\Controllers\EtudeController::class);
 		Route::get('planFinancements', [App\Http\Controllers\ProjetController::class, 'planFinancements'])->name('projets.planFinancements');
 		Route::post('planFinancements', [App\Http\Controllers\ProjetController::class, 'storePlanFinancements'])->name('projets.planFinancements.store');
 		Route::get('editPlanFinancements/{composante_id}/{source_financement_id}/{bailleur_id}/{categorie_depense_id}/{nature_financement_id}/{statut_financement_id}', [App\Http\Controllers\ProjetController::class, 'editPlanFinancements'])->name('projets.planFinancements.edit');
-		Route::post('editplanFinancements', [App\Http\Controllers\ProjetController::class, 'updatePlanFinancements'])->name('projets.planFinancements.update');
+		Route::post('editplanFinancements/{planFinancement}', [App\Http\Controllers\ProjetController::class, 'updatePlanFinancements'])->name('projets.planFinancements.update');
 		Route::delete('planFinancements/{composante_id}/{source_financement_id}/{bailleur_id}/{categorie_depense_id}/{nature_financement_id}/{statut_financement_id}', [App\Http\Controllers\ProjetController::class, 'destroyPlanFinancements'])->name('projets.planFinancements.destroy');
 		
 		Route::get('budgetAnnuelPrevu/{composante_id}/{source_financement_id}/{bailleur_id}/{categorie_depense_id}/{nature_financement_id}/{statut_financement_id}', [App\Http\Controllers\ProjetController::class, 'budgetAnnuelPrevu'])->name('projets.planFinancements.budgetAnnuelPrevu');
 		Route::post('budgetAnnuelPrevu/{planFinancement}', [App\Http\Controllers\ProjetController::class, 'storeBudgetAnnuelPrevu'])->name('projets.planFinancements.budgetAnnuelPrevu.store');
 		Route::get('editBudgetAnnuelPrevu/{budgetAnnuelPrevu}', [App\Http\Controllers\ProjetController::class, 'editBudgetAnnuelPrevu'])->name('projets.planFinancements.budgetAnnuelPrevu.edit');
 		Route::post('editbudgetAnnuelPrevu/{budgetAnnuelPrevu}', [App\Http\Controllers\ProjetController::class, 'updateBudgetAnnuelPrevu'])->name('projets.planFinancements.budgetAnnuelPrevu.update');
-		
-		//class, 'updateBudgetAnnuelPrevu'])->name('projets.planFinancements.budgetAnnuelPrevu.update');
 		Route::delete('budgetAnnuelPrevu/{budgetAnnuelPrevu}', [App\Http\Controllers\ProjetController::class, 'destroyBudgetAnnuelPrevu'])->name('projets.planFinancements.budgetAnnuelPrevu.destroy');
 		
 		Route::get('budgetAnnuelDepense/{composante_id}/{source_financement_id}/{bailleur_id}/{categorie_depense_id}/{nature_financement_id}/{statut_financement_id}', [App\Http\Controllers\ProjetController::class, 'budgetAnnuelDepense'])->name('projets.planFinancements.budgetAnnuelDepense');
-		Route::post('budgetAnnuelDepense/{planFinancement}', [App\Http\Controllers\ProjetController::class, 'storeBudgetAnnuelDepense'])->name('projets.planFinancements.budgetAnnuelDepense.update');
+		Route::post('budgetAnnuelDepense/{planFinancement}', [App\Http\Controllers\ProjetController::class, 'storeBudgetAnnuelDepense'])->name('projets.planFinancements.budgetAnnuelDepense.store');
+		Route::get('editBudgetAnnuelDepense/{budgetAnnuelDepense}', [App\Http\Controllers\ProjetController::class, 'editBudgetAnnuelDepense'])->name('projets.planFinancements.budgetAnnuelDepense.edit');
+		Route::post('editbudgetAnnuelDepense/{budgetAnnuelDepense}', [App\Http\Controllers\ProjetController::class, 'updateBudgetAnnuelDepense'])->name('projets.planFinancements.budgetAnnuelDepense.update');
+		Route::delete('budgetAnnuelDepense/{budgetAnnuelDepense}', [App\Http\Controllers\ProjetController::class, 'destroyBudgetAnnuelDepense'])->name('projets.planFinancements.budgetAnnuelDepense.destroy');
+		
+		Route::get('budgetAnnuel/{composante_id}/{source_financement_id}/{bailleur_id}/{categorie_depense_id}/{nature_financement_id}/{statut_financement_id}', [App\Http\Controllers\ProjetController::class, 'budgetAnnuel'])->name('projets.planFinancements.budgetAnnuel');
+		Route::post('budgetAnnuel/{planFinancement}', [App\Http\Controllers\ProjetController::class, 'storeBudgetAnnuel'])->name('projets.planFinancements.budgetAnnuel.store');
+		Route::get('editBudgetAnnuel/{budgetAnnuel}', [App\Http\Controllers\ProjetController::class, 'editBudgetAnnuel'])->name('projets.planFinancements.budgetAnnuel.edit');
+		Route::post('editbudgetAnnuel/{budgetAnnuel}', [App\Http\Controllers\ProjetController::class, 'updateBudgetAnnuel'])->name('projets.planFinancements.budgetAnnuel.update');
+		Route::delete('budgetAnnuel/{budgetAnnuel}', [App\Http\Controllers\ProjetController::class, 'destroyBudgetAnnuel'])->name('projets.planFinancements.budgetAnnuel.destroy');
+		
+		//clôture projet
+		Route::get('clotureProjets', [App\Http\Controllers\ProjetController::class, 'clotureProjets'])->name('projets.clotureProjets');
+		Route::post('clotureProjets', [App\Http\Controllers\ProjetController::class, 'storeClotureProjets'])->name('projets.clotureProjets.store');
+		Route::get('editClotureProjets/{clotureProjet}', [App\Http\Controllers\ProjetController::class, 'editClotureProjets'])->name('projets.clotureProjets.edit');
+		Route::post('editClotureProjets/{clotureProjet}', [App\Http\Controllers\ProjetController::class, 'updateClotureProjets'])->name('projets.clotureProjets.update');
+		Route::delete('clotureProjets/{clotureProjet}',[App\Http\Controllers\ProjetController::class, 'destroyClotureProjets'])->name('projets.clotureProjets.destroy');
+		
 		
 	});
 //});
@@ -170,6 +186,16 @@ Route::post('/donnee_indicateurs/extractionDonnees', [App\Http\Controllers\Donne
 Route::get('/donnee_indicateurs/parametreSaisie', [App\Http\Controllers\DonneeIndicateurController::class, 'parametreSaisieForm'])->name('donneeIndicateur.parametreSaisie.form');
 Route::post('/donnee_indicateurs/parametreSaisie', [App\Http\Controllers\DonneeIndicateurController::class, 'matriceSaisie'])->name('donneeIndicateur.parametreSaisie');
 Route::post('/donnee_indicateurs/matriceSaisie', [App\Http\Controllers\DonneeIndicateurController::class, 'saveMatriceSaisie'])->name('donneeIndicateur.matriceSaisie.store');
+
+// Routes de validation des données
+Route::get('/donnee_indicateurs/validation', [App\Http\Controllers\DonneeIndicateurController::class, 'indexValidation'])->name('donneeIndicateur.validation.index');
+Route::get('/donnee_indicateurs/validees', [App\Http\Controllers\DonneeIndicateurController::class, 'indexValidees'])->name('donneeIndicateur.validees.index');
+Route::get('/donnee_indicateurs/rejetees', [App\Http\Controllers\DonneeIndicateurController::class, 'indexRejetees'])->name('donneeIndicateur.rejetees.index');
+Route::post('/donnee_indicateurs/{id}/valider', [App\Http\Controllers\DonneeIndicateurController::class, 'valider'])->name('donneeIndicateur.valider');
+Route::post('/donnee_indicateurs/{id}/rejeter', [App\Http\Controllers\DonneeIndicateurController::class, 'rejeter'])->name('donneeIndicateur.rejeter');
+Route::post('/donnee_indicateurs/valider-global', [App\Http\Controllers\DonneeIndicateurController::class, 'validerGlobal'])->name('donneeIndicateur.valider.global');
+Route::post('/donnee_indicateurs/valider-tout', [App\Http\Controllers\DonneeIndicateurController::class, 'validerTout'])->name('donneeIndicateur.valider.tout');
+Route::post('/donnee_indicateurs/rejeter-global', [App\Http\Controllers\DonneeIndicateurController::class, 'rejeterGlobal'])->name('donneeIndicateur.rejeter.global');
 
 Route::get('/export_data_template', function () {
     return Excel::download(new DataTemplateExport, 'data_template.xlsx');
