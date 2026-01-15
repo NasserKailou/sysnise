@@ -14,8 +14,10 @@
 				<div class="row">
 					<div class="row mb-3">
 						<div class="col-md-6">
-						  <label class="form-label">Population cible</label>
-						   <select name="population_cible_id" class="form-select @error('PopulationCible') is-invalid @enderror">
+						  <label class="form-label">Population cible 
+							<span style="color: red;">*</span>
+						  </label>
+						   <select name="population_cible_id" class="form-select @error('PopulationCible') is-invalid @enderror" required>
 								<option value="">-- Sélectionner la population cible --</option>
 								@foreach($populationCibles as $population)
 									<option value="{{ $population->id }}">
@@ -25,8 +27,10 @@
 							</select>
 						</div>
 						<div class="col-md-6">
-						  <label class="form-label">Effectif</label>
-						  <input name="effectif" type="text" class="form-control">
+						  <label class="form-label">Effectif 
+							<span style="color: red;">*</span>
+						  </label>
+						  <input name="effectif" type="text" class="form-control" required>
 						</div>
 					</div>
 				</div>

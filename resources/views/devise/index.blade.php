@@ -1,41 +1,44 @@
 @extends('layouts.app')
 @section('content')
 <div class="container-fluid">
+	@if(session('failed_devises'))
+	<script>
+		$(function () {
+			@foreach(session('failed_devises') as $devise)
+				$(document).Toasts('create', {
+					class: 'bg-danger',
+					title: 'Import échoué',
+					body: `
+						<strong>Intitulé :</strong> {{ $devise['intitule'] }}<br>
+						<strong>Raison :</strong> {{ $devise['raison'] }}
+					`,
+					autohide: false
+				});
+			@endforeach
+		});
+	</script>
+	@endif
     <div class="row">
 	  <!-- Contenu principal -->
       <div class="col-md-12 col-lg-12">
         <div class="card">
-		  <div class="card-header">
-			<strong>Etude Disponible : </strong>
+		  <div class="card-header d-flex  align-items-center">
+			<strong>Nouvelle dévise</strong>
+			
 		  </div>
 		  <div class="card-body">
-			<form action="{{ route('projets.etudeDisponibles.store',['projet' => $projet->id]) }}" method="POST" enctype="multipart/form-data">
+			<form action="{{ route('devises.store') }}" method="POST">
 				@csrf
 				<div class="row">
 					<div class="row mb-3">
-						<div class="col-md-6">
-						  <label class="form-label">Etude 
-							<span style="color: red;">*</span>
-						  </label>
-						   <select name="etude_id" class="form-select @error('Etude') is-invalid @enderror" required>
-								<option value="">-- Sélectionner une étude --</option>
-								@foreach($etudes as $etude)
-									<option value="{{ $etude->id }}">
-										{{ $etude->intitule }}
-									</option>
-								@endforeach
-							</select>
-						</div>
-						<div class="col-md-6">
-							<label class="form-label">Fichier 
-								<span style="color: red;">*</span>
-							</label>
-							<input name="fichier" type="file" class="form-control" required>
+						<div class="col-md-12">
+						  <label class="form-label">Intitulé</label>
+						  <input name="intitule" type="text" class="form-control">
 						</div>
 					</div>
 				</div>
 				<div class="mt-3 text-end">
-					<a href="{{ route('projets.show', $projet->id) }}" class="btn btn-secondary"><i class="fa fa-arrow-left"></i> Retour</a>
+					<a href="{{ url()->previous() }}" class="btn btn-secondary"><i class="fa fa-arrow-left"></i> Retour</a>
 					<button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Enregistrer</button>
 				</div>
 			</form>
@@ -47,23 +50,23 @@
         <div class="col-md-12 col-lg-12">
             <div class="card">
                 <div class="card-header">
-                    <strong>Etudes Disponibles</strong>
+                    <strong>Dévises</strong>
                 </div>
                 <div class="card-body">
                     <table class="dataTable table table-bordered table-striped">
                         <thead>
                             <tr>
-                                <th class="text-left">Etude</th>
+                                <th class="text-left">Intitulé</th>
                                 <th class="text-center table-icons">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($projet->etudeDisponibles as $ED)
+                            @foreach($devises as $devise)
                             <tr>
-                                <td class="text-left">{{ $ED->intitule }}</td>
+                                <td class="text-left">{{ $devise->intitule }}</td>
                                 <td class="text-center table-icons">
-                                    <a href="{{ asset('storage/'.$ED->pivot->fichier) }}" target="_blank" class="btn btn-sm btn-success"><i class="fa fa-download"></i></a>
-									<form action="{{ route('projets.etudeDisponibles.destroy',[$projet->id,$ED->id]) }}" method="POST" style="display:inline-block;">
+                                    <a href="{{ route('devises.edit', $devise->id) }}" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i></a>
+                                    <form action="{{ route('devises.destroy',$devise->id) }}" method="POST" style="display:inline-block;">
                                         @csrf
                                         @method('DELETE')
                                         <button class="btn btn-sm btn-danger" onclick="return confirm('Confirmer la suppression ?')"><i class="fa fa-trash"></i></button>
@@ -76,7 +79,7 @@
                 </div>
             </div>
         </div>
-	  
+		
     </div>
 </div>
 

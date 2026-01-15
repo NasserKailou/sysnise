@@ -303,51 +303,33 @@
 					  <label class="form-label">coût du projet</label>
 					  <input name="cout" type="integer" class="form-control" value="{{ old('cout', $projet->cout) }}">
 					</div>
-					<div class="col-md-3">
-						<label class="form-label">Coût du projet (DEVlSE)</label>
-
-						<div class="input-group">
-							<input
-								name="cout_devise"
-								type="number"
-								class="form-control"
-								placeholder="Montant"
-							>
-
-							<button
-								class="btn btn-outline-secondary dropdown-toggle"
-								type="button"
-								data-bs-toggle="dropdown"
-								aria-expanded="false"
-							>
-								<i class="fas fa-dollar-sign"></i>
-							</button>
-
-							<ul class="dropdown-menu dropdown-menu-end">
-								<li>
-									<a class="dropdown-item devise-option" href="#" data-devise="USD">
-										<i class="fas fa-dollar-sign me-2"></i> Dollar
-									</a>
-								</li>
-								<li>
-									<a class="dropdown-item devise-option" href="#" data-devise="EUR">
-										<i class="fas fa-euro-sign me-2"></i> Euro
-									</a>
-								</li>
-							</ul>
+					
+					<div class="col-md-9">
+						<div class="mb-3">
+							<label class="form-label">Coût du projet (DEVlSE)</label>
+							<div class="input-group">
+								<input type="number" class="form-control" name="cout_devise" placeholder="Saisir le montant" value="{{ old('cout_devise', $projet->cout_devise) }}">
+								<select name="devise_id" class="form-select @error('priorite') is-invalid @enderror">
+									<option value="">-- Sélectionner la dévise --</option>
+									@foreach($devises as $devise)
+										<option value="{{ $devise->id }}"
+											{{ old('devise_id', $projet->devise_id ?? '') == $devise->id ? 'selected' : '' }}>
+											{{ $devise->intitule }}
+										</option>
+									@endforeach
+								</select>
+							</div>
 						</div>
-
-						<input type="hidden" name="devise" id="devise" value="USD">
 					</div>
-					<div class="execution_projet col-md-6" style="display: {{ $projet->statut_projet_id == 3 ? 'block' : 'none' }}">>
+					<div class="execution_projet col-md-4" style="display: {{ $projet->statut_projet_id == 3 ? 'block' : 'none' }}">>
 					  <label class="form-label">Partenaires de fonds </label>
 					  <input name="partenaires" type="text" class="form-control" value="{{ old('partenaires', $projet->partenaires) }}">
 					</div>
-					<div  class="execution_projet col-md-6" style="display: {{ $projet->statut_projet_id == 3 ? 'block' : 'none' }}">>
+					<div  class="execution_projet col-md-4" style="display: {{ $projet->statut_projet_id == 3 ? 'block' : 'none' }}">>
 					  <label class="form-label">période prorogation (si applicable)</label>
 					  <input name="periode_prorogation" type="date" class="form-control" value="{{ old('periode_prorogation', $projet->periode_prorogation) }}">
 					</div>
-					<div  class="execution_projet col-md-6" style="display: {{ $projet->statut_projet_id == 3 ? 'block' : 'none' }}">>
+					<div  class="execution_projet col-md-4" style="display: {{ $projet->statut_projet_id == 3 ? 'block' : 'none' }}">>
 					  <label class="form-label"> nouvelle durée prorogation (si applicable)</label>
 					  <input name="duree_prorogation" type="date" class="form-control" value="{{ old('duree_prorogation', $projet->duree_prorogation) }}">
 					</div>

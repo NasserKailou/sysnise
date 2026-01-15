@@ -112,7 +112,7 @@
 			<strong>Plan de Financement du projet : </strong>
 		  </div>
 		  <div class="card-body">
-			<form action="{{ route('projets.planFinancements.store',['projet' => $projet->id]) }}" method="POST" enctype="multipart/form-data">
+			<form action="{{ route('projets.planFinancements.store',['projet' => $projet->id]) }}" method="POST">
 				@csrf
 				<div class="row">
 					<div class="row mb-3">
@@ -255,14 +255,15 @@
 										
 									])->first();
 								@endphp
-								<td class="text-left">{{ $planFinancement?->budgetsAnnuelsPrevus()->sum('montant') ?? 0  }}</td>
+								<td class="text-left">{{ $planFinancement?->budgetsAnnuels()->sum('montant') ?? 0  }}</td>
+                                <td class="text-left">{{ $planFinancement?->budgetsAnnuelsPrevus()->sum('montant') ?? 0  }}</td>
                                 <td class="text-left">{{ $planFinancement?->budgetsAnnuelsDepenses()->sum('montant') ?? 0  }}</td>
-								<td class="text-left"></td>
-                                
+								
 								<td class="text-center table-icons">
-                                    <a href="{{ route('projets.planFinancements.edit', [$projet->id,$financement->pivot->composante_id,$financement->pivot->source_financement_id,$financement->pivot->bailleur_id,$financement->pivot->categorie_depense_id,$financement->pivot->nature_financement_id,$financement->pivot->statut_financement_id]) }}" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i></a>
-									<a href="{{ route('projets.planFinancements.budgetAnnuelPrevu', [$projet->id,$financement->pivot->composante_id,$financement->pivot->source_financement_id,$financement->pivot->bailleur_id,$financement->pivot->categorie_depense_id,$financement->pivot->nature_financement_id,$financement->pivot->statut_financement_id]) }}" class="btn btn-sm btn-primary"><i class="fa fa-file-invoice-dollar"></i></a>
-									<a href="{{ route('projets.planFinancements.budgetAnnuelDepense', [$projet->id,$financement->pivot->composante_id,$financement->pivot->source_financement_id,$financement->pivot->bailleur_id,$financement->pivot->categorie_depense_id,$financement->pivot->nature_financement_id,$financement->pivot->statut_financement_id]) }}" class="btn btn-sm btn-success"><i class="fa fa-money-bill-wave"></i></a>
+                                    <a href="{{ route('projets.planFinancements.edit', [$projet->id,$financement->pivot->composante_id,$financement->pivot->source_financement_id,$financement->pivot->bailleur_id,$financement->pivot->categorie_depense_id,$financement->pivot->nature_financement_id,$financement->pivot->statut_financement_id]) }}" class="btn btn-sm btn-secondary" data-bs-toggle="tooltip" data-bs-placement="top" title="Modifier"><i class="fa fa-edit"></i></a>
+									<a href="{{ route('projets.planFinancements.budgetAnnuel', [$projet->id,$financement->pivot->composante_id,$financement->pivot->source_financement_id,$financement->pivot->bailleur_id,$financement->pivot->categorie_depense_id,$financement->pivot->nature_financement_id,$financement->pivot->statut_financement_id]) }}" class="btn btn-sm btn-success" data-bs-toggle="tooltip" data-bs-placement="top" title="Montant budgétisé"><i class="fa fa-hand-holding-dollar"></i></a>
+									<a href="{{ route('projets.planFinancements.budgetAnnuelPrevu', [$projet->id,$financement->pivot->composante_id,$financement->pivot->source_financement_id,$financement->pivot->bailleur_id,$financement->pivot->categorie_depense_id,$financement->pivot->nature_financement_id,$financement->pivot->statut_financement_id]) }}" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Montant prévu"><i class="fa fa-money-bill-wave"></i></a>
+									<a href="{{ route('projets.planFinancements.budgetAnnuelDepense', [$projet->id,$financement->pivot->composante_id,$financement->pivot->source_financement_id,$financement->pivot->bailleur_id,$financement->pivot->categorie_depense_id,$financement->pivot->nature_financement_id,$financement->pivot->statut_financement_id]) }}" class="btn btn-sm btn-warning" data-bs-toggle="tooltip" data-bs-placement="top" title="Montant dépensé"><i class="fa fa-arrow-trend-down"></i></a>
 									<form action="{{ route('projets.planFinancements.destroy',[$projet->id,$financement->pivot->composante_id,$financement->pivot->source_financement_id,$financement->pivot->bailleur_id,$financement->pivot->categorie_depense_id,$financement->pivot->nature_financement_id,$financement->pivot->statut_financement_id]) }}" method="POST" style="display:inline-block;">
                                         @csrf
                                         @method('DELETE')

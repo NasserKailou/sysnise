@@ -27,6 +27,8 @@ class ProjetUpdateRequest extends FormRequest
             'direction_agence' => ['nullable', 'string', 'max:255'],
             'contact' => ['nullable', 'string', 'max:255'],
             'cout' => ['nullable', 'numeric'],
+			'cout_devise' => ['nullable', 'numeric'],
+			'devise_id' => ['nullable', 'integer', 'exists:devises,id'],
             'annee_demarrage' => ['nullable', 'integer'],
             'date_debut_prevue' => ['nullable', 'date'],
             'date_fin_prevue' => ['nullable', 'date'],

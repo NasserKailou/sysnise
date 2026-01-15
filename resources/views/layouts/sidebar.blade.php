@@ -127,6 +127,12 @@
                     </a>
                   </li>
 				  <li class="nav-item">
+                    <a href="/devises" class="nav-link">
+                      <i class="nav-icon bi bi-circle"></i>
+                      <p>Dévises</p>
+                    </a>
+                  </li>
+				  <li class="nav-item">
                     <a href="/bailleurs" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
                       <p>Bailleurs</p>

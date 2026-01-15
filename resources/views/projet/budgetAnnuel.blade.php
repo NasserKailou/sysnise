@@ -9,7 +9,7 @@
 			<strong>Plan de Financement</strong>
 		  </div>
 		  <div class="card-body">
-			<form action="{{ route('projets.planFinancements.budgetAnnuelDepense.store',['projet' => $projet->id,'planFinancement' => $planFinancement->id ]) }}" method="POST">
+			<form action="{{ route('projets.planFinancements.budgetAnnuel.store',['projet' => $projet->id,'planFinancement' => $planFinancement->id ]) }}" method="POST">
 				@csrf
 				<div class="row">
 					<div class="row mb-3">
@@ -72,8 +72,8 @@
 								<td class="text-left">{{ $budget->annee }}</td>
 								<td class="text-left">{{ $budget->montant }}</td>
                                 <td class="text-center table-icons">
-                                    <a href="{{ route('projets.planFinancements.budgetAnnuelDepense.edit', [$projet->id, $budget->id]) }}" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i></a>
-                                    <form action="{{ route('projets.planFinancements.budgetAnnuelDepense.destroy', [$projet->id, $budget->id]) }}" method="POST" style="display:inline-block;">
+                                    <a href="{{ route('projets.planFinancements.budgetAnnuel.edit', [$projet->id, $budget->id]) }}" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i></a>
+                                    <form action="{{ route('projets.planFinancements.budgetAnnuel.destroy', [$projet->id, $budget->id]) }}" method="POST" style="display:inline-block;">
                                         @csrf
                                         @method('DELETE')
                                         <button class="btn btn-sm btn-danger" onclick="return confirm('Confirmer la suppression ?')"><i class="fa fa-trash"></i></button>

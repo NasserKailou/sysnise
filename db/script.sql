@@ -37,6 +37,7 @@ INSERT INTO type_indicateurs (intitule) VALUES
 ('Strategie'),
 ('Produit');
 
+
 CREATE TABLE nature_financements
 (
     id BIGSERIAL,
@@ -1410,7 +1411,7 @@ CREATE TABLE budget_annuel_depenses
         ON DELETE CASCADE
 );
 
-CREATE TABLE budget_annuel
+CREATE TABLE budget_annuels
 (
     id BIGSERIAL,
     plan_financement_id bigint NOT NULL,
@@ -1830,3 +1831,63 @@ ADD COLUMN statut character varying(50) null;
 
 ALTER TABLE donnee_indicateurs
 ADD COLUMN commentaire_rejet text null;
+
+/* ------------- update 14/01/2026 abass ------------- */
+CREATE TABLE devises
+(
+    id BIGSERIAL,
+    intitule character varying(255) NOT NULL,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT devises_pkey PRIMARY KEY (id),
+    CONSTRAINT devises_intitule_unique UNIQUE (intitule)
+);
+INSERT INTO devises (intitule) VALUES
+('USD'),
+('EUR');
+
+ALTER TABLE projets
+ADD COLUMN cout_devise DOUBLE PRECISION,
+ADD COLUMN devise_id BIGINT,
+ADD CONSTRAINT projets_devise_fkey
+FOREIGN KEY (devise_id)
+REFERENCES devises (id)
+MATCH SIMPLE
+ON UPDATE CASCADE
+ON DELETE CASCADE;
+
+INSERT INTO population_cibles (intitule) VALUES
+('Rurale Sédentaire'),
+('Rurale Nomade'),
+('Urbaine'),
+('Totale');
+
+ALTER TABLE budget_annuel
+RENAME TO budget_annuels;
+
+CREATE TABLE cloture_projets (
+    id BIGSERIAL,
+    projet_id BIGINT NOT NULL,
+    cout_effectif DOUBLE PRECISION,
+    date_debut_effectif DATE,
+    date_fin_effectif DATE,
+    duree_effectif INTEGER,
+    rapport_achevement TEXT,
+    conclusion_rapport_achevement TEXT,
+    date_rapport_achevement DATE,
+    rapport_cloture TEXT,
+    conclusion_rapport_cloture TEXT,
+    date_rapport_cloture DATE,
+    date_fermeture_comptes DATE,
+	reference_document_fermeture_comptes TEXT,
+	created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT cloture_projets_pkey PRIMARY KEY (id),
+    CONSTRAINT cloture_projets_projet_id_fkey 
+        FOREIGN KEY (projet_id)
+        REFERENCES projets (id)
+        MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+

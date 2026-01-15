@@ -67,5 +67,13 @@ class PlanFinancement extends Pivot
         );
     }
 	
+	public function budgetsAnnuels()
+    {
+        return $this->hasMany(
+            BudgetAnnuel::class,
+            'plan_financement_id'
+        );
+    }
+	
 	
 }

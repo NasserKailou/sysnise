@@ -25,6 +25,7 @@ class Projet extends Model
         'direction_agence',
         'contact',
         'cout',
+		'cout_devise',
         'annee_demarrage',
         'date_debut_prevue',
         'date_fin_prevue',
@@ -33,6 +34,7 @@ class Projet extends Model
         'duree',
 		'statut_projet_id',
 		'projet_id',
+		'devise_id',
 		'cadre_developpement_id',
 		'date_approbation',
 		'date_signature',
@@ -68,6 +70,11 @@ class Projet extends Model
     public function priorite(): BelongsTo
     {
         return $this->belongsTo(Priorite::class);
+    }
+	
+	public function devise(): BelongsTo
+    {
+        return $this->belongsTo(Devise::class);
     }
 
     public function institutionTutelle(): BelongsTo
