@@ -1748,12 +1748,22 @@ ORDER BY cadre_developpement_id, niveau, id;
    
 
 
-
+-----------------------Debut travaux alapriss
 ALTER TABLE cadre_developpements
 ADD COLUMN user_id BIGINT;
 
 ALTER TABLE cadre_developpements
 ADD CONSTRAINT fk_cadre_developpement_user
+FOREIGN KEY (user_id)
+REFERENCES users(id)
+ON DELETE SET NULL;
+
+
+ALTER TABLE projets
+ADD COLUMN user_id BIGINT;
+
+ALTER TABLE projets
+ADD CONSTRAINT fk_projet_user
 FOREIGN KEY (user_id)
 REFERENCES users(id)
 ON DELETE SET NULL;
@@ -1823,4 +1833,8 @@ ALTER TABLE categorie_depenses
 ADD COLUMN deleted_on timestamp null;
 
 ALTER TABLE nature_financements
+ADD COLUMN deleted_on timestamp null;
+
+
+ALTER TABLE projets
 ADD COLUMN deleted_on timestamp null;

@@ -20,7 +20,7 @@
 					</div>
 				</div>
 				<div class="mt-3 text-end">
-					<a href="{{ route('projets.show', $projet->id) }}" class="btn btn-secondary"><i class="fa fa-arrow-left"></i> Retour</a>
+					<a href="" class="btn btn-secondary"><i class="fa fa-arrow-left"></i> Retour</a>
 					<button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Enregistrer</button>
 				</div>
 			</form>
@@ -47,8 +47,8 @@
                             <tr>
                                 <td class="text-left">{{ $population->intitule }}</td>
                                 <td class="text-center table-icons">
-                                    <a href="{{ route('projets.population_cibles.edit', ['populationCible' => $population->id]) }}" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i></a>
-                                    <form action="{{ route('projets.population_cibles.destroy',$population->id) }}" method="POST" style="display:inline-block;">
+                                   <!-- <a href="" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i></a> -->
+                                    <form action="{{ route('population_cibles.destroy',$population->id) }}" method="POST" style="display:inline-block;">
                                         @csrf
                                         @method('DELETE')
                                         <button class="btn btn-sm btn-danger" onclick="return confirm('Confirmer la suppression ?')"><i class="fa fa-trash"></i></button>
