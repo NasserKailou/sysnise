@@ -34,7 +34,7 @@
 					<a href="{{ route('cadre_developpements.edit', $cadre->id) }}" class="btn btn-success btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Modifier">
 						<i class="fa fa-pen"></i>
 					</a>
-                    <a href="{{ route('cadre_developpements.edit', $cadre->id) }}" class="btn btn-warning btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Telecharger modele de chargement">
+                    <a href="{{ route('export_cadre_data_template', $cadre->id) }}" class="btn btn-warning btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Telecharger modele de chargement">
 						<i class="fa fa-download"></i>
 					</a>
 					<form action="{{ route('cadre_developpements.destroy', $cadre->id) }}" method="POST" class="d-inline">
