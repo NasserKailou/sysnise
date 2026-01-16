@@ -251,7 +251,7 @@
 					</div>
 				</div>
 				<div class="row mb-3">
-					<div class="col-md-6">
+					<div class="col-md-4">
 					  <label class="form-label">Ministère/Institution de tutelle 
 						<span style="color: red;">*</span>
 					  </label>
@@ -266,9 +266,23 @@
 						</select>
 					</div>
 					
-					<div class="col-md-3">
+					<div class="col-md-4">
 					  <label class="form-label">Contact</label>
 					  <input name="contact" type="text" class="form-control" value="{{ old('contact', $projet->contact) }}">
+					</div>
+					<div class="col-md-4">
+					  <label class="form-label">Secteur 
+						<span style="color: red;">*</span>
+					  </label>
+					   <select name="secteur_id" class="form-select @error('secteur') is-invalid @enderror" required>
+							<option value="">-- Sélectionner Secteur --</option>
+							@foreach($secteurs as $secteur)
+								<option value="{{ $secteur->id }}"
+									{{ old('secteur_id', $projet->secteur->id ?? '') == $secteur->id ? 'selected' : '' }}>
+									{{ $secteur->intitule }}
+								</option>
+							@endforeach
+						</select>
 					</div>
 				</div>
 				<div class="row mb-3">

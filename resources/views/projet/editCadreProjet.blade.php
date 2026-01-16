@@ -15,11 +15,11 @@
 				<div class="row mb-3">
 					<div class="col-md-6">
 					  <label class="form-label">Intitulé</label>
-					  <input name="intitule" type="text" class="form-control" readonly value="{{ old('intitule', $projet->cadreDeveloppement->intitule) }}">
+					  <input name="intitule" type="text" class="form-control" value="{{ old('intitule', $projet->cadreDeveloppement->intitule) }}">
 					</div>
 					<div class="col-md-6">
 					  <label class="form-label">Structure Responsable</label>
-					  <input name="structure_responsable" type="text" class="form-control" readonly value="{{ old('structure_responsable', $projet->cadreDeveloppement->structure_responsable) }}">
+					  <input name="structure_responsable" type="text" class="form-control" value="{{ old('structure_responsable', $projet->cadreDeveloppement->structure_responsable) }}">
 					</div>
 				</div>
 				<div class="row mb-3">

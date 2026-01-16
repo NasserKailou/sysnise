@@ -271,7 +271,7 @@
 					  <label class="form-label">Secteur 
 						<span style="color: red;">*</span>
 					  </label>
-					   <select name="institution_tutelle_id" class="form-select @error('priorite') is-invalid @enderror" required>
+					   <select name="secteur_id" class="form-select @error('secteur') is-invalid @enderror" required>
 							<option value="">-- Sélectionner Secteur --</option>
 							@foreach($secteurs as $secteur)
 								<option value="{{ $secteur->id }}">
