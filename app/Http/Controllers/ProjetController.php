@@ -212,11 +212,12 @@ class ProjetController extends Controller
 			'breadcrumb' => 'Projet > cadre stratégique',
         ]);
 	}
-	
+	 
 	public function storeCadreProjet(CadreDeveloppementStoreRequest $request, Projet $projet)
     {
 		$data = $request->validated();
 		$data['type_cadre_developpement_id'] = 2;
+		$data['user_id'] = auth()->id();
 		$cadreDeveloppement = CadreDeveloppement::create($data);
 		$projet->cadre_developpement_id = $cadreDeveloppement->id;
 		$projet->save();
