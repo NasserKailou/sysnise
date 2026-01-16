@@ -228,10 +228,10 @@
                                 <th class="text-left">Composante</th>
 								<th class="text-left">Bailleur</th>
 								<th class="text-left">Nature</th>
-								<th class="text-left">Montant</th>
+								<th class="text-left">Coût</th>
 								<th class="text-left">Mont. Budgétisé</th>
-								<th class="text-left">Tot. Prévu</th>
-								<th class="text-left">Tot. Dépensé</th>
+								<th class="text-left">Mont. PTBA</th>
+								<th class="text-left">Mont. Dépensé</th>
                                 <th class="text-center table-icons">Actions</th>
                             </tr>
                         </thead>

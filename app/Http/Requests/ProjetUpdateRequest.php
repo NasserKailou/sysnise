@@ -23,6 +23,7 @@ class ProjetUpdateRequest extends FormRequest
             'sigle' => ['required', 'string', 'max:255'],
             'intitule' => ['required', 'string', 'max:255'],
             'priorite_id' => ['nullable', 'integer', 'exists:priorites,id'],
+            'secteur_id' => ['nullable', 'integer', 'exists:secteurs,id'],
             'institution_tutelle_id' => ['nullable', 'integer', 'exists:institution_tutelles,id'],
             'direction_agence' => ['nullable', 'string', 'max:255'],
             'contact' => ['nullable', 'string', 'max:255'],

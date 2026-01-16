@@ -212,20 +212,26 @@
 			<div class="row">
 				<div class="row mb-3">
 					<div class="col-md-3">
-					  <label class="form-label">Sigle</label>
-					  <input name="sigle" type="text" class="form-control" value="{{ old('sigle', $projet->sigle) }}">
+					  <label class="form-label">Sigle 
+						<span style="color: red;">*</span>
+					  </label>
+					  <input name="sigle" type="text" class="form-control" value="{{ old('sigle', $projet->sigle) }}" required>
 					</div>
 					<div class="col-md-3">
-					  <label class="form-label">Intitulé</label>
-					  <input name="intitule" type="text" class="form-control" value="{{ old('intitule', $projet->intitule) }}">
+					  <label class="form-label">Intitulé 
+						<span style="color: red;">*</span>
+					  </label>
+					  <input name="intitule" type="text" class="form-control" value="{{ old('intitule', $projet->intitule) }}" required>
 					</div>
 					<div class="col-md-3">
-					  <label class="form-label">Statut Projet</label>
-					   <select id="statut_projet_id" name="statut_projet_id" class="form-select @error('projet') is-invalid @enderror">
+					  <label class="form-label">Statut Projet 
+						<span style="color: red;">*</span>
+					  </label>
+					   <select id="statut_projet_id" name="statut_projet_id" class="form-select @error('projet') is-invalid @enderror" required>
 							<option value="">-- Sélectionner le statut --</option>
 							@foreach($statutProjets as $statut)
 								<option value="{{ $statut->id }}"
-									{{ old('statut_projet_id', $projet->statut_projet_id ?? '') == $statut->id ? 'selected' : '' }}>
+									{{ old('statut_projet_id', $projet->statutProjet->id ?? '') == $statut->id ? 'selected' : '' }}>
 									{{ $statut->intitule }}
 								</option>
 							@endforeach
@@ -237,7 +243,7 @@
 							<option value="">-- Sélectionner la priorité --</option>
 							@foreach($priorites as $priorite)
 								<option value="{{ $priorite->id }}"
-									{{ old('priorite_id', $projet->priorite_id ?? '') == $priorite->id ? 'selected' : '' }}>
+									{{ old('priorite_id', $projet->priorite->id ?? '') == $priorite->id ? 'selected' : '' }}>
 									{{ $priorite->intitule }}
 								</option>
 							@endforeach
@@ -246,52 +252,51 @@
 				</div>
 				<div class="row mb-3">
 					<div class="col-md-6">
-					  <label class="form-label">Ministères/Institutions</label>
-					   <select name="institution_tutelle_id" class="form-select @error('priorite') is-invalid @enderror">
+					  <label class="form-label">Ministère/Institution de tutelle 
+						<span style="color: red;">*</span>
+					  </label>
+					   <select name="institution_tutelle_id" class="form-select @error('priorite') is-invalid @enderror" required>
 							<option value="">-- Sélectionner Ministères/Institutions --</option>
 							@foreach($institutionTutelles as $institutionTutelle)
 								<option value="{{ $institutionTutelle->id }}"
-									{{ old('institution_tutelle_id', $projet->institution_tutelle_id ?? '') == $institutionTutelle->id ? 'selected' : '' }}>
+									{{ old('institution_tutelle_id', $projet->institutionTutelle->id ?? '') == $institutionTutelle->id ? 'selected' : '' }}>
 									{{ $institutionTutelle->intitule }}
 								</option>
 							@endforeach
 						</select>
 					</div>
+					
 					<div class="col-md-3">
-					  <label class="form-label">Direction/agence</label>
-					  <input name="direction_agence" type="text" class="form-control" value="{{ old('direction_agence', $projet->direction_agence) }}">
-					</div>
-					<div class="col-md-3">
-					  <label class="form-label">Contact Direction/agence</label>
+					  <label class="form-label">Contact</label>
 					  <input name="contact" type="text" class="form-control" value="{{ old('contact', $projet->contact) }}">
 					</div>
 				</div>
 				<div class="row mb-3">
-					<div id="annee_demarrage" class="col-md-3" style="display: {{ $projet->statut_projet_id == 1 ? 'block' : 'none' }}">>
+					<div id="annee_demarrage" class="col-md-3" style="display: {{ $projet->statut_projet_id == 1 ? 'block' : 'none' }}">
 					  <label class="form-label">Année démarrage</label>
 					  <input name="annee_demarrage" type="integer" class="form-control" value="{{ old('annee_demarrage', $projet->annee_demarrage) }}">
 					</div>
-					<div id="div_date_debut_prevue" class="col-md-3" style="display: {{ $projet->statut_projet_id != 2 ? 'block' : 'none' }}">>
+					<div id="div_date_debut_prevue" class="col-md-3" style="display: {{ $projet->statut_projet_id != 2 ? 'block' : 'none' }}">
 					  <label class="form-label">Date de début</label>
 					  <input id="date_debut_prevue" name="date_debut_prevue" type="date" class="form-control" value="{{ old('date_debut_prevue', $projet->date_debut_prevue) }}">
 					</div>
-					<div id="div_date_fin_prevue" class="col-md-3" style="display: {{ $projet->statut_projet_id != 2 ? 'block' : 'none' }}">>
+					<div id="div_date_fin_prevue" class="col-md-3" style="display: {{ $projet->statut_projet_id != 2 ? 'block' : 'none' }}">
 					  <label class="form-label">Date de fin</label>
 					  <input id="date_fin_prevue" name="date_fin_prevue" type="date" class="form-control" value="{{ old('date_fin_prevue', $projet->date_fin_prevue) }}">
 					</div>
-					<div  class="execution_projet col-md-3" style="display: {{ $projet->statut_projet_id == 3 ? 'block' : 'none' }}">>
+					<div  class="execution_projet col-md-3" style="display: {{ $projet->statut_projet_id == 3 ? 'block' : 'none' }}">
 					  <label class="form-label">Date d’approbation </label>
 					  <input name="date_approbation" type="date" class="form-control" value="{{ old('date_approbation', $projet->date_approbation) }}">
 					</div>
-					<div  class="execution_projet col-md-3" style="display: {{ $projet->statut_projet_id == 3 ? 'block' : 'none' }}">>
+					<div  class="execution_projet col-md-3" style="display: {{ $projet->statut_projet_id == 3 ? 'block' : 'none' }}">
 					  <label class="form-label">Date de signature  </label>
 					  <input name="date_signature" type="date" class="form-control" value="{{ old('date_signature', $projet->date_signature) }}">
 					</div>
-					<div  class="execution_projet col-md-3" style="display: {{ $projet->statut_projet_id == 3 ? 'block' : 'none' }}">>
+					<div  class="execution_projet col-md-3" style="display: {{ $projet->statut_projet_id == 3 ? 'block' : 'none' }}">
 					  <label class="form-label">Date de mise en vigueur  </label>
 					  <input name="date_mise_en_vigueur" type="date" class="form-control" value="{{ old('date_mise_en_vigueur', $projet->date_mise_en_vigueur) }}">
 					</div>
-					<div  class="execution_projet col-md-3" style="display: {{ $projet->statut_projet_id == 3 ? 'block' : 'none' }}">>
+					<div  class="execution_projet col-md-3" style="display: {{ $projet->statut_projet_id == 3 ? 'block' : 'none' }}">
 					  <label class="form-label">Date de démarrage effectif</label>
 					  <input name="date_demarrage_effectif" type="date" class="form-control" value="{{ old('date_demarrage_effectif', $projet->date_demarrage_effectif) }}">
 					</div>
@@ -300,7 +305,7 @@
 					  <input id="duree" name="duree" type="integer" class="form-control" value="{{ old('duree', $projet->duree) }}">
 					</div>
 					<div class="col-md-3">
-					  <label class="form-label">coût du projet</label>
+					  <label class="form-label">coût du projet (FCFA)</label>
 					  <input name="cout" type="integer" class="form-control" value="{{ old('cout', $projet->cout) }}">
 					</div>
 					
@@ -313,7 +318,7 @@
 									<option value="">-- Sélectionner la dévise --</option>
 									@foreach($devises as $devise)
 										<option value="{{ $devise->id }}"
-											{{ old('devise_id', $projet->devise_id ?? '') == $devise->id ? 'selected' : '' }}>
+											{{ old('devise_id', $projet->devise->id ?? '') == $devise->id ? 'selected' : '' }}>
 											{{ $devise->intitule }}
 										</option>
 									@endforeach
@@ -321,16 +326,16 @@
 							</div>
 						</div>
 					</div>
-					<div class="execution_projet col-md-4" style="display: {{ $projet->statut_projet_id == 3 ? 'block' : 'none' }}">>
-					  <label class="form-label">Partenaires de fonds </label>
+					<div class="execution_projet col-md-4" style="display: {{ $projet->statut_projet_id == 3 ? 'block' : 'none' }}">
+					  <label class="form-label">PTFs </label>
 					  <input name="partenaires" type="text" class="form-control" value="{{ old('partenaires', $projet->partenaires) }}">
 					</div>
-					<div  class="execution_projet col-md-4" style="display: {{ $projet->statut_projet_id == 3 ? 'block' : 'none' }}">>
+					<div  class="execution_projet col-md-4" style="display: {{ $projet->statut_projet_id == 3 ? 'block' : 'none' }}">
 					  <label class="form-label">période prorogation (si applicable)</label>
 					  <input name="periode_prorogation" type="date" class="form-control" value="{{ old('periode_prorogation', $projet->periode_prorogation) }}">
 					</div>
-					<div  class="execution_projet col-md-4" style="display: {{ $projet->statut_projet_id == 3 ? 'block' : 'none' }}">>
-					  <label class="form-label"> nouvelle durée prorogation (si applicable)</label>
+					<div  class="execution_projet col-md-4" style="display: {{ $projet->statut_projet_id == 3 ? 'block' : 'none' }}">
+					  <label class="form-label">durée prorogation (si applicable)</label>
 					  <input name="duree_prorogation" type="date" class="form-control" value="{{ old('duree_prorogation', $projet->duree_prorogation) }}">
 					</div>
 				</div>
@@ -340,10 +345,10 @@
 						  <label class="form-label">Projet lié</label>
 						   <select name="projet_id" class="form-select @error('projet') is-invalid @enderror">
 								<option value="">-- Sélectionner le projet --</option>
-								@foreach($projets as $project)
-									<option value="{{ $project->id }}"
-										{{ old('projet_id', $projet->projet_id ?? '') == $project->id ? 'selected' : '' }}>
-										{{ $project->intitule }}
+								@foreach($projets as $cur_project)
+									<option value="{{ $cur_project->id }}"
+										{{ old('projet_id', $projet->id ?? '') == $cur_project->id ? 'selected' : '' }}>
+										{{ $cur_project->intitule }}
 									</option>
 								@endforeach
 							</select>

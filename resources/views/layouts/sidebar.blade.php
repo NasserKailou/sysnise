@@ -103,6 +103,12 @@
                     </a>
                   </li>
 				  <li class="nav-item">
+                    <a href="/secteurs" class="nav-link">
+                      <i class="nav-icon bi bi-circle"></i>
+                      <p>Secteurs</p>
+                    </a>
+                  </li>
+				  <li class="nav-item">
                     <a href="/statut_projets" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
                       <p>Statuts Projet</p>

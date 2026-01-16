@@ -25,11 +25,11 @@
                             @foreach($projets as $projet)
                             <tr>
                                 <td class="text-left">{{ $projet->intitule }}</td>
-								<td class="text-left">{{ $projet->statutProjet->intitule }}</td>
-								<td class="text-left">{{ $projet->priorite->intitule }}</td>
-								<td class="text-left">{{ $projet->institutionTutelle->intitule }}</td>
+								<td class="text-left">{{ $projet->statutProjet?->intitule ?? '—'  }}</td>
+								<td class="text-left">{{ $projet->priorite?->intitule ?? '—'  }}</td>
+								<td class="text-left">{{ $projet->institutionTutelle?->intitule ?? '—'  }}</td>
 								<td class="text-left">@if($projet->date_debut_prevue && $projet->date_fin_prevue){{ \Carbon\Carbon::parse($projet->date_debut_prevue)->format('d/m/Y') }}- {{ \Carbon\Carbon::parse($projet->date_fin_prevue)->format('d/m/Y')}}@endif</td>
-								<td class="text-left">{{ $projet->cout }}</td>
+								<td class="text-left">{{ $projet->cout ?? '—' }}</td>
 								<td class="text-left">{{ $projet->zoneInterventions->pluck('intitule')->implode(', ') }}</td>
                                 <td class="text-center table-icons">
                                     <a href="{{ route('projets.show', $projet->id) }}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Voir le détail"><i class="fa fa-eye"></i></a>

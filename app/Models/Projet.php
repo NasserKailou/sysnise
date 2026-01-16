@@ -21,6 +21,7 @@ class Projet extends Model
         'sigle',
         'intitule',
         'priorite_id',
+		'secteur_id',
         'institution_tutelle_id',
         'direction_agence',
         'contact',
@@ -65,12 +66,17 @@ class Projet extends Model
 	
 	public function statutProjet(): BelongsTo
     {
-        return $this->belongsTo(statutProjet::class);
+        return $this->belongsTo(StatutProjet::class);
     }
 
     public function priorite(): BelongsTo
     {
         return $this->belongsTo(Priorite::class);
+    }
+	
+	 public function secteur(): BelongsTo
+    {
+        return $this->belongsTo(Secteur::class);
     }
 	
 	public function devise(): BelongsTo
