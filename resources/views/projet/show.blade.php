@@ -44,6 +44,7 @@
 								<p><strong>Intitulé :</strong> {{ $projet?->intitule ?? '—' }}</p>
 								<p><strong>Priorité :</strong> {{ $projet->priorite?->intitule  ?? '—' }}</p>
 								<p><strong>Tutelle :</strong> {{ $projet->institutionTutelle?->intitule ?? '—' }}</p>
+								<p><strong>Secteur :</strong> {{ $projet->secteur?->intitule ?? '—' }}</p>
 								<p><strong>Direction/Agence :</strong> {{ $projet->direction_agence  ?? '—' }}</p>
 								<p><strong>Contact :</strong> {{ $projet->contact ?? '—' }}</p>
 								<p><strong>Projet liée :</strong> {{ $projet->parent?->intitule ?? '—' }}</p>

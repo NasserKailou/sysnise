@@ -21,6 +21,7 @@ use App\Models\Projet;
 use App\Models\StatutProjet;
 use App\Models\Zone;
 use App\Models\Priorite;
+use App\Models\Secteur;
 use App\Models\PopulationCible;
 use App\Models\InstitutionTutelle;
 use App\Models\StatutFinancement;
@@ -61,8 +62,10 @@ class ProjetController extends Controller
 		$statutProjets = StatutProjet::whereNull('deleted_on')->get();
 		$zones = Zone::whereNull('deleted_on')->get();
 		$chaineLogiques = DB::table('view_cadre_logique')->get();
+		
 		$priorites = Priorite::all();
-
+		$secteurs = Secteur::all();
+		
         $populationCibles = PopulationCible::whereNull('deleted_on')->get();
 		$institutionTutelles = InstitutionTutelle::whereNull('deleted_on')->get();
 		$statutFinancements = StatutFinancement::whereNull('deleted_on')->get();
@@ -78,6 +81,7 @@ class ProjetController extends Controller
 			'populationCibles' => $populationCibles,
 			'institutionTutelles' => $institutionTutelles,
 			'priorites' => $priorites,
+			'secteurs' => $secteurs,
 			'statutFinancements' => $statutFinancements,
 			'natureFinancements' => $natureFinancements,
 			'sourceFinancements' => $sourceFinancements,

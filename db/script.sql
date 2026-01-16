@@ -150,7 +150,8 @@ CREATE TABLE source_financements
 );
 INSERT INTO source_financements (intitule) VALUES
 ('PTFs'),
-('ETAT');
+('ETAT'),
+('cofinancement Etat/PTFs');
 
 CREATE TABLE source_indicateurs
 (
@@ -383,8 +384,7 @@ INSERT INTO etudes (intitule) VALUES
 ('Etudes bathymétriques'),
 ('Etudes hydrauliques et hydro-morphiques'),
 ('Etudes routières'),
-('Elaboration d’un plan d’affaires dans le cadre des PPP'),
-('Autres Etudes à préciser');
+('Elaboration d’un plan d’affaires dans le cadre des PPP');
 
 
 CREATE TABLE zones
@@ -1697,58 +1697,6 @@ CREATE OR REPLACE VIEW public.view_cmr
   GROUP BY n.cadre_developpement_id, n.cadre_id, n.intitule, n.parent_id, n.niveau, i.id, i.intitule, di.valeur, z.intitule, u.intitule, s.intitule, nd.intitule, p.intitule
   ORDER BY n.cadre_developpement_id, n.parent_id NULLS FIRST, n.cadre_id, i.id;
 
-CREATE OR REPLACE VIEW public.view_cadre_logique
- AS
-WITH RECURSIVE hierarchy AS (
-
-    /* TERME NON RÉCURSIF : CADRES DE DÉVELOPPEMENT */
-    SELECT
-        cd.id                              AS cadre_developpement_id,
-        '' || cd.id::text              AS id,
-        cd.intitule                       AS intitule,
-        NULL::text                        AS parent_id,
-        0                                 AS niveau,
-        NULL::bigint                      AS cadre_logique_pk
-    FROM cadre_developpements cd
-
-    UNION ALL
-
-    /* TERME RÉCURSIF : CADRES LOGIQUES */
-    SELECT
-        h.cadre_developpement_id          AS cadre_developpement_id,
-        h.id || '' || cl.id::text     AS id,
-        cl.intitule                       AS intitule,
-        h.id                              AS parent_id,
-        h.niveau + 1                      AS niveau,
-        cl.id                             AS cadre_logique_pk
-    FROM hierarchy h
-    JOIN cadre_logiques cl
-        ON (
-            /* niveau 1 : cadres logiques rattachés au cadre de développement */
-            (h.niveau = 0 AND cl.id IN (
-                SELECT ocd.cadre_logique_id
-                FROM orientation_cadre_developpements ocd
-                WHERE ocd.cadre_developpement_id = h.cadre_developpement_id
-            ))
-            /* niveaux suivants : descendance hiérarchique */
-            OR
-            (h.cadre_logique_pk IS NOT NULL
-             AND cl.cadre_logique_id = h.cadre_logique_pk)
-        )
-)
-
-SELECT
-    cadre_developpement_id,
-    id,
-    intitule,
-    parent_id,
-    niveau
-FROM hierarchy
-ORDER BY cadre_developpement_id, niveau, id;
-
-
-
-
 -----------------------Debut travaux alapriss
 ALTER TABLE cadre_developpements
 ADD COLUMN user_id BIGINT;
@@ -1906,4 +1854,40 @@ CREATE TABLE cloture_projets (
         ON DELETE CASCADE
 );
 
+/*----- la bonne view view_cadre_logique ------ */
+CREATE OR REPLACE VIEW public.view_cadre_logique
+ AS
+ WITH RECURSIVE hierarchy AS (
+         SELECT cl.id,
+            cl.intitule,
+            cl.cadre_logique_id AS parent_id,
+            1 AS niveau
+           FROM cadre_logiques cl
+          WHERE (cl.id IN ( SELECT ocd.cadre_logique_id
+                   FROM orientation_cadre_developpements ocd))
+        UNION ALL
+         SELECT child.id,
+            child.intitule,
+            child.cadre_logique_id AS parent_id,
+            h.niveau + 1 AS niveau
+           FROM cadre_logiques child
+             JOIN hierarchy h ON child.cadre_logique_id = h.id
+        )
+ SELECT id,
+    intitule,
+    parent_id,
+    niveau
+   FROM hierarchy
+  ORDER BY niveau, parent_id NULLS FIRST, id;
 
+CREATE TABLE secteurs
+(
+    id BIGSERIAL,
+    intitule character varying(255) NOT NULL,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT secteurs_pkey PRIMARY KEY (id),
+    CONSTRAINT secteurs_intitule_unique UNIQUE (intitule)
+);
+INSERT INTO secteurs (intitule) VALUES
+('Agriculture');

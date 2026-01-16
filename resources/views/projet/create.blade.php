@@ -239,7 +239,7 @@
 					</div>
 					<div class="col-md-3">
 					  <label class="form-label">Priorité </label>
-					   <select name="priorite_id" class="form-select @error('priorite') is-invalid @enderror">
+					   <select name="priorite_id" class="form-select">
 							<option value="">-- Sélectionner la priorité --</option>
 							@foreach($priorites as $priorite)
 								<option value="{{ $priorite->id }}">
@@ -250,8 +250,8 @@
 					</div>
 				</div>
 				<div class="row mb-3">
-					<div class="col-md-6">
-					  <label class="form-label">Ministères/Institutions de tutelle 
+					<div class="col-md-4">
+					  <label class="form-label">Ministère/Institution de tutelle 
 						<span style="color: red;">*</span>
 					  </label>
 					   <select name="institution_tutelle_id" class="form-select @error('priorite') is-invalid @enderror" required>
@@ -263,9 +263,22 @@
 							@endforeach
 						</select>
 					</div>
-					<div class="col-md-6">
+					<div class="col-md-4">
 					  <label class="form-label">Contact</label>
 					  <input name="contact" type="text" class="form-control">
+					</div>
+					<div class="col-md-4">
+					  <label class="form-label">Secteur 
+						<span style="color: red;">*</span>
+					  </label>
+					   <select name="institution_tutelle_id" class="form-select @error('priorite') is-invalid @enderror" required>
+							<option value="">-- Sélectionner Secteur --</option>
+							@foreach($secteurs as $secteur)
+								<option value="{{ $secteur->id }}">
+									{{ $secteur->intitule }}
+								</option>
+							@endforeach
+						</select>
 					</div>
 				</div>
 				<div class="row mb-3">
@@ -311,7 +324,7 @@
 							<label class="form-label">Coût du projet (DEVlSE)</label>
 							<div class="input-group">
 								<input type="number" class="form-control" name="cout_devise" placeholder="Saisir le montant">
-								<select name="priorite_id" class="form-select @error('priorite') is-invalid @enderror">
+								<select name="devise_id" class="form-select @error('priorite') is-invalid @enderror">
 									<option value="">-- Sélectionner la dévise --</option>
 									@foreach($devises as $devise)
 										<option value="{{ $devise->id }}">
