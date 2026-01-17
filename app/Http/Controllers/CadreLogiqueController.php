@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\CadreDeveloppement;
 use App\Models\CadreLogique;
 use App\Models\Indicateur;
+use Auth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -22,7 +23,7 @@ class CadreLogiqueController extends Controller
         $cadreDeveloppement = CadreDeveloppement::find($cadre_developpement_id);
 
         if (
-            !$cadreDeveloppement || $cadreDeveloppement->user_id !== auth()->id()
+            !$cadreDeveloppement || $cadreDeveloppement->institution_tutelle_id !== Auth::user()->institution_tutelle_id
         ) {
             Session::flash('error', 'Accès non autorisé');
             return redirect()->back();//->with('error', 'Accès non autorisé');

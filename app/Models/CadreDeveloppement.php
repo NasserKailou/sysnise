@@ -24,6 +24,7 @@ class CadreDeveloppement extends Model
         'description',
         'cadre_developpement_id',
         'user_id',
+        'institution_tutelle_id',
     ];
 
     /**
