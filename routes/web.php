@@ -193,6 +193,10 @@ Route::middleware(['auth'])->group(function () {
 		return Excel::download(new DataTemplateExport, 'data_template.xlsx');
 	});
 
+	Route::get('/export_cadre_data_template/{cadre_developpement_id}', function ($cadre_developpement_id) {
+		return Excel::download(new \App\Exports\CadreDataTemplateExport($cadre_developpement_id), 'modele_chargement_cadre_' . $cadre_developpement_id . '.xlsx');
+	})->name('export_cadre_data_template');
+
 	Route::get('/afficher_cmr/{cadre_id}', [App\Http\Controllers\DonneeIndicateurController::class, 'afficherCMR']);
 	Route::get('/telecharger_cmr/{cadre_id}', [App\Http\Controllers\DonneeIndicateurController::class, 'telecharger_cmr']);
 	
