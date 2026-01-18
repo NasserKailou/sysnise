@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Auth;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\CadreDeveloppementStoreRequest;
@@ -45,7 +46,8 @@ class ProjetController extends Controller
     public function index(Request $request)
     {
         $projets = Projet::whereNull('deleted_on')
-				->where('user_id', auth()->id())
+				//->where('user_id', auth()->id())
+				->where('institution_tutelle_id', Auth::user()->institution_tutelle_id)
 				->get();
 
         return view('projet.index', [
@@ -57,7 +59,8 @@ class ProjetController extends Controller
     public function create(Request $request)
     {
 		$projets = Projet::whereNull('deleted_on')
-				->where('user_id', auth()->id())
+				//->where('user_id', auth()->id())
+				->where('institution_tutelle_id', Auth::user()->institution_tutelle_id)
 				->get();
 		$statutProjets = StatutProjet::whereNull('deleted_on')->get();
 		$zones = Zone::whereNull('deleted_on')->get();
@@ -72,6 +75,7 @@ class ProjetController extends Controller
 		$natureFinancements = NatureFinancement::whereNull('deleted_on')->get();
 		$sourceFinancements = SourceFinancement::whereNull('deleted_on')->get();
 		$devises = Devise::all();
+		$instituion_tutelle_id=Auth::user()->institution_tutelle_id;
 	
 
         return view('projet.create', [
@@ -88,6 +92,7 @@ class ProjetController extends Controller
 			'chaineLogiques' => $chaineLogiques,
 			'statutProjets' => $statutProjets,
 			'breadcrumb' => 'Projet > Nouveau Projet',
+			'instituion_tutelle_id'=> $instituion_tutelle_id,
         ]);
     }
 
@@ -151,6 +156,7 @@ class ProjetController extends Controller
 		// Récupérer les actions/cadre logique liées au projet
 		$chaineLogiqueNames = $projet->positionnementStrategiques->pluck('intitule')->implode(', ');
 		$chaineLogiqueIds = $projet->positionnementStrategiques->pluck('id')->implode(',');
+		$instituion_tutelle_id=Auth::user()->institution_tutelle_id;
 		
  
         return view('projet.edit', [
@@ -172,6 +178,7 @@ class ProjetController extends Controller
 			'chaineLogiqueNames' => $chaineLogiqueNames,
 			'chaineLogiqueIds' => $chaineLogiqueIds,
 			'breadcrumb' => 'Projet > Mise à jour projet',
+			'instituion_tutelle_id'=> $instituion_tutelle_id,
         ]);
     }
 
@@ -199,14 +206,14 @@ class ProjetController extends Controller
           $projet->save();
 
         return redirect()->route('projets.index');
-    }
+    } 
 	
 	public function showActionStrategieNationaleForm()
     {
 		$cadre_logiques = CadreLogique::all();
         return view('projet.actionStrategieNationale',compact('cadre_logiques'));
     }
-	
+	 
 	public function cadreProjet(Request $request, Projet $projet)
     {
 		return view('projet.cadreProjet', [
@@ -214,11 +221,13 @@ class ProjetController extends Controller
 			'breadcrumb' => 'Projet > cadre stratégique',
         ]);
 	}
-	
+	 
 	public function storeCadreProjet(CadreDeveloppementStoreRequest $request, Projet $projet)
     {
 		$data = $request->validated();
 		$data['type_cadre_developpement_id'] = 2;
+		$data['user_id'] = auth()->id();
+		//$data['institution_tutelle_id'] = Auth::user()->institution_tutelle_id;
 		$cadreDeveloppement = CadreDeveloppement::create($data);
 		$projet->cadre_developpement_id = $cadreDeveloppement->id;
 		$projet->save();

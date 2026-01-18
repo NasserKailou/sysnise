@@ -254,14 +254,15 @@
 					  <label class="form-label">Ministère/Institution de tutelle 
 						<span style="color: red;">*</span>
 					  </label>
-					   <select name="institution_tutelle_id" class="form-select @error('priorite') is-invalid @enderror" required>
+					   <select name="institution_tutelle_id" class="form-select @error('priorite') is-invalid @enderror" disabled required>
 							<option value="">-- Sélectionner Ministères/Institutions --</option>
 							@foreach($institutionTutelles as $institutionTutelle)
-								<option value="{{ $institutionTutelle->id }}">
+								<option value="{{ $institutionTutelle->id }}" @if ($instituion_tutelle_id==$institutionTutelle->id)		selected="selected" 	@endif >
 									{{ $institutionTutelle->intitule }}
 								</option>
 							@endforeach
 						</select>
+						<input type="hidden"  name="institution_tutelle_id" value="{{ $instituion_tutelle_id }}">
 					</div>
 					<div class="col-md-4">
 					  <label class="form-label">Contact</label>
@@ -269,9 +270,9 @@
 					</div>
 					<div class="col-md-4">
 					  <label class="form-label">Secteur 
-						<span style="color: red;">*</span>
+						<span style="color: red;">*</span> 
 					  </label>
-					   <select name="secteur_id" class="form-select @error('secteur') is-invalid @enderror" required>
+					   <select name="secteur_id" class="form-select @error('priorite') is-invalid @enderror" required>
 							<option value="">-- Sélectionner Secteur --</option>
 							@foreach($secteurs as $secteur)
 								<option value="{{ $secteur->id }}">
@@ -279,6 +280,7 @@
 								</option>
 							@endforeach
 						</select>
+						
 					</div>
 				</div>
 				<div class="row mb-3">

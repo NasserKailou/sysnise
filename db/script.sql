@@ -1892,22 +1892,63 @@ CREATE TABLE secteurs
 INSERT INTO secteurs (intitule) VALUES
 ('Agriculture');
 
-----------------update
+
+
+
+-- 2026-01-16
+ALTER TABLE users
+ADD COLUMN institution_tutelle_id BIGINT;
+
+
+
+ALTER TABLE users
+ADD CONSTRAINT fk_institution_tutelle_id_user
+FOREIGN KEY (institution_tutelle_id)
+REFERENCES institution_tutelles(id)
+ON DELETE SET NULL;
+
+
+
+update users set institution_tutelle_id=1;
+
+ALTER TABLE users ALTER COLUMN institution_tutelle_id SET NOT NULL;
+
+
+
+
+ALTER TABLE cadre_developpements
+ADD COLUMN institution_tutelle_id BIGINT;
+
+
+
+ALTER TABLE cadre_developpements
+ADD CONSTRAINT fk_institution_tutelle_id_cadre_developpements
+FOREIGN KEY (institution_tutelle_id)
+REFERENCES institution_tutelles(id)
+ON DELETE SET NULL;
+
+
+
+update cadre_developpements set institution_tutelle_id=1;
+
+ALTER TABLE cadre_developpements ALTER COLUMN institution_tutelle_id SET NOT NULL;
+
+
+
+
 ALTER TABLE projets
 ADD COLUMN secteur_id BIGINT;
 
+
+
 ALTER TABLE projets
-ADD CONSTRAINT projets_secteur_fkey
+ADD CONSTRAINT fk_projets_secteur
 FOREIGN KEY (secteur_id)
 REFERENCES secteurs(id)
 ON DELETE SET NULL;
 
------------view pour la recupération des produits (derniers noeuds de cadre_logique ---
-SELECT
-    cl.id,
-    cl.intitule
-FROM cadre_logiques cl
-LEFT JOIN cadre_logiques enfant
-       ON enfant.cadre_logique_id = cl.id
-WHERE enfant.id IS NULL;
 
+
+update projets set secteur_id=1;
+
+ALTER TABLE projets ALTER COLUMN secteur_id SET NOT NULL;

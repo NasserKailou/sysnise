@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Auth;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\CadreDeveloppementStoreRequest;
 use App\Http\Requests\CadreDeveloppementUpdateRequest;
@@ -16,8 +17,11 @@ class CadreDeveloppementController extends Controller
     public function index(Request $request)
     {
         $cadreDeveloppements = CadreDeveloppement::where('type_cadre_developpement_id', 1)
-            ->where('user_id', auth()->id())
+            //->where('user_id', auth()->id())
+            ->where('institution_tutelle_id', Auth::user()->institution_tutelle_id)
             ->get();
+      
+
         return view('cadreDeveloppement.index', [
             'breadcrumb' => 'Cadres stratégiques > Liste des cadres',
 			'cadreDeveloppements' => $cadreDeveloppements,
@@ -37,6 +41,7 @@ class CadreDeveloppementController extends Controller
     {
         $data = $request->validated();
         $data['user_id'] = auth()->id();
+        $data['institution_tutelle_id'] = Auth::user()->institution_tutelle_id;
 
 		$cadreDeveloppement = CadreDeveloppement::create($data);
 		//Récupérer les IDs de Positionnement stratégique envoyés depuis la vue
@@ -51,7 +56,7 @@ class CadreDeveloppementController extends Controller
         
 
         if (
-             $cadreDeveloppement->user_id !== auth()->id()
+             $cadreDeveloppement->institution_tutelle_id !== Auth::user()->institution_tutelle_id
         ) {
             Session::flash('error', 'Accès non autorisé');
             return redirect()->back();//->with('error', 'Accès non autorisé');
