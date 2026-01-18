@@ -135,7 +135,8 @@ class ProjetController extends Controller
 		$statutProjets = StatutProjet::whereNull('deleted_on')->get();
 		$zones = Zone::whereNull('deleted_on')->get();
 		$devises = Devise::all();
-
+		$secteurs = Secteur::all();
+		
 		$chaineLogiques = DB::table('view_cadre_logique')->get();
 		$priorites = Priorite::all();
         $populationCibles = PopulationCible::whereNull('deleted_on')->get();
@@ -157,6 +158,7 @@ class ProjetController extends Controller
 			'projet' => $projet,
 			'zones' => $zones,
 			'devises' => $devises,
+			'secteurs' => $secteurs,
 			'populationCibles' => $populationCibles,
 			'institutionTutelles' => $institutionTutelles,
 			'priorites' => $priorites,

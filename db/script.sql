@@ -1891,3 +1891,23 @@ CREATE TABLE secteurs
 );
 INSERT INTO secteurs (intitule) VALUES
 ('Agriculture');
+
+----------------update
+ALTER TABLE projets
+ADD COLUMN secteur_id BIGINT;
+
+ALTER TABLE projets
+ADD CONSTRAINT projets_secteur_fkey
+FOREIGN KEY (secteur_id)
+REFERENCES secteurs(id)
+ON DELETE SET NULL;
+
+-----------view pour la recupération des produits (derniers noeuds de cadre_logique ---
+SELECT
+    cl.id,
+    cl.intitule
+FROM cadre_logiques cl
+LEFT JOIN cadre_logiques enfant
+       ON enfant.cadre_logique_id = cl.id
+WHERE enfant.id IS NULL;
+

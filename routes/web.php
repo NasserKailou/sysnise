@@ -33,6 +33,7 @@ Route::middleware(['auth'])->group(function () {
 	Route::resource('categorie_depenses', App\Http\Controllers\CategorieDepenseController::class);
 	Route::resource('bailleurs', App\Http\Controllers\BailleurController::class);
 	Route::resource('devises', App\Http\Controllers\DeviseController::class);
+	Route::resource('secteurs', App\Http\Controllers\SecteurController::class);
 
 	Route::resource('priorites', App\Http\Controllers\PrioriteController::class);
 	Route::resource('institution_tutelles', App\Http\Controllers\InstitutionTutelleController::class);
