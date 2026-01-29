@@ -65,5 +65,19 @@ class CadreDeveloppement extends Model
             'cadre_logique_id'              // clé étrangère du modèle lié
         )->withTimestamps();       // active la gestion automatique de created_at / updated_at
     }
+
+// Relation avec les associations
+    public function cadreDeveloppementUsers()
+    {
+        return $this->hasMany(CadreDeveloppementUser::class, 'cadre_developpement', 'id')
+                    ->with('userr');
+    }
+
+    // Alias pour faciliter l'utilisation
+    public function associations()
+    {
+        return $this->cadreDeveloppementUsers();
+    }
+
 	
 }

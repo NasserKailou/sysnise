@@ -3,11 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCadreDeveloppementInstitutionRequest;
-use App\Http\Requests\StoreCadreDeveloppementUserRequest;
 use App\Models\CadreDeveloppementInstitution;
-use App\Models\CadreDeveloppementUser;
 use App\Models\InstitutionTutelle;
-use App\Models\User;
 use Auth;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\CadreDeveloppementStoreRequest;
@@ -18,26 +15,26 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Session;
 
-class CadreDeveloppementController extends Controller
+class CadreDeveloppementControllerOld extends Controller
 {
     public function index(Request $request)
     {
         $cadreDeveloppements = CadreDeveloppement::where('type_cadre_developpement_id', 1)
             //->where('user_id', auth()->id())
             ->where('institution_tutelle_id', Auth::user()->institution_tutelle_id)
-           ->with(['cadreDeveloppementUsers.userr']) // Charger les associations avec l'institution
+           ->with(['cadreDeveloppementUsers.institution']) // Charger les associations avec l'institution
             ->get();
 
 
 $currentUserInstitutionId = Auth::user()->institution_tutelle_id;
-             $users = User::where('institution_tutelle_id', '!=', $currentUserInstitutionId)
-        //->whereNull('deleted_on')
+             $institutions = InstitutionTutelle::where('id', '!=', $currentUserInstitutionId)
+        ->whereNull('deleted_on')
         ->get();
       
 
         return view('cadreDeveloppement.index', [
             'breadcrumb' => 'Cadres stratégiques > Liste des cadres',
-			'cadreDeveloppements' => $cadreDeveloppements, 'users' =>$users
+			'cadreDeveloppements' => $cadreDeveloppements, 'institutions' =>$institutions
         ]);
     }
 
@@ -65,21 +62,21 @@ $currentUserInstitutionId = Auth::user()->institution_tutelle_id;
     }
 
 
-     public function associer(StoreCadreDeveloppementUserRequest $request)
+     public function associer(StoreCadreDeveloppementInstitutionRequest $request)
 {
     $data = $request->validated();
     
     // Préparer les données avec les bons noms de colonnes
     $associationData = [
         'cadre_developpement' => $data['cadre_developpement_id'],
-        'userr' => $data['user_id'],
+        'institution' => $data['institution_id'],
         'user_id' => auth()->id()
     ];
     
     // Vérifier si l'association existe déjà avec les bons noms de colonnes
-    $existingAssociation = CadreDeveloppementUser::where([
+    $existingAssociation = CadreDeveloppementInstitution::where([
         'cadre_developpement' => $associationData['cadre_developpement'],
-        'userr' => $associationData['userr'],
+        'institution' => $associationData['institution'],
         'user_id' => auth()->id()
     ])->first();
     
@@ -88,7 +85,7 @@ $currentUserInstitutionId = Auth::user()->institution_tutelle_id;
             ->with('warning', 'Cette association existe déjà.');
     }
     
-    $cadreDeveloppementUser= CadreDeveloppementUser::create($associationData);
+    $cadreDeveloppementInstitution = CadreDeveloppementInstitution::create($associationData);
 
     return redirect()->route('cadre_developpements.index')
         ->with('success', 'Cadre de développement associé avec succès');
@@ -97,7 +94,7 @@ $currentUserInstitutionId = Auth::user()->institution_tutelle_id;
 public function dissocier($associationId)
 {
     // Trouver l'association
-    $association = CadreDeveloppementUser::findOrFail($associationId);
+    $association = CadreDeveloppementInstitution::findOrFail($associationId);
     
     // Vérifier que l'utilisateur est autorisé à supprimer cette association
     // (par exemple, vérifier que l'utilisateur est le propriétaire du cadre ou de l'association)

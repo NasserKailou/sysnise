@@ -191,6 +191,22 @@ class Projet extends Model
 		->withPivot(['bailleur_id', 'statut_financement_id', 'nature_financement_id', 'composante_id', 'categorie_depense_id', 'montant'])
 		->withTimestamps();
 	}
+
+
+
+
+    // Relation avec les associations
+    public function projetUsers()
+    {
+        return $this->hasMany(ProjetUser::class, 'projet', 'id')
+                    ->with('userr');
+    }
+
+    // Alias pour faciliter l'utilisation
+    public function associations()
+    {
+        return $this->projetUsers();
+    }
 	
 	
 }

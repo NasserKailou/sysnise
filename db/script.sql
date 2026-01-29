@@ -1952,3 +1952,65 @@ ON DELETE SET NULL;
 update projets set secteur_id=1;
 
 ALTER TABLE projets ALTER COLUMN secteur_id SET NOT NULL;
+
+
+
+
+-- debut 29/01/26 par alapriss
+-- DROP TABLE IF EXISTS public.cadre_developpement_institutions;
+
+CREATE TABLE IF NOT EXISTS public.cadre_developpement_users
+(
+    id  bigserial,
+    cadre_developpement bigint NOT NULL,
+    userr bigint NOT NULL,
+    user_id bigint NOT NULL,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    CONSTRAINT cadre_developpement_user_pkey PRIMARY KEY (id),
+    CONSTRAINT cadre_developpement_user_cadre_developpement_user_key UNIQUE (cadre_developpement, userr),
+    CONSTRAINT cadre_developpement_user_cadre_developpement_fkey FOREIGN KEY (cadre_developpement)
+        REFERENCES public.cadre_developpements (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT cadre_developpement_user_user_fkey FOREIGN KEY (userr)
+        REFERENCES public.users (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID,
+    CONSTRAINT cadre_developpement_user_user_id_fkey FOREIGN KEY (user_id)
+        REFERENCES public.users (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+)
+
+
+CREATE TABLE IF NOT EXISTS public.projet_users
+(
+    id  bigserial,
+    projet bigint NOT NULL,
+    userr bigint NOT NULL,
+    user_id bigint NOT NULL,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    CONSTRAINT projet_user_pkey PRIMARY KEY (id),
+    CONSTRAINT projet_user_projet_user_key UNIQUE (projet, userr),
+    CONSTRAINT projet_user_projet_fkey FOREIGN KEY (projet)
+        REFERENCES public.projets (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT projet_user_user_fkey FOREIGN KEY (userr)
+        REFERENCES public.users (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID,
+    CONSTRAINT projet_user_user_id_fkey FOREIGN KEY (user_id)
+        REFERENCES public.users (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+)
+
+
+-- fin 29/01/26 par alapriss
