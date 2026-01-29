@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreProjetUserRequest;
+use App\Models\ProjetUser;
+use App\Models\User;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -48,11 +51,20 @@ class ProjetController extends Controller
         $projets = Projet::whereNull('deleted_on')
 				//->where('user_id', auth()->id())
 				->where('institution_tutelle_id', Auth::user()->institution_tutelle_id)
+				->with(['projetUsers.userr']) // Charger les associations 
 				->get();
+
+
+
+
+$currentUserInstitutionId = Auth::user()->institution_tutelle_id;
+             $users = User::where('institution_tutelle_id', '!=', $currentUserInstitutionId)
+        //->whereNull('deleted_on')
+        ->get();
 
         return view('projet.index', [
             'projets' => $projets,
-			'breadcrumb' => 'Projets > Liste projets',
+			'breadcrumb' => 'Projets > Liste projets', 'users' =>$users
         ]);
     }
 
@@ -120,6 +132,56 @@ class ProjetController extends Controller
 			->with('success', 'Projet enregistré avec succès.');
 	
     }
+
+
+
+	 public function associer(StoreProjetUserRequest $request)
+{
+    $data = $request->validated();
+    
+    // Préparer les données avec les bons noms de colonnes
+    $associationData = [
+        'projet' => $data['projet_id'],
+        'userr' => $data['user_id'],
+        'user_id' => auth()->id()
+    ];
+    
+    // Vérifier si l'association existe déjà avec les bons noms de colonnes
+    $existingAssociation = ProjetUser::where([
+        'projet' => $associationData['projet'],
+        'userr' => $associationData['userr'],
+        'user_id' => auth()->id()
+    ])->first();
+    
+    if ($existingAssociation) {
+        return redirect()->route('projets.index')
+            ->with('warning', 'Cette association existe déjà.');
+    }
+    
+    $projetUSer= ProjetUser::create($associationData);
+
+    return redirect()->route('projets.index')
+        ->with('success', 'Projet associé avec succès');
+}
+
+public function dissocier($associationId)
+{
+    // Trouver l'association
+    $association = ProjetUser::findOrFail($associationId);
+    
+    // Vérifier que l'utilisateur est autorisé à supprimer cette association
+    // (par exemple, vérifier que l'utilisateur est le propriétaire du cadre ou de l'association)
+    if ($association->user_id !== auth()->id()) {
+        return redirect()->route('projets.index')
+            ->with('error', 'Vous n\'êtes pas autorisé à supprimer cette association.');
+    }
+    
+    // Supprimer l'association
+    $association->delete();
+    
+    return redirect()->route('projets.index')
+        ->with('success', 'Association supprimée avec succès');
+}
 
     public function show(Request $request, Projet $projet)
     {

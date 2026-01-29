@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('donnee_indicateurs', function (Blueprint $table) {
-            $table->enum('statut', ['en_attente', 'valide', 'rejete'])
+        /* Schema::table('donnee_indicateurs', function (Blueprint $table) {
+           $table->enum('statut', ['en_attente', 'valide', 'rejete'])
                   ->default('en_attente')
                   ->after('valeur')
                   ->comment('Statut de validation: en_attente (par défaut), valide, rejete');
-        });
+        });*/
     }
 
     /**
@@ -24,8 +24,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('donnee_indicateurs', function (Blueprint $table) {
+       /* Schema::table('donnee_indicateurs', function (Blueprint $table) {
             $table->dropColumn('statut');
-        });
+        });*/
     }
 };

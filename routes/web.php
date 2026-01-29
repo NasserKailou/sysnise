@@ -49,6 +49,10 @@ Route::middleware(['auth'])->group(function () {
 	Route::get('/projets/{projet}/composantes_upload', [App\Http\Controllers\ComposanteController::class, 'showUploadForm'])->name('projets.composantes.showUploadForm');
 	Route::post('/projets/{projet}/composantes_upload', [App\Http\Controllers\ComposanteController::class, 'upload'])->name('projets.composantes.upload');
 
+	Route::post('/projets/associer', [App\Http\Controllers\ProjetController::class, 'associer'])->name('projets.associer');
+	Route::delete('/projets/associations/{association}', [App\Http\Controllers\ProjetController::class, 'dissocier'])->name('projets.dissocier');
+
+
 	Route::prefix('projets/{projet}')->group(function () {
 		// Enregistrer une nouvelle pièce jointe
 		Route::post('piece_jointe_projets', [App\Http\Controllers\PieceJointeProjetController::class, 'store'])->name('projets.piece_jointe_projets.store');
@@ -138,6 +142,8 @@ Route::middleware(['auth'])->group(function () {
 	Route::get('/cadre_developpements/{cadre_developpement}/cadres_logiques', [App\Http\Controllers\CadreLogiqueController::class, 'index'])->name('cadre_developpements.cadres_logiques.index');
 	Route::get('/cadre_developpements/{cadre_developpement}/cadres_logiques_upload', [App\Http\Controllers\CadreLogiqueController::class, 'showUploadForm'])->name('cadre_developpements.cadres_logiques.showUploadForm');
 	Route::post('/cadre_developpements/{cadre_developpement}/cadres_logiques_upload', [App\Http\Controllers\CadreLogiqueController::class, 'upload'])->name('cadre_developpements.cadres_logiques.upload');
+	Route::post('/cadre_developpements/associer', [App\Http\Controllers\CadreDeveloppementController::class, 'associer'])->name('cadre_developpements.associer');
+	Route::delete('/cadre_developpements/associations/{association}', [App\Http\Controllers\CadreDeveloppementController::class, 'dissocier'])->name('cadre_developpements.dissocier');
 
 	Route::resource('cadre_logiques.hypothese_risques', App\Http\Controllers\HypotheseRisqueController::class);
 	Route::resource('cadre_logiques.produits', App\Http\Controllers\ProduitController::class);
