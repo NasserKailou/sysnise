@@ -67,7 +67,7 @@
 		</style>
 		
 		<script type="text/javascript">
-	  var zNodesProduit =[
+	  var zNodesIndicateur =[
 		  { id:0, pId:0, name:"/", open:true}
 	  ];
 	  var zNodescomposante =[
@@ -75,15 +75,15 @@
 			
 		];
 	  
-	  var zNodesProduitSelectionnes =[];
+	  var zNodesIndicateurSelectionnes =[];
 	</script>
 
 	<script>
-		@foreach($produits as $produit)
-			zNodesProduit.push({
-				id: {{ $produit->id }},
+		@foreach($indicateurs as $indicateur)
+			zNodesIndicateur.push({
+				id: {{ $indicateur->id }},
 				pId: 0,
-				name: @json($produit->intitule)
+				name: @json($indicateur->intitule)
 			});
 		@endforeach
 
@@ -137,7 +137,7 @@
 				}
 				function onClickcomposante(event, treeId, treeNode, clickFlag) {
 					$.ajax({
-						url: '/api/composante_produits/' + treeNode.id + '/produits',
+						url: '/api/composante_indicateurs/' + treeNode.id + '/indicateurs',
 						type: 'GET',
 						success: function (data) {
 							// Construction du noeud racine "/"
@@ -149,8 +149,8 @@
 								isParent: true
 							};
 
-							// Liste des produits sélectionnés et non sélectionnés
-							var selectedProducts = data.selected.map(function (item) {
+							// Liste des indicateurs sélectionnés et non sélectionnés
+							var selectedIndicators = data.selected.map(function (item) {
 								return {
 									id: item.id,
 									pId: 0, // sous la racine
@@ -158,7 +158,7 @@
 								};
 							});
 
-							var notSelectedProducts = data.notSelected.map(function (item) {
+							var notSelectedIndicators = data.notSelected.map(function (item) {
 								return {
 									id: item.id,
 									pId: 0, // sous la racine
@@ -167,11 +167,11 @@
 							});
 
 							// Fusion des noeuds racine + enfants
-							selectedProducts.unshift(rootNode);
-							notSelectedProducts.unshift(rootNode);
+							selectedIndicators.unshift(rootNode);
+							notSelectedIndicators.unshift(rootNode);
 
 							// Activation de l’édition
-							var editableSetting = $.extend(true, {}, settingProduit, {
+							var editableSetting = $.extend(true, {}, settingIndicateur, {
 								edit: {
 									enable: true,
 									editNameSelectAll: true,
@@ -186,8 +186,8 @@
 							});
 
 							//Initialisation des arbres
-							$.fn.zTree.init($("#liste_produit_selectionnes"), editableSetting, selectedProducts);
-							$.fn.zTree.init($("#liste_produit"), editableSetting, notSelectedProducts);
+							$.fn.zTree.init($("#liste_indicateur_selectionnes"), editableSetting, selectedIndicators);
+							$.fn.zTree.init($("#liste_indicateur"), editableSetting, notSelectedIndicators);
 						},
 						error: function (xhr) {
 							console.error("Erreur :", xhr.responseText);
@@ -386,11 +386,11 @@
 					$("#addBtn_"+treeNode.tId).unbind().remove();
 				};
 				
-			var settingProduit = {
+			var settingIndicateur = {
 				view: {
 					showIcon: showIconForTree,
-					addHoverDom: addHoverDomProduit,
-					removeHoverDom: removeHoverDomProduit
+					addHoverDom: addHoverDomIndicateur,
+					removeHoverDom: removeHoverDomIndicateur
 					
 				},
 				data: {
@@ -405,15 +405,15 @@
 					showRenameBtn: true
 				},
 				callback: {
-					beforeClick: beforeClickProduit,
-					onClick: onClickProduit,
-					beforeDblClick : beforeDblClickProduit,
-					onDblClick: onDblClickProduit,
-					beforeEditName: beforeEditNameProduit,
-					beforeRemove: beforeRemoveProduit,
-					beforeRename: beforeRenameProduit,
-					onRemove: onRemoveProduit,
-					onRename: onRenameProduit
+					beforeClick: beforeClickIndicateur,
+					onClick: onClickIndicateur,
+					beforeDblClick : beforeDblClickIndicateur,
+					onDblClick: onDblClickIndicateur,
+					beforeEditName: beforeEditNameIndicateur,
+					beforeRemove: beforeRemoveIndicateur,
+					beforeRename: beforeRenameIndicateur,
+					onRemove: onRemoveIndicateur,
+					onRename: onRenameIndicateur
 					
 					
 				}
@@ -422,42 +422,42 @@
 			
 			
 			
-			function beforeClickProduit(treeId, treeNode, clickFlag) {
+			function beforeClickIndicateur(treeId, treeNode, clickFlag) {
 				return (treeNode.click != false);
 			}
-			function onClickProduit(event, treeId, treeNode, clickFlag) {
+			function onClickIndicateur(event, treeId, treeNode, clickFlag) {
 				
 			}
-			function beforeDblClickProduit(treeId, treeNode) {
+			function beforeDblClickIndicateur(treeId, treeNode) {
 				return (treeNode.click != false);
 			};
 			
-			function onDblClickProduit(event, treeId, treeNode) {
+			function onDblClickIndicateur(event, treeId, treeNode) {
 				var composanteTreeObj = $.fn.zTree.getZTreeObj("liste_composante");
 				var composanteTreeNodes = composanteTreeObj.getSelectedNodes();
 				var composanteLength = composanteTreeNodes.length;
-				if(treeId == "liste_produit")
+				if(treeId == "liste_indicateur")
 				{
-					var sourceTreeObj = $.fn.zTree.getZTreeObj("liste_produit");
+					var sourceTreeObj = $.fn.zTree.getZTreeObj("liste_indicateur");
 					var treeNodes = sourceTreeObj.getSelectedNodes();
 
-					var destinationTreeObj = $.fn.zTree.getZTreeObj("liste_produit_selectionnes");
+					var destinationTreeObj = $.fn.zTree.getZTreeObj("liste_indicateur_selectionnes");
 					
 					var params =[];
 					
 					if(composanteLength > 0)
 					{
 						
-							var produit = treeNodes[0];
-							if(produit.name != "/")
+							var indicateur = treeNodes[0];
+							if(indicateur.name != "/")
 							{
-								destinationTreeObj.addNodes(null, produit);
-								sourceTreeObj.removeNode(produit);
+								destinationTreeObj.addNodes(null, indicateur);
+								sourceTreeObj.removeNode(indicateur);
 								$.ajax({
-									url: '/api/composante_produits/',
+									url: '/api/composante_indicateurs/',
 									type: 'POST',
 									data: {
-										produit_id: produit.id,
+										indicateur_id: indicateur.id,
 										composante_id:composanteTreeNodes[0].id
 									},
 									success: function (id) {
@@ -474,27 +474,27 @@
 					}
 					
 				}
-				else if(treeId == "liste_produit_selectionnes")
+				else if(treeId == "liste_indicateur_selectionnes")
 				{
-					var sourceTreeObj = $.fn.zTree.getZTreeObj("liste_produit_selectionnes");
+					var sourceTreeObj = $.fn.zTree.getZTreeObj("liste_indicateur_selectionnes");
 					var treeNodes = sourceTreeObj.getSelectedNodes();
 
-					var destinationTreeObj = $.fn.zTree.getZTreeObj("liste_produit");
+					var destinationTreeObj = $.fn.zTree.getZTreeObj("liste_indicateur");
 					
 					var params =[];
 					
 					if(composanteLength > 0)
 					{
 						
-							var produit = treeNodes[0];
-							/*destinationTreeObj.addNodes(destinationTreeObj.getNodes()[0], produit);
-							sourceTreeObj.removeNode(produit);*/
+							var indicateur = treeNodes[0];
+							/*destinationTreeObj.addNodes(destinationTreeObj.getNodes()[0], indicateur);
+							sourceTreeObj.removeNode(indicateur);*/
 							
-							destinationTreeObj.addNodes(null, produit);
-							sourceTreeObj.removeNode(produit);
+							destinationTreeObj.addNodes(null, indicateur);
+							sourceTreeObj.removeNode(indicateur);
 							
 							$.ajax({
-								url: '/api/composante_produits/'+composanteTreeNodes[0].id+'/'+produit.id,
+								url: '/api/composante_indicateurs/'+composanteTreeNodes[0].id+'/'+indicateur.id,
 								type: 'DELETE',
 								success: function (id) {
 									console.log("Suppression réussie :", id);
@@ -515,19 +515,19 @@
 				/*return !treeNode.isParent;*/
 			};
 			
-			function beforeEditNameProduit(treeId, treeNode) {
-				var zTree = $.fn.zTree.getZTreeObj("liste_produit");
+			function beforeEditNameIndicateur(treeId, treeNode) {
+				var zTree = $.fn.zTree.getZTreeObj("liste_indicateur");
 				zTree.selectNode(treeNode);
 				setTimeout(function() {
 						zTree.editName(treeNode);
 					}, 0);
 				return false;
 			}
-			function beforeRenameProduit(treeId, treeNode, newName, isCancel) {
+			function beforeRenameIndicateur(treeId, treeNode, newName, isCancel) {
 				className = (className === "dark" ? "":"dark");
 				if (newName.length == 0) {
 					setTimeout(function() {
-						var zTree = $.fn.zTree.getZTreeObj("liste_produit");
+						var zTree = $.fn.zTree.getZTreeObj("liste_indicateur");
 						zTree.cancelEditName();
 						alert("le libelle ne doit pas être vide");
 					}, 0);
@@ -536,17 +536,17 @@
 					
 				return true;
 			}
-			function onRenameProduit(e, treeId, treeNode, isCancel) {
+			function onRenameIndicateur(e, treeId, treeNode, isCancel) {
 				
 				if(tempNode != null)
 				{
 					$.ajax({
-						url: '/api/produits/',
+						url: '/api/indicateurs/',
 						type: 'POST',
 						data: {
 							id: treeNode.id,
 							intitule: treeNode.name,
-							type_produit_id: 2
+							type_indicateur_id: 2
 						},
 						success: function (id) {
 							console.log("Ajout réussie :", id);
@@ -562,12 +562,12 @@
 				else
 				{
 					$.ajax({
-						url: '/api/produits/' + treeNode.id,
+						url: '/api/indicateurs/' + treeNode.id,
 						type: 'PUT',
 						data: {
 							id: treeNode.id,
 							intitule: treeNode.name,
-							type_produit_id: 2
+							type_indicateur_id: 2
 						},
 						success: function (id) {
 							console.log("Mise à jour réussie :", id);
@@ -580,15 +580,15 @@
 					
 				}
 			}
-			function beforeRemoveProduit(treeId, treeNode) {
+			function beforeRemoveIndicateur(treeId, treeNode) {
 				className = (className === "dark" ? "":"dark");
-				var zTree = $.fn.zTree.getZTreeObj("liste_produit");
+				var zTree = $.fn.zTree.getZTreeObj("liste_indicateur");
 				zTree.selectNode(treeNode);
-				return confirm("Confirmer la suppression de l'produit : " + treeNode.name);
+				return confirm("Confirmer la suppression de l'indicateur : " + treeNode.name);
 			}
-			function onRemoveProduit(e, treeId, treeNode) {
+			function onRemoveIndicateur(e, treeId, treeNode) {
 				$.ajax({
-						url: '/api/produits/' + treeNode.id,
+						url: '/api/indicateurs/' + treeNode.id,
 						type: 'DELETE',
 						data: {
 							id: treeNode.id,
@@ -604,7 +604,7 @@
 			}
 			
 			var newCount = 0;
-			function addHoverDomProduit(treeId, treeNode) {
+			function addHoverDomIndicateur(treeId, treeNode) {
 				if(treeNode.id == 0){
 				var sObj = $("#" + treeNode.tId + "_span");
 				if (treeNode.editNameFlag || $("#addBtn_"+treeNode.tId).length>0) return;
@@ -618,8 +618,8 @@
 						var indice = treeNode.children.length;
 					else
 						var indice = 0;
-					var zTree = $.fn.zTree.getZTreeObj("liste_produit");
-					var newNode_name = "nouveau produit";
+					var zTree = $.fn.zTree.getZTreeObj("liste_indicateur");
+					var newNode_name = "nouveau indicateur";
 					newCount++;
 					var newNode = {id:newCount, pId:treeNode.id, name:newNode_name};
 					zTree.addNodes(treeNode, 0, newNode);
@@ -636,7 +636,7 @@
 				
 			}	
 			};
-			function removeHoverDomProduit(treeId, treeNode) {
+			function removeHoverDomIndicateur(treeId, treeNode) {
 				$("#addBtn_"+treeNode.tId).unbind().remove();
 			};
 			
@@ -695,17 +695,17 @@
 			}
 
 		</script>
-		@if(session('failed_produits'))
+		@if(session('failed_indicateurs'))
 		<script>
 			$(function () {
-				@foreach(session('failed_produits') as $produit)
+				@foreach(session('failed_indicateurs') as $indicateur)
 					$(document).Toasts('create', {
 						class: 'bg-danger',
 						title: 'Import échoué',
 						body: `
-							<strong>Code :</strong> {{ $produit['code'] }}<br>
-							<strong>Intitulé :</strong> {{ $produit['intitule'] }}<br>
-							<strong>Raison :</strong> {{ $produit['raison'] }}
+							<strong>Code :</strong> {{ $indicateur['code'] }}<br>
+							<strong>Intitulé :</strong> {{ $indicateur['intitule'] }}<br>
+							<strong>Raison :</strong> {{ $indicateur['raison'] }}
 						`,
 						autohide: false
 					});
@@ -723,20 +723,20 @@
 							<a href="#" id="uploadComposante"><i class="fas fa-file-upload" style="padding-right:15px"></i></a>
 						</span>
 					</th>
-					<th style="width:40%;padding:10px;">Produits disponibles
+					<th style="width:40%;padding:10px;">Indicateurs disponibles
 						<span class="float-right">
-							<!--<a href="#" id="uniteProduitDisponible" data-toggle="tooltip" data-placement="top" title="" data-original-title="Définir les unités d'un produit selectionné"><i class="fas fa-scale-balanced" style="padding-right:15px"></i></a>
-							<a href="#" id="desagregationProduitDisponible" data-toggle="tooltip" data-placement="top" title="" data-original-title="Définir les sous groupes d'un produit selectionné"><i class="fas fa-sitemap" style="padding-right:15px"></i></a>
+							<!--<a href="#" id="uniteIndicateurDisponible" data-toggle="tooltip" data-placement="top" title="" data-original-title="Définir les unités d'un indicateur selectionné"><i class="fas fa-scale-balanced" style="padding-right:15px"></i></a>
+							<a href="#" id="desagregationIndicateurDisponible" data-toggle="tooltip" data-placement="top" title="" data-original-title="Définir les sous groupes d'un indicateur selectionné"><i class="fas fa-sitemap" style="padding-right:15px"></i></a>
 							-->
-							<a href="#" id="uploadProduit"><i class="fas fa-file-upload" style="padding-right:15px"></i></a>
-							<a href="#" id="infosProduitDisponible"><i class="fas fa-info" style="padding-right:15px"></i></a>
-							<a href="#" id="transfererProduitDisponibleVersSelectionne"><i class="fas fa-angle-right" style="padding-right:15px"></i></a>
+							<a href="#" id="uploadIndicateur"><i class="fas fa-file-upload" style="padding-right:15px"></i></a>
+							<a href="#" id="infosIndicateurDisponible"><i class="fas fa-info" style="padding-right:15px"></i></a>
+							<a href="#" id="transfererIndicateurDisponibleVersSelectionne"><i class="fas fa-angle-right" style="padding-right:15px"></i></a>
 						</span>
 					</th>
-					<th style="width:28%;padding:10px;">Produits associés
+					<th style="width:28%;padding:10px;">Indicateurs associés
 						<span class="float-right">
-							<a href="#" id="infosProduitSelectionne"><i class=" fas fa-info" style="padding-right:15px"></i></a>
-							<a href="#" id="transfererProduitSelectionneVersDisponible"><i class="fas fa-angle-left" style="padding-right:15px"></i></a>
+							<a href="#" id="infosIndicateurSelectionne"><i class=" fas fa-info" style="padding-right:15px"></i></a>
+							<a href="#" id="transfererIndicateurSelectionneVersDisponible"><i class="fas fa-angle-left" style="padding-right:15px"></i></a>
 						</span>
 					</th>
 				</tr>
@@ -754,21 +754,21 @@
 					</td>
 					<td style="vertical-align: top;border-right: solid 3px #f8f9fa">
 						<div class="input-group">
-				           <input type="text" id="search_produit" name="search_produit" class="form-control form-control-sm" placeholder="Search">
+				           <input type="text" id="search_indicateur" name="search_indicateur" class="form-control form-control-sm" placeholder="Search">
 				       		<span class="input-group-append">
 	                       		<button type="button" class="btn btn-sm btn-primary"><i class="fa fa-search"></i></button>
 	                       </span>
 				       	</div>
-						<ul id="liste_produit" class="ztree"></ul>
+						<ul id="liste_indicateur" class="ztree"></ul>
 					</td>
 					<td style="vertical-align: top;">
 						<div class="input-group">
-				           <input type="text" id="search_produit_selectionnes" name="search_produit_selectionnes" class="form-control form-control-sm" placeholder="Search">
+				           <input type="text" id="search_indicateur_selectionnes" name="search_indicateur_selectionnes" class="form-control form-control-sm" placeholder="Search">
 				       		<span class="input-group-append">
 	                       		<button type="button" class="btn btn-sm btn-primary"><i class="fa fa-search"></i></button>
 	                       </span>
 				       	</div>
-						<ul id="liste_produit_selectionnes" class="ztree"></ul>
+						<ul id="liste_indicateur_selectionnes" class="ztree"></ul>
 					</td>
 				</tr>
 			</tbody>
@@ -777,9 +777,9 @@
 		<script>
 			var zTree, rMenu;
 			$(document).ready(function () {
-				$.fn.zTree.init($("#liste_produit"), settingProduit, zNodesProduit);
+				$.fn.zTree.init($("#liste_indicateur"), settingIndicateur, zNodesIndicateur);
 				$.fn.zTree.init($("#liste_composante"), settingcomposante, zNodescomposante);
-				$.fn.zTree.init($("#liste_produit_selectionnes"), settingProduit, zNodesProduitSelectionnes);
+				$.fn.zTree.init($("#liste_indicateur_selectionnes"), settingIndicateur, zNodesIndicateurSelectionnes);
 				rMenu = $("#rMenu");
 				zTree = $.fn.zTree.getZTreeObj("liste_composante");
 				$(".toast").toast();
@@ -796,43 +796,43 @@
 			    	}
 					 
 			      });
-				$('#search_produit').keypress(function(){
+				$('#search_indicateur').keypress(function(){
 			    	 if($(this).val() != "")
 			    	 { 
-			    		 var treeObj = $.fn.zTree.getZTreeObj("liste_produit");
+			    		 var treeObj = $.fn.zTree.getZTreeObj("liste_indicateur");
 					      var nodes = treeObj.getNodesByParamFuzzy("name", $(this).val(), null);
-					      $.fn.zTree.init($("#liste_produit"), settingProduit, nodes); 
+					      $.fn.zTree.init($("#liste_indicateur"), settingIndicateur, nodes); 
 			    	 }else
 			    	{
-			    		 $.fn.zTree.init($("#liste_produit"), settingProduit, zNodesProduit);
+			    		 $.fn.zTree.init($("#liste_indicateur"), settingIndicateur, zNodesIndicateur);
 			    	}
 					 
 			      });
-				$('#search_produit_selectionnes').keypress(function(){
+				$('#search_indicateur_selectionnes').keypress(function(){
 			    	 if($(this).val() != "")
 			    	 { 
-			    		 var treeObj = $.fn.zTree.getZTreeObj("liste_produit_selectionnes");
+			    		 var treeObj = $.fn.zTree.getZTreeObj("liste_indicateur_selectionnes");
 					      var nodes = treeObj.getNodesByParamFuzzy("name", $(this).val(), null);
-					      $.fn.zTree.init($("#liste_produit_selectionnes"), settingProduit, nodes); 
+					      $.fn.zTree.init($("#liste_indicateur_selectionnes"), settingIndicateur, nodes); 
 			    	 }else
 			    	{
-			    		 $.fn.zTree.init($("#liste_produit_selectionnes"), settingProduit, zNodesProduitSelectionnes);
+			    		 $.fn.zTree.init($("#liste_indicateur_selectionnes"), settingIndicateur, zNodesIndicateurSelectionnes);
 							
 			    	}
 					 
 			      });
 				
 				
-				$('#transfererProduitDisponibleVersSelectionne').click(function(){
+				$('#transfererIndicateurDisponibleVersSelectionne').click(function(){
 					var composanteTreeObj = $.fn.zTree.getZTreeObj("liste_composante");
 					var composanteTreeNodes = composanteTreeObj.getSelectedNodes();
 					var composanteLength = composanteTreeNodes.length;
 					
-					var sourceTreeObj = $.fn.zTree.getZTreeObj("liste_produit");
+					var sourceTreeObj = $.fn.zTree.getZTreeObj("liste_indicateur");
 					var treeNodes = sourceTreeObj.getSelectedNodes();
 					var l=treeNodes.length;
 					
-					var destinationTreeObj = $.fn.zTree.getZTreeObj("liste_produit_selectionnes");
+					var destinationTreeObj = $.fn.zTree.getZTreeObj("liste_indicateur_selectionnes");
 					
 					
 					if(composanteLength > 0)
@@ -841,13 +841,13 @@
 						let associations = [];
 						let composanteId = composanteTreeNodes[0].id;
 						while (l>0) {
-							var produit = treeNodes[l-1];
-							destinationTreeObj.addNodes(null, produit);
-							sourceTreeObj.removeNode(produit);
+							var indicateur = treeNodes[l-1];
+							destinationTreeObj.addNodes(null, indicateur);
+							sourceTreeObj.removeNode(indicateur);
 							l--;
 							
 							associations.push({
-								produit_id: produit.id,
+								indicateur_id: indicateur.id,
 								composante_id: composanteId
 							});
 							
@@ -870,16 +870,16 @@
 					
 				});
 				
-				$('#transfererProduitSelectionneVersDisponible').click(function(){
+				$('#transfererIndicateurSelectionneVersDisponible').click(function(){
 					var composanteTreeObj = $.fn.zTree.getZTreeObj("liste_composante");
 					var composanteTreeNodes = composanteTreeObj.getSelectedNodes();
 					var composanteLength = composanteTreeNodes.length;
 					
-					var sourceTreeObj = $.fn.zTree.getZTreeObj("liste_produit_selectionnes");
+					var sourceTreeObj = $.fn.zTree.getZTreeObj("liste_indicateur_selectionnes");
 					var treeNodes = sourceTreeObj.getSelectedNodes();
 					var l=treeNodes.length;
 					
-					var destinationTreeObj = $.fn.zTree.getZTreeObj("liste_produit");
+					var destinationTreeObj = $.fn.zTree.getZTreeObj("liste_indicateur");
 					
 					var params =[];
 					var p = 0;
@@ -889,12 +889,12 @@
 						let associations = [];
 						let composanteId = composanteTreeNodes[0].id;
 						while (l>0) {
-							var produit = treeNodes[l-1];
-							destinationTreeObj.addNodes(destinationTreeObj.getNodes()[0], produit);
-							sourceTreeObj.removeNode(produit);
+							var indicateur = treeNodes[l-1];
+							destinationTreeObj.addNodes(destinationTreeObj.getNodes()[0], indicateur);
+							sourceTreeObj.removeNode(indicateur);
 							l--;
 							associations.push({
-								produit_id: produit.id,
+								indicateur_id: indicateur.id,
 								composante_id: composanteId
 							});
 						}
@@ -914,13 +914,13 @@
 					
 				});
 				
-				$('#infosProduitDisponible').click(function(){
+				$('#infosIndicateurDisponible').click(function(){
 					/*typecomposante_code = $('#typecomposante_code').val();*/
-					var sourceTreeObj = $.fn.zTree.getZTreeObj("liste_produit");
+					var sourceTreeObj = $.fn.zTree.getZTreeObj("liste_indicateur");
 					var treeNodes = sourceTreeObj.getSelectedNodes();
-					var produit = treeNodes[0];
-					/*$.get('/ajouterFicheTechnique/'+produit.id+'/'+typecomposante_code,function(dat){*/
-					$.get('/ajouterFicheTechnique/'+produit.id,function(dat){
+					var indicateur = treeNodes[0];
+					/*$.get('/ajouterFicheTechnique/'+indicateur.id+'/'+typecomposante_code,function(dat){*/
+					$.get('/ajouterFicheTechnique/'+indicateur.id,function(dat){
 						$('#popup').html(dat);
 						$("#myModal").modal('show');
 					});
@@ -928,31 +928,31 @@
 				});
 				
 				
-				$('#uniteProduitDisponible').click(function(){
-					var sourceTreeObj = $.fn.zTree.getZTreeObj("liste_produit");
+				$('#uniteIndicateurDisponible').click(function(){
+					var sourceTreeObj = $.fn.zTree.getZTreeObj("liste_indicateur");
 					var treeNodes = sourceTreeObj.getSelectedNodes();
-					var produit = treeNodes[0];
-					$.get('/ajouterUniteProduit/'+produit.id,function(dat){
+					var indicateur = treeNodes[0];
+					$.get('/ajouterUniteIndicateur/'+indicateur.id,function(dat){
 						$('#popup').html(dat);
 						$("#myModal").modal('show');
 					});
 					
 				});
 				
-				$('#desagregationProduitDisponible').click(function(){
-					var sourceTreeObj = $.fn.zTree.getZTreeObj("liste_produit");
+				$('#desagregationIndicateurDisponible').click(function(){
+					var sourceTreeObj = $.fn.zTree.getZTreeObj("liste_indicateur");
 					var treeNodes = sourceTreeObj.getSelectedNodes();
-					var produit = treeNodes[0];
-					$.get('/produits/'+produit.id+'/desagregation',function(dat){
+					var indicateur = treeNodes[0];
+					$.get('/indicateurs/'+indicateur.id+'/desagregation',function(dat){
 						$('#popup').html(dat);
 						$("#myModal").modal('show');
 					});
 					
 				});
 				
-				$('#uploadProduit').click(function(){
+				$('#uploadIndicateur').click(function(){
 					
-					$.get('/produits/upload',function(dat){
+					$.get('/indicateurs/upload',function(dat){
 						$('#popup').html(dat);
 						$("#myModal").modal('show');
 					});

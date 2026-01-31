@@ -13,26 +13,13 @@
 				@csrf
 				<div class="row">
 					<div class="row mb-3">
-						<div class="col-md-4">
-						  <label class="form-label">Catégorie de dépense 
-							<span style="color: red;">*</span>
-						  </label>
-						   <select name="categorie_depense_id" class="form-select @error('categorieDepense') is-invalid @enderror" required>
-								<option value="">-- Sélectionner une catégorie --</option>
-								@foreach($categorieDepenses as $categorie)
-									<option value="{{ $categorie->id }}">
-										{{ $categorie->intitule }}
-									</option>
-								@endforeach
-							</select>
-						</div>
-						<div class="col-md-4">
+						<div class="col-md-6">
 						  <label class="form-label">Année 
 							<span style="color: red;">*</span>
 						  </label>
 						  <input name="annee" type="text" class="form-control" required>
 						</div>
-						<div class="col-md-4">
+						<div class="col-md-6">
 						  <label class="form-label">Montant 
 							<span style="color: red;">*</span>
 						  </label>
@@ -59,8 +46,7 @@
                     <table class="dataTable table table-bordered table-striped">
                         <thead>
                             <tr>
-                                <th class="text-left">Catégorie dépense</th>
-								<th class="text-left">Année</th>
+                                <th class="text-left">Année</th>
 								<th class="text-left">Montant</th>
                                 <th class="text-center table-icons">Actions</th>
                             </tr>
@@ -68,8 +54,7 @@
                         <tbody>
                             @foreach($budgets as $budget)
                             <tr>
-                                <td class="text-left">{{ $budget->categorieDepense->intitule }}</td>
-								<td class="text-left">{{ $budget->annee }}</td>
+                                <td class="text-left">{{ $budget->annee }}</td>
 								<td class="text-left">{{ $budget->montant }}</td>
                                 <td class="text-center table-icons">
                                     <a href="{{ route('projets.planFinancements.budgetAnnuel.edit', [$projet->id, $budget->id]) }}" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i></a>

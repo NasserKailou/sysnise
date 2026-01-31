@@ -94,21 +94,44 @@ Route::middleware(['auth'])->group(function () {
 		Route::post('planFinancements', [App\Http\Controllers\ProjetController::class, 'storePlanFinancements'])->name('projets.planFinancements.store');
 		Route::get('editPlanFinancements/{composante_id}/{source_financement_id}/{bailleur_id}/{categorie_depense_id}/{nature_financement_id}/{statut_financement_id}', [App\Http\Controllers\ProjetController::class, 'editPlanFinancements'])->name('projets.planFinancements.edit');
 		Route::post('editplanFinancements/{planFinancement}', [App\Http\Controllers\ProjetController::class, 'updatePlanFinancements'])->name('projets.planFinancements.update');
-		Route::delete('planFinancements/{composante_id}/{source_financement_id}/{bailleur_id}/{categorie_depense_id}/{nature_financement_id}/{statut_financement_id}', [App\Http\Controllers\ProjetController::class, 'destroyPlanFinancements'])->name('projets.planFinancements.destroy');
+		Route::delete('planFinancements/{planFinancement}', [App\Http\Controllers\ProjetController::class, 'destroyPlanFinancements'])->name('projets.planFinancements.destroy');
 		
-		Route::get('budgetAnnuelPrevu/{composante_id}/{source_financement_id}/{bailleur_id}/{categorie_depense_id}/{nature_financement_id}/{statut_financement_id}', [App\Http\Controllers\ProjetController::class, 'budgetAnnuelPrevu'])->name('projets.planFinancements.budgetAnnuelPrevu');
+		//financement par composante
+		Route::get('financementParComposante', [App\Http\Controllers\ProjetController::class, 'financementParComposante'])->name('projets.financementParComposante');
+		Route::post('financementParComposante', [App\Http\Controllers\ProjetController::class, 'storeFinancementParComposante'])->name('projets.financementParComposante.store');
+		Route::get('editFinancementParComposante/{composante_id}', [App\Http\Controllers\ProjetController::class, 'editFinancementParComposante'])->name('projets.financementParComposante.edit');
+		Route::post('editFinancementParComposante/{planFinancement}', [App\Http\Controllers\ProjetController::class, 'updateFinancementParComposante'])->name('projets.financementParComposante.update');
+		
+		//financement par catégorie de dépense
+		Route::get('financementParCategorieDepense', [App\Http\Controllers\ProjetController::class, 'financementParCategorieDepense'])->name('projets.financementParCategorieDepense');
+		Route::post('financementParCategorieDepense', [App\Http\Controllers\ProjetController::class, 'storeFinancementParCategorieDepense'])->name('projets.financementParCategorieDepense.store');
+		Route::get('editFinancementParCategorieDepense/{composante_id}', [App\Http\Controllers\ProjetController::class, 'editFinancementParCategorieDepense'])->name('projets.financementParCategorieDepense.edit');
+		Route::post('editFinancementParCategorieDepense/{planFinancement}', [App\Http\Controllers\ProjetController::class, 'updateFinancementParCategorieDepense'])->name('projets.financementParCategorieDepense.update');
+		
+		//financement par Bailleur
+		Route::get('financementParBailleur', [App\Http\Controllers\ProjetController::class, 'financementParBailleur'])->name('projets.financementParBailleur');
+		Route::post('financementParBailleur', [App\Http\Controllers\ProjetController::class, 'storeFinancementParBailleur'])->name('projets.financementParBailleur.store');
+		Route::get('editFinancementParBailleur/{composante_id}', [App\Http\Controllers\ProjetController::class, 'editFinancementParBailleur'])->name('projets.financementParBailleur.edit');
+		Route::post('editFinancementParBailleur/{planFinancement}', [App\Http\Controllers\ProjetController::class, 'updateFinancementParBailleur'])->name('projets.financementParBailleur.update');
+		
+		//**
+		Route::get('financementParComposante/budgetAnnuelPrevu/{composante_id}', [App\Http\Controllers\ProjetController::class, 'budgetAnnuelPrevuParComposante'])->name('projets.financementParComposante.budgetAnnuelPrevu');
+		
+		Route::get('budgetAnnuelPrevu/{planFinancement}', [App\Http\Controllers\ProjetController::class, 'budgetAnnuelPrevu'])->name('projets.planFinancements.budgetAnnuelPrevu');
 		Route::post('budgetAnnuelPrevu/{planFinancement}', [App\Http\Controllers\ProjetController::class, 'storeBudgetAnnuelPrevu'])->name('projets.planFinancements.budgetAnnuelPrevu.store');
 		Route::get('editBudgetAnnuelPrevu/{budgetAnnuelPrevu}', [App\Http\Controllers\ProjetController::class, 'editBudgetAnnuelPrevu'])->name('projets.planFinancements.budgetAnnuelPrevu.edit');
 		Route::post('editbudgetAnnuelPrevu/{budgetAnnuelPrevu}', [App\Http\Controllers\ProjetController::class, 'updateBudgetAnnuelPrevu'])->name('projets.planFinancements.budgetAnnuelPrevu.update');
 		Route::delete('budgetAnnuelPrevu/{budgetAnnuelPrevu}', [App\Http\Controllers\ProjetController::class, 'destroyBudgetAnnuelPrevu'])->name('projets.planFinancements.budgetAnnuelPrevu.destroy');
 		
-		Route::get('budgetAnnuelDepense/{composante_id}/{source_financement_id}/{bailleur_id}/{categorie_depense_id}/{nature_financement_id}/{statut_financement_id}', [App\Http\Controllers\ProjetController::class, 'budgetAnnuelDepense'])->name('projets.planFinancements.budgetAnnuelDepense');
+		Route::get('budgetAnnuelDepense/{planFinancement}', [App\Http\Controllers\ProjetController::class, 'budgetAnnuelDepense'])->name('projets.planFinancements.budgetAnnuelDepense');
 		Route::post('budgetAnnuelDepense/{planFinancement}', [App\Http\Controllers\ProjetController::class, 'storeBudgetAnnuelDepense'])->name('projets.planFinancements.budgetAnnuelDepense.store');
 		Route::get('editBudgetAnnuelDepense/{budgetAnnuelDepense}', [App\Http\Controllers\ProjetController::class, 'editBudgetAnnuelDepense'])->name('projets.planFinancements.budgetAnnuelDepense.edit');
 		Route::post('editbudgetAnnuelDepense/{budgetAnnuelDepense}', [App\Http\Controllers\ProjetController::class, 'updateBudgetAnnuelDepense'])->name('projets.planFinancements.budgetAnnuelDepense.update');
 		Route::delete('budgetAnnuelDepense/{budgetAnnuelDepense}', [App\Http\Controllers\ProjetController::class, 'destroyBudgetAnnuelDepense'])->name('projets.planFinancements.budgetAnnuelDepense.destroy');
 		
-		Route::get('budgetAnnuel/{composante_id}/{source_financement_id}/{bailleur_id}/{categorie_depense_id}/{nature_financement_id}/{statut_financement_id}', [App\Http\Controllers\ProjetController::class, 'budgetAnnuel'])->name('projets.planFinancements.budgetAnnuel');
+		//**
+		Route::get('financementParComposante/budgetAnnuel/{planFinancement}', [App\Http\Controllers\ProjetController::class, 'budgetAnnuelParComposante'])->name('projets.financementParComposante.budgetAnnuel');
+		Route::get('budgetAnnuel/{planFinancement}', [App\Http\Controllers\ProjetController::class, 'budgetAnnuel'])->name('projets.planFinancements.budgetAnnuel');
 		Route::post('budgetAnnuel/{planFinancement}', [App\Http\Controllers\ProjetController::class, 'storeBudgetAnnuel'])->name('projets.planFinancements.budgetAnnuel.store');
 		Route::get('editBudgetAnnuel/{budgetAnnuel}', [App\Http\Controllers\ProjetController::class, 'editBudgetAnnuel'])->name('projets.planFinancements.budgetAnnuel.edit');
 		Route::post('editbudgetAnnuel/{budgetAnnuel}', [App\Http\Controllers\ProjetController::class, 'updateBudgetAnnuel'])->name('projets.planFinancements.budgetAnnuel.update');

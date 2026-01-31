@@ -181,7 +181,8 @@ class Projet extends Model
 	
 	public function planFinancements()
 	{
-		return $this->belongsToMany(
+		return $this->hasMany(PlanFinancement::class);
+		/*return $this->belongsToMany(
 			SourceFinancement::class,
 			'plan_financements',
 			'projet_id',
@@ -189,7 +190,7 @@ class Projet extends Model
 		)
 		->using(PlanFinancement::class)
 		->withPivot(['bailleur_id', 'statut_financement_id', 'nature_financement_id', 'composante_id', 'categorie_depense_id', 'montant'])
-		->withTimestamps();
+		->withTimestamps();*/
 	}
 	
 	

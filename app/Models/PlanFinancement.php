@@ -75,5 +75,10 @@ class PlanFinancement extends Pivot
         );
     }
 	
+	public function projet()
+	{
+		return $this->belongsTo(Projet::class);
+	}
+	
 	
 }

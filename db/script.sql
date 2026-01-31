@@ -1952,3 +1952,83 @@ ON DELETE SET NULL;
 update projets set secteur_id=1;
 
 ALTER TABLE projets ALTER COLUMN secteur_id SET NOT NULL;
+
+-------------19/01/2026-----------
+ALTER TABLE plan_financements
+    ALTER COLUMN composante_id DROP NOT NULL,
+    ALTER COLUMN source_financement_id DROP NOT NULL,
+    ALTER COLUMN bailleur_id DROP NOT NULL,
+    ALTER COLUMN statut_financement_id DROP NOT NULL,
+    ALTER COLUMN nature_financement_id DROP NOT NULL,
+    ALTER COLUMN categorie_depense_id DROP NOT NULL;
+
+-------------------------------requete pour recupérer les produits (derniers noeud d'un cadre de resultat -------------
+WITH RECURSIVE descendants AS (
+    -- Nœud parent de départ
+    SELECT 
+        id,
+        intitule,
+        parent_id
+    FROM view_cadre_logique
+    WHERE id = :parent_id
+
+    UNION ALL
+
+    -- Récupération récursive des descendants
+    SELECT 
+        v.id,
+        v.intitule,
+        v.parent_id
+    FROM view_cadre_logique v
+    INNER JOIN descendants d
+        ON v.parent_id = d.id
+)
+SELECT 
+    d.id,
+    d.intitule,
+    d.parent_id
+FROM descendants d
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM view_cadre_logique c
+    WHERE c.parent_id = d.id
+);
+
+-----------------------function postgres getProduit
+CREATE OR REPLACE FUNCTION get_produit_from_cmr(parent_node_id BIGINT)
+RETURNS TABLE (
+    id BIGINT,
+    intitule VARCHAR,
+    parent_id BIGINT
+)
+LANGUAGE sql
+AS $$
+WITH RECURSIVE descendants AS (
+    SELECT
+        id,
+        intitule,
+        parent_id
+    FROM view_cadre_logique
+    WHERE id = parent_node_id
+
+    UNION ALL
+
+    SELECT
+        v.id,
+        v.intitule,
+        v.parent_id
+    FROM view_cadre_logique v
+    INNER JOIN descendants d
+        ON v.parent_id = d.id
+)
+SELECT
+    d.id,
+    d.intitule,
+    d.parent_id
+FROM descendants d
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM view_cadre_logique c
+    WHERE c.parent_id = d.id
+);
+$$;

@@ -13,20 +13,7 @@
 				@csrf
 				<div class="row">
 					<div class="row mb-3">
-						<div class="col-md-4">
-						  <label class="form-label">Catégorie de dépense 
-							<span style="color: red;">*</span>
-						  </label>
-						   <select name="categorie_depense_id" class="form-select @error('categorieDepense') is-invalid @enderror" required>
-								<option value="">-- Sélectionner une catégorie --</option>
-								@foreach($categorieDepenses as $categorie)
-									<option value="{{ $categorie->id }}"
-										{{ old('categorie_depense_id', $budgetAnnuelDepense->categorieDepense->id ?? '') == $categorie->id ? 'selected' : '' }}>
-										{{ $categorie->intitule }}
-									</option>
-								@endforeach
-							</select>
-						</div>
+						
 						<div class="col-md-4">
 						  <label class="form-label">Année 
 							<span style="color: red;">*</span>
