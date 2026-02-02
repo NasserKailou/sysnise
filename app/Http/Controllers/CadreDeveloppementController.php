@@ -22,14 +22,28 @@ class CadreDeveloppementController extends Controller
 {
     public function index(Request $request)
     {
-        $cadreDeveloppements = CadreDeveloppement::where('type_cadre_developpement_id', 1)
+       // $cadreDeveloppements = CadreDeveloppement::where('type_cadre_developpement_id', 1)
             //->where('user_id', auth()->id())
-            ->where('institution_tutelle_id', Auth::user()->institution_tutelle_id)
-           ->with(['cadreDeveloppementUsers.userr']) // Charger les associations avec l'institution
-            ->get();
+           // ->where('institution_tutelle_id', Auth::user()->institution_tutelle_id)
+          // ->with(['cadreDeveloppementUsers.userr']) // Charger les associations avec l'institution
+           // ->get();
+
+           $user = Auth::user();
+
+           $cadreDeveloppements = CadreDeveloppement::where('type_cadre_developpement_id', 1)
+    ->where(function($query) use ($user) {
+        // Condition 1: Institution tutelle de l'utilisateur
+        $query->where('institution_tutelle_id', $user->institution_tutelle_id)
+              // Condition 2: OU associé à l'utilisateur connecté
+              ->orWhereHas('cadreDeveloppementUsers', function($q) use ($user) {
+                  $q->where('userr', $user->id);
+              });
+    })
+    ->with(['cadreDeveloppementUsers.userr'])
+    ->get();
 
 
-$currentUserInstitutionId = Auth::user()->institution_tutelle_id;
+        $currentUserInstitutionId = Auth::user()->institution_tutelle_id;
              $users = User::where('institution_tutelle_id', '!=', $currentUserInstitutionId)
         //->whereNull('deleted_on')
         ->get();
