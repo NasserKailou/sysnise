@@ -48,11 +48,28 @@ class ProjetController extends Controller
 {
     public function index(Request $request)
     {
-        $projets = Projet::whereNull('deleted_on')
+        //$projets = Projet::whereNull('deleted_on')
 				//->where('user_id', auth()->id())
-				->where('institution_tutelle_id', Auth::user()->institution_tutelle_id)
-				->with(['projetUsers.userr']) // Charger les associations 
-				->get();
+				//->where('institution_tutelle_id', Auth::user()->institution_tutelle_id)
+				//->with(['projetUsers.userr']) // Charger les associations 
+				//->get();
+
+
+
+				 $user = Auth::user();
+
+         $projets = Projet::whereNull('deleted_on')
+    ->where(function($query) use ($user) {
+        // Condition 1: Institution tutelle de l'utilisateur
+        $query->where('institution_tutelle_id', $user->institution_tutelle_id)
+              // Condition 2: OU associé à l'utilisateur connecté via projet_users
+              ->orWhereHas('projetUsers', function($q) use ($user) {
+                  $q->where('userr', $user->id);
+              });
+    })
+    ->with(['projetUsers.userr'])
+    ->get();
+
 
 
 
