@@ -25,6 +25,7 @@ class CadreDeveloppementStoreRequest extends FormRequest
             'annee_debut' => ['nullable', 'string', 'max:255'],
             'annee_fin' => ['nullable', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
+			'cout_total_financement' => ['nullable', 'string'],
             'cadre_developpement_id' => ['nullable', 'integer', 'exists:cadre_developpements,id'],
         ];
     }

@@ -185,6 +185,12 @@
                     </a>
                   </li>
 				  <li class="nav-item">
+                    <a href="{{ asset('storage/modele/cadre_resultat_PRR.xlsx') }}" class="nav-link">
+                      <i class="nav-icon bi bi-download"></i>
+                      <p>Fiche Cadre Résultat</p>
+                    </a>
+                  </li>
+				  <li class="nav-item">
                     <a href="{{ asset('storage/modele/Indicateur_PRR.xlsx') }}" class="nav-link">
                       <i class="nav-icon bi bi-download"></i>
                       <p>Fiche Indicateurs</p>
@@ -266,6 +272,44 @@
                     <a href="/projets" class="nav-link">
                       <i class="nav-icon bi bi-list"></i>
                       <p>Liste des projets</p>
+                    </a>
+                  </li>
+				  <li class="nav-item">
+                    <a href="{{ asset('storage/modele/Indicateur_PRR.xlsx') }}" class="nav-link">
+                      <i class="nav-icon bi bi-download"></i>
+                      <p>Fiche Indicateurs</p>
+                    </a>
+                  </li>
+				  <li class="nav-item">
+                    <a href="/export_data_template" class="nav-link">
+                      <i class="nav-icon bi bi-download"></i>
+                      <p>Modèle de chargement</p>
+                    </a>
+                  </li>
+				  <li class="nav-item">
+                    <a href="/donnee_indicateurs/uploadData" class="nav-link">
+                      <i class="nav-icon bi bi-upload"></i>
+                      <p>Chargement de données</p>
+                    </a>
+                  </li>
+				  <li class="nav-item">
+                    <a href="/donnee_indicateurs/create" class="nav-link">
+                      <i class="nav-icon bi bi-journal-text"></i>
+                      <p>Saisie de données</p>
+                    </a>
+                  </li>
+				  <li class="nav-item">
+                    <a href="/donnee_indicateurs/parametreSaisie" class="nav-link">
+                      <i class="nav-icon bi bi-journal-text"></i>
+                      <p>Saisie réalisation</p>
+                    </a>
+                  </li>
+				  <li class="nav-header">EXTRACTION</li>
+				  
+				  <li class="nav-item">
+                    <a href="/donnee_indicateurs/extractionDonnees" class="nav-link">
+                      <i class="nav-icon bi bi-graph-up"></i>
+                      <p>Extraction de données</p>
                     </a>
                   </li>
 				 

@@ -21,7 +21,11 @@
 			  <a href="#" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Situation Financière</a>
 				<ul class="dropdown-menu">
 				  <li><a class="dropdown-item" href="{{ route('projets.rechercheFinancements', ['projet' => $projet->id]) }}">Recherche Financement</a></li>
-				  <li><a class="dropdown-item" href="{{ route('projets.planFinancements', ['projet' => $projet->id]) }}">Plan Financement</a></li>
+				  <li><a class="dropdown-item" href="{{ route('projets.financementParComposante', ['projet' => $projet->id]) }}">Financement par Composante</a></li>
+				  <li><a class="dropdown-item" href="{{ route('projets.financementParCategorieDepense', ['projet' => $projet->id]) }}">Financement par Catégorie de dépense</a></li>
+				  <li><a class="dropdown-item" href="{{ route('projets.financementParBailleur', ['projet' => $projet->id]) }}">Financement par Bailleur</a></li>
+				  
+				
 				</ul>
 			  <a href="{{ route('projets.clotureProjets', ['projet' => $projet->id]) }}"" class="btn btn-outline-secondary">Clôture </a>
 			  @if ($projet->statutProjet->id == 4)<a href="#" class="btn btn-outline-secondary">Evaluation </a>@endif

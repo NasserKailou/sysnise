@@ -25,6 +25,7 @@ class CadreDeveloppement extends Model
         'cadre_developpement_id',
         'user_id',
         'institution_tutelle_id',
+		'cout_total_financement',
     ];
 
     /**
@@ -78,6 +79,16 @@ class CadreDeveloppement extends Model
     {
         return $this->cadreDeveloppementUsers();
     }
+	
+	public function financementParBailleurs()
+	{
+		return $this->hasMany(CD_FinancementParBailleur::class);
+	}
+	
+	public function financementParResultats()
+	{
+		return $this->hasMany(CD_FinancementParResultat::class);
+	}
 
 	
 }

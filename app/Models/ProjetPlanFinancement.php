@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class PlanFinancement extends Pivot
+class ProjetPlanFinancement extends Pivot
 {
-    protected $table = 'plan_financements';
+    protected $table = 'projet_plan_financements';
 	
 
     protected $fillable = [
@@ -54,26 +54,31 @@ class PlanFinancement extends Pivot
 	public function budgetsAnnuelsPrevus()
     {
         return $this->hasMany(
-            BudgetAnnuelPrevu::class,
+            ProjetBudgetAnnuel::class,
             'plan_financement_id'
-        );
+        )->where('statut_budget_id', 1);
     }
 	
 	public function budgetsAnnuelsDepenses()
     {
         return $this->hasMany(
-            BudgetAnnuelDepense::class,
+            ProjetBudgetAnnuel::class,
             'plan_financement_id'
-        );
+        )->where('statut_budget_id', 2);
     }
 	
 	public function budgetsAnnuels()
     {
         return $this->hasMany(
-            BudgetAnnuel::class,
+            ProjetBudgetAnnuel::class,
             'plan_financement_id'
-        );
+        )->where('statut_budget_id', 3);
     }
+	
+	public function projet()
+	{
+		return $this->belongsTo(Projet::class);
+	}
 	
 	
 }

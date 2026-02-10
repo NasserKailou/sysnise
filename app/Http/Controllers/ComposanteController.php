@@ -1,8 +1,11 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Support\Facades\DB;
 use App\Models\Projet;
 use App\Models\Composante;
+use App\Models\CadreDeveloppement;
+use App\Models\CadreLogique;
 use App\Models\Indicateur;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -16,11 +19,10 @@ class ComposanteController extends Controller
     public function index($projet_id)
     {
         $projet = Projet::findOrFail($projet_id);
-		$indicateurs = Indicateur::where('type_indicateur_id',2)->get();
+		$produits = CadreLogique::getProduitsByCadreDeveloppement($projet->cadreDeveloppement->id);
 		$composantes = Composante::where('projet_id',$projet_id)->get();
-		//getHierarchyByProjet($projet_id);
 		$breadcrumb = 'Projets >Composantes';
-        return view('composante.index', compact('breadcrumb','projet', 'composantes','indicateurs'));
+        return view('composante.index', compact('breadcrumb','projet', 'composantes','produits'));
     }
 	
 	public function showUploadForm($projet_id)

@@ -54,7 +54,7 @@
 
         .login-header {
             background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            padding: 3rem 2rem;
+            /*padding: 3rem 2rem;*/
             text-align: center;
             position: relative;
         }

@@ -92,8 +92,8 @@
 
 		@foreach($cadre_logiques as $cadre_logique)
 			zNodescadre_logique.push({
-				id: {{ $cadre_logique->id }},
-				pId: {{ $cadre_logique->parent_id ?? 0 }},
+				id: @json((string) $cadre_logique->id),
+				pId: @json((string) ($cadre_logique->parent_id ?? '0')),
 				name: @json($cadre_logique->intitule)
 			});
 		@endforeach

@@ -6,11 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class ComposanteIndicateur extends Model
+class ComposanteProduit extends Model
 {
 
     protected $fillable = [
-        'indicateur_id',
+        'produit_id',
         'composante_id',
     ];
 
@@ -22,15 +22,15 @@ class ComposanteIndicateur extends Model
     protected function casts(): array
     {
         return [
-            'indicateur_id' => 'integer',
+            'produit_id' => 'integer',
             'composante_id' => 'integer',
         ];
     }
 	
-	// Relation avec Indicateur
-    public function indicateur()
+	// Relation avec Produit
+    public function produit()
     {
-        return $this->belongsTo(Indicateur::class, 'indicateur_id', 'id');
+        return $this->belongsTo(Produit::class, 'produit_id', 'id');
     }
 
     // Relation avec Composante
