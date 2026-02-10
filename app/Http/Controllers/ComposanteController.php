@@ -20,10 +20,6 @@ class ComposanteController extends Controller
     {
         $projet = Projet::findOrFail($projet_id);
 		$produits = CadreLogique::getProduitsByCadreDeveloppement($projet->cadreDeveloppement->id);
-		/*$produits = DB::select(
-            'SELECT * FROM get_cadre_logique_feuilles(?)',
-            [9]
-        );*/
 		$composantes = Composante::where('projet_id',$projet_id)->get();
 		$breadcrumb = 'Projets >Composantes';
         return view('composante.index', compact('breadcrumb','projet', 'composantes','produits'));

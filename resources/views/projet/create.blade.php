@@ -105,8 +105,11 @@
 		var zNodesChaineLogique = [];
 		@foreach($chaineLogiques as $chaine)
 			zNodesChaineLogique.push({
-				id: {{ $chaine->id }},
+				/*id: {{ $chaine->id }},
 				pId: {{ $chaine->parent_id ?? 0 }},
+				*/
+				id: @json((string) $chaine->id),
+				pId: @json((string) ($chaine->parent_id ?? '0')),
 				name: @json($chaine->intitule)
 			});
 		@endforeach

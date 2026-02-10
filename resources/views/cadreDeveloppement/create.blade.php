@@ -32,8 +32,8 @@
 		var zNodesChaineLogique = [];
 		@foreach($chaineLogiques as $chaine)
 			zNodesChaineLogique.push({
-				id: {{ $chaine->id }},
-				pId: {{ $chaine->parent_id ?? 0 }},
+				id: @json((string) $chaine->id),
+				pId: @json((string) ($chaine->parent_id ?? '0')),
 				name: @json($chaine->intitule)
 			});
 		@endforeach
@@ -131,6 +131,12 @@
 					<div class="col-md-6">
 					  <label class="form-label">Année de fin</label>
 					  <input name="annee_fin" type="text" class="form-control">
+					</div>
+				</div>
+				<div class="row mb-3">
+					<div class="col-md-12">
+					  <label class="form-label">Coût total du financement</label>
+					  <input name="cout_total_financement" type="number" class="form-control">
 					</div>
 				</div>
 				<div class="row mb-3">

@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('donnee_indicateurs', function (Blueprint $table) {
+      /*  Schema::table('donnee_indicateurs', function (Blueprint $table) {
             $table->text('commentaire_rejet')->nullable()->after('statut')->comment('Commentaire en cas de rejet de la donnée');
-        });
+        });*/
     }
 
     /**
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('donnee_indicateurs', function (Blueprint $table) {
+      /*  Schema::table('donnee_indicateurs', function (Blueprint $table) {
             $table->dropColumn('commentaire_rejet');
-        });
+        });*/
     }
 };

@@ -4,17 +4,15 @@ use Illuminate\Support\Facades\Route;
 
 Route::apiResource('zones', App\Http\Controllers\ZoneApiController::class);
 
-//Route::apiResource('cadre_developpements', App\Http\Controllers\CadreDeveloppementApiController::class);
-
-//Route::apiResource('piece-jointes', App\Http\Controllers\PieceJointeController::class);
-
 Route::apiResource('composantes', App\Http\Controllers\ComposanteApiController::class);
-Route::apiResource('composante_indicateurs', App\Http\Controllers\ComposanteIndicateurApiController::class);
-Route::delete('/composante_indicateurs/{composante_id}/{indicateur_id}',[App\Http\Controllers\ComposanteIndicateurApiController::class, 'destroy']);
-Route::get('/composante_indicateurs/{composante_id}/indicateurs', [App\Http\Controllers\ComposanteIndicateurApiController::class, 'getIndicateursByComposante']);
-Route::get('/composante_indicateurs/{composante_id}/indicateursSelected', [App\Http\Controllers\ComposanteIndicateurApiController::class, 'getIndicateursInComposante']);
-Route::post('/composante_indicateurs/storeBatch',[App\Http\Controllers\ComposanteIndicateurApiController::class, 'storeBatch']);
-Route::post('/composante_indicateurs/deleteBatch',[App\Http\Controllers\ComposanteIndicateurApiController::class, 'deleteBatch']);
+Route::apiResource('composante_produits', App\Http\Controllers\ComposanteProduitApiController::class);
+Route::delete('/composante_produits/{composante_id}/{produit_id}',[App\Http\Controllers\ComposanteProduitApiController::class, 'destroy']);
+//Route::get('/composante_produits/{composante_id}/produits', [App\Http\Controllers\ComposanteProduitApiController::class, 'getProduitsByComposante']);
+Route::get('/composante_produits/{projet}/{composante}/produits', [App\Http\Controllers\ComposanteProduitApiController::class, 'getProduitsByComposante']);
+
+Route::get('/composante_produits/{composante_id}/produitsSelected', [App\Http\Controllers\ComposanteProduitApiController::class, 'getProduitsInComposante']);
+Route::post('/composante_produits/storeBatch',[App\Http\Controllers\ComposanteProduitApiController::class, 'storeBatch']);
+Route::post('/composante_produits/deleteBatch',[App\Http\Controllers\ComposanteProduitApiController::class, 'deleteBatch']);
 
 Route::apiResource('cadre_logiques', App\Http\Controllers\CadreLogiqueApiController::class);
 Route::put('/cadre_mesure_resultats/{id}/update-parent', [App\Http\Controllers\CadreLogiqueApiController::class, 'updateParent']);

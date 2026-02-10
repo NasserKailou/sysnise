@@ -25,6 +25,7 @@ class CadreDeveloppement extends Model
         'cadre_developpement_id',
         'user_id',
         'institution_tutelle_id',
+		'cout_total_financement',
     ];
 
     /**
@@ -65,5 +66,29 @@ class CadreDeveloppement extends Model
             'cadre_logique_id'              // clé étrangère du modèle lié
         )->withTimestamps();       // active la gestion automatique de created_at / updated_at
     }
+
+// Relation avec les associations
+    public function cadreDeveloppementUsers()
+    {
+        return $this->hasMany(CadreDeveloppementUser::class, 'cadre_developpement', 'id')
+                    ->with('userr');
+    }
+
+    // Alias pour faciliter l'utilisation
+    public function associations()
+    {
+        return $this->cadreDeveloppementUsers();
+    }
+	
+	public function financementParBailleurs()
+	{
+		return $this->hasMany(CD_FinancementParBailleur::class);
+	}
+	
+	public function financementParResultats()
+	{
+		return $this->hasMany(CD_FinancementParResultat::class);
+	}
+
 	
 }

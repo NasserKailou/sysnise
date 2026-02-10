@@ -136,8 +136,9 @@
 					return (treeNode.click != false);
 				}
 				function onClickcomposante(event, treeId, treeNode, clickFlag) {
+					projet_id = $('#projet_id').val();
 					$.ajax({
-						url: '/api/composante_produits/' + treeNode.id + '/produits',
+						url: '/api/composante_produits/'+projet_id+'/' + treeNode.id + '/produits',
 						type: 'GET',
 						success: function (data) {
 							// Construction du noeud racine "/"
@@ -173,10 +174,10 @@
 							// Activation de l’édition
 							var editableSetting = $.extend(true, {}, settingProduit, {
 								edit: {
-									enable: true,
-									editNameSelectAll: true,
+									enable: false,
+									/*editNameSelectAll: true,
 									showRemoveBtn: true,
-									showRenameBtn: true
+									showRenameBtn: true*/
 								},
 								data: {
 									simpleData: {
@@ -388,9 +389,9 @@
 				
 			var settingProduit = {
 				view: {
-					showIcon: showIconForTree,
-					addHoverDom: addHoverDomProduit,
-					removeHoverDom: removeHoverDomProduit
+					showIcon: showIconForTree
+					/*addHoverDom: addHoverDomProduit,
+					removeHoverDom: removeHoverDomProduit*/
 					
 				},
 				data: {
@@ -399,10 +400,10 @@
 					}
 				},
 				edit: {
-					enable: true,
-					editNameSelectAll: true,
+					enable: false,
+					/*editNameSelectAll: true,
 					showRemoveBtn: true,
-					showRenameBtn: true
+					showRenameBtn: true*/
 				},
 				callback: {
 					beforeClick: beforeClickProduit,

@@ -131,6 +131,12 @@
 					</div>
 				</div>
 				<div class="row mb-3">
+					<div class="col-md-12">
+					  <label class="form-label">Coût total du financement</label>
+					  <input name="cout_total_financement" type="number" class="form-control" value="{{ old('cout_total_financement', $cadreDeveloppement->cout_total_financement) }}">
+					</div>
+				</div>
+				<div class="row mb-3">
 						<div class="col-md-12">
 							<label class="form-label">Cadre Stratégique d'alignement</label>
 							<input id="chaine_logique_ids" name="chaine_logique_ids" type="hidden" class="form-control" readonly value="{{ old('chaine_logique_ids', $chaineLogiqueIds ?? '') }}"/>

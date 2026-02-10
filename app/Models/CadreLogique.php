@@ -108,26 +108,41 @@ class CadreLogique extends Model
 
 		return $result;
 	}
-	/*public static function getProduitsByCadreDeveloppement($cadreDeveloppementId)
+	
+	public static function getProduitsNonAssocieByCadreDeveloppement(int $cadreDeveloppementId,$composanteId) 
 	{
-		// 1. Récupérer le nœud racine "CMR" lié au cadre de développement
+		// 1. Récupérer le nœud racine "CMR"
 		$root = self::where('intitule', 'CMR')
-			->whereHas('orientations', function ($q) use ($cadreDeveloppementId) {
-				$q->where('cadre_developpement_id', $cadreDeveloppementId);
-			})
+			->whereIn(
+				'id',
+				OrientationCadreDeveloppement::where('cadre_developpement_id', $cadreDeveloppementId)
+					->pluck('cadre_logique_id')
+			)
+			->with('children') // préchargement
 			->first();
-			
+
 		if (!$root) {
-			return collect(); // aucun CMR trouvé
+			return collect();
 		}
+
+		// 2. Récupérer UNE FOIS les produits déjà associés à la composante
+		$cadreIdsDejaUtilises = ComposanteProduit::where('composante_id', $composanteId)
+			->pluck('produit_id')
+			->flip(); // clé = id (lookup O(1))
+
 		$result = collect();
 
-		// 2. Parcours récursif pour ne garder que les feuilles
-		$traverse = function ($cadre) use (&$traverse, &$result) {
+		// 3. Parcours récursif sans requêtes supplémentaires
+		$traverse = function ($cadre) use (&$traverse, &$result, $cadreIdsDejaUtilises) {
 
-			if (!$cadre->children()->exists()) {
-				// c'est un nœud de dernier niveau
-				$result->push($cadre);
+			// feuille
+			if ($cadre->children->isEmpty()) {
+
+				// ne garder que ceux qui ne sont PAS déjà utilisés
+				if (!isset($cadreIdsDejaUtilises[$cadre->id])) {
+					$result->push($cadre);
+				}
+
 				return;
 			}
 
@@ -136,12 +151,11 @@ class CadreLogique extends Model
 			}
 		};
 
-		// 3. Lancer le parcours depuis CMR
+		// 4. Lancer le parcours
 		$traverse($root);
 
 		return $result;
-	}*/
-	
+	}
 
 	public function cadreMesureResultats()
     {
@@ -155,4 +169,10 @@ class CadreLogique extends Model
 			'cadre_logique_id'
 		);
 	}
+	
+	public function composanteProduit()
+	{
+		return $this->hasOne(ComposanteProduit::class, 'produit_id');
+	}
+	
 }

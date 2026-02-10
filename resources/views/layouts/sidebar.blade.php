@@ -185,7 +185,7 @@
                     </a>
                   </li>
 				  <li class="nav-item">
-                    <a href="{{ asset('storage/modele/Indicateur_PRR.xlsx') }}" class="nav-link">
+                    <a href="{{ asset('storage/modele/cadre_resultat_PRR.xlsx') }}" class="nav-link">
                       <i class="nav-icon bi bi-download"></i>
                       <p>Fiche Cadre Résultat</p>
                     </a>

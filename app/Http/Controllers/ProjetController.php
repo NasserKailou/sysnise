@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreProjetUserRequest;
+use App\Models\ProjetUser;
+use App\Models\User;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -32,11 +35,9 @@ use App\Models\Bailleur;
 use App\Models\Devise;
 use App\Models\NatureFinancement;
 use App\Models\SourceFinancement;
-use App\Models\PlanFinancement;
+use App\Models\ProjetPlanFinancement;
 use App\Models\ClotureProjet;
-use App\Models\BudgetAnnuelPrevu;
-use App\Models\BudgetAnnuelDepense;
-use App\Models\BudgetAnnuel;
+use App\Models\ProjetBudgetAnnuel;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -48,11 +49,17 @@ class ProjetController extends Controller
         $projets = Projet::whereNull('deleted_on')
 				//->where('user_id', auth()->id())
 				->where('institution_tutelle_id', Auth::user()->institution_tutelle_id)
+				->with(['projetUsers.userr']) // Charger les associations 
 				->get();
+
+		$currentUserInstitutionId = Auth::user()->institution_tutelle_id;
+        $users = User::where('institution_tutelle_id', '!=', $currentUserInstitutionId)
+			//->whereNull('deleted_on')
+			->get();
 
         return view('projet.index', [
             'projets' => $projets,
-			'breadcrumb' => 'Projets > Liste projets',
+			'breadcrumb' => 'Projets > Liste projets', 'users' =>$users
         ]);
     }
 
@@ -101,12 +108,7 @@ class ProjetController extends Controller
         // Récupère les données validées
         $data = $request->validated();
 		$data['user_id'] = auth()->id();
-
 		$projet = Projet::create($data);
-
-
-	
-		
 		//Récupérer les IDs de zones envoyés depuis la vue
 		$zoneIds = array_filter(explode(',', $request->input('zone_ids', '')));
 		$projet->zoneInterventions()->attach($zoneIds);
@@ -120,6 +122,54 @@ class ProjetController extends Controller
 			->with('success', 'Projet enregistré avec succès.');
 	
     }
+
+	 public function associer(StoreProjetUserRequest $request)
+	{
+		$data = $request->validated();
+		
+		// Préparer les données avec les bons noms de colonnes
+		$associationData = [
+			'projet' => $data['projet_id'],
+			'userr' => $data['user_id'],
+			'user_id' => auth()->id()
+		];
+		
+		// Vérifier si l'association existe déjà avec les bons noms de colonnes
+		$existingAssociation = ProjetUser::where([
+			'projet' => $associationData['projet'],
+			'userr' => $associationData['userr'],
+			'user_id' => auth()->id()
+		])->first();
+		
+		if ($existingAssociation) {
+			return redirect()->route('projets.index')
+				->with('warning', 'Cette association existe déjà.');
+		}
+		
+		$projetUSer= ProjetUser::create($associationData);
+
+		return redirect()->route('projets.index')
+			->with('success', 'Projet associé avec succès');
+	}
+
+	public function dissocier($associationId)
+	{
+		// Trouver l'association
+		$association = ProjetUser::findOrFail($associationId);
+		
+		// Vérifier que l'utilisateur est autorisé à supprimer cette association
+		// (par exemple, vérifier que l'utilisateur est le propriétaire du cadre ou de l'association)
+		if ($association->user_id !== auth()->id()) {
+			return redirect()->route('projets.index')
+				->with('error', 'Vous n\'êtes pas autorisé à supprimer cette association.');
+		}
+		
+		// Supprimer l'association
+		$association->delete();
+		
+		return redirect()->route('projets.index')
+			->with('success', 'Association supprimée avec succès');
+	}
 
     public function show(Request $request, Projet $projet)
     {
@@ -514,7 +564,7 @@ class ProjetController extends Controller
 		$natureFinancements = NatureFinancement::whereNull('deleted_on')->get();
 		$statutFinancements = StatutFinancement::whereNull('deleted_on')->get();
 		$categorieDepenses = CategorieDepense::whereNull('deleted_on')->get();
-		$planFinancements = PlanFinancement::where('projet_id', $projet->id)->get();
+		$planFinancements = ProjetProjetPlanFinancement::where('projet_id', $projet->id)->get();
 		
 
 		return view('projet.planFinancements', [
@@ -552,9 +602,9 @@ class ProjetController extends Controller
 	}
 	
 	//public function destroyPlanFinancements($projetId, $composanteId, $sourceFinancementId, $bailleurId, $categorieDepenseId, $natureFinancementId, $statutFinancementId)
-    public function destroyPlanFinancements(Projet $projet, PlanFinancement $PlanFinancement)
+    public function destroyPlanFinancements(Projet $projet, ProjetPlanFinancement $PlanFinancement)
     {
-		//PlanFinancement::where('projet_id',$projetId)->where('bailleur_id', $bailleurId)->where('source_financement_id', $sourceFinancementId)->where('statut_financement_id', $statutFinancementId)->where('nature_financement_id', $natureFinancementId)->where('categorie_depense_id', $categorieDepenseId)->where('composante_id', $composanteId)->delete();
+		//ProjetPlanFinancement::where('projet_id',$projetId)->where('bailleur_id', $bailleurId)->where('source_financement_id', $sourceFinancementId)->where('statut_financement_id', $statutFinancementId)->where('nature_financement_id', $natureFinancementId)->where('categorie_depense_id', $categorieDepenseId)->where('composante_id', $composanteId)->delete();
 		$PlanFinancement->delete();
 		return redirect()->back()->with('success', 'plan de financement supprimée avec succès.');
 		
@@ -568,10 +618,10 @@ class ProjetController extends Controller
 		$natureFinancements = NatureFinancement::whereNull('deleted_on')->get();
 		$statutFinancements = StatutFinancement::whereNull('deleted_on')->get();
 		$categorieDepenses = CategorieDepense::whereNull('deleted_on')->get();
-		//$PF = PlanFinancement::where('projet_id',$projet->id)->where('bailleur_id', $bailleurId)->where('source_financement_id', $sourceFinancementId)->where('statut_financement_id', $statutFinancementId)->where('nature_financement_id', $natureFinancementId)->where('statut_montant_id', $statutMontantId)->where('composante_id', $composanteId)->where('categorie_depense_id', $categorieDepenseId)->first();
+		//$PF = ProjetPlanFinancement::where('projet_id',$projet->id)->where('bailleur_id', $bailleurId)->where('source_financement_id', $sourceFinancementId)->where('statut_financement_id', $statutFinancementId)->where('nature_financement_id', $natureFinancementId)->where('statut_montant_id', $statutMontantId)->where('composante_id', $composanteId)->where('categorie_depense_id', $categorieDepenseId)->first();
 
-		$planFinancement = PlanFinancement::where('projet_id',$projet->id)->where('bailleur_id', $bailleurId)->where('source_financement_id', $sourceFinancementId)->where('statut_financement_id', $statutFinancementId)->where('nature_financement_id', $natureFinancementId)->where('categorie_depense_id', $categorieDepenseId)->where('composante_id', $composanteId)->first();
-		//PlanFinancement::where('projet_id',$projet->id)->where('bailleur_id', $bailleurId)->where('source_financement_id', $sourceFinancementId)->where('statut_financement_id', $statutFinancementId)->where('nature_financement_id', $natureFinancementId)->where('statut_montant_id', $statutMontantId)->where('composante_id', $composanteId)->where('categorie_depense_id', $categorieDepenseId)->first();
+		$planFinancement = ProjetPlanFinancement::where('projet_id',$projet->id)->where('bailleur_id', $bailleurId)->where('source_financement_id', $sourceFinancementId)->where('statut_financement_id', $statutFinancementId)->where('nature_financement_id', $natureFinancementId)->where('categorie_depense_id', $categorieDepenseId)->where('composante_id', $composanteId)->first();
+		//ProjetPlanFinancement::where('projet_id',$projet->id)->where('bailleur_id', $bailleurId)->where('source_financement_id', $sourceFinancementId)->where('statut_financement_id', $statutFinancementId)->where('nature_financement_id', $natureFinancementId)->where('statut_montant_id', $statutMontantId)->where('composante_id', $composanteId)->where('categorie_depense_id', $categorieDepenseId)->first();
 		return view('projet.editPlanFinancements', [
             'projet' => $projet,
 			'planFinancement' => $planFinancement,
@@ -592,7 +642,7 @@ class ProjetController extends Controller
         ]);
 	}
 	
-	public function updatePlanFinancements(Request $request, Projet $projet, PlanFinancement $planFinancement)
+	public function updatePlanFinancements(Request $request, Projet $projet, ProjetPlanFinancement $planFinancement)
     {
 		// Validation
         $data = $request->validate([
@@ -617,7 +667,7 @@ class ProjetController extends Controller
         return redirect()->route('projets.planFinancements',['projet' => $projet->id])->with('success', 'plan financement mis à jour avec succès.');
 	}
 	
-	public function budgetAnnuelPrevu(Request $request, Projet $projet, PlanFinancement $planFinancement)
+	public function budgetAnnuelPrevu(Request $request, Projet $projet, ProjetPlanFinancement $planFinancement)
     {
 		$budgets = $planFinancement->budgetsAnnuelsPrevus;
 		
@@ -629,7 +679,7 @@ class ProjetController extends Controller
         ]);
 	}
 	
-	public function storeBudgetAnnuelPrevu(Request $request,Projet $projet,PlanFinancement $planFinancement)
+	public function storeBudgetAnnuelPrevu(Request $request,Projet $projet,ProjetPlanFinancement $planFinancement)
     {
         // Validation
         $data = $request->validate([
@@ -640,11 +690,12 @@ class ProjetController extends Controller
 		$planFinancement->budgetsAnnuelsPrevus()->create([
 			'annee'   => $data['annee'],
 			'montant' => $data['montant'],
+			'statut_budget_id' => 1,
 		]);
         return redirect()->back()->with('success', 'montant annuel prévu ajoutée avec succès.');
     
 	}
-	public function editBudgetAnnuelPrevu(Request $request, Projet $projet, BudgetAnnuelPrevu $budgetAnnuelPrevu)
+	public function editBudgetAnnuelPrevu(Request $request, Projet $projet, ProjetBudgetAnnuel $budgetAnnuelPrevu)
     {
 		return view('projet.editBudgetAnnuelPrevu', [
             'projet' => $projet,
@@ -653,7 +704,7 @@ class ProjetController extends Controller
         ]);
     }
 
-    public function updateBudgetAnnuelPrevu(Request $request,Projet $projet, BudgetAnnuelPrevu $budgetAnnuelPrevu)
+    public function updateBudgetAnnuelPrevu(Request $request,Projet $projet, ProjetBudgetAnnuel $budgetAnnuelPrevu)
     {
         // Validation
         $data = $request->validate([
@@ -666,7 +717,7 @@ class ProjetController extends Controller
         return redirect()->back()->with('success', 'montant annuel prévu modifié avec succès.');
     }
 	
-	public function destroyBudgetAnnuelPrevu(Request $request,Projet $projet, BudgetAnnuelPrevu $budgetAnnuelPrevu)
+	public function destroyBudgetAnnuelPrevu(Request $request,Projet $projet, ProjetBudgetAnnuel $budgetAnnuelPrevu)
     {
          $projet->deleted_on = Carbon::now();
           $projet->save();
@@ -674,7 +725,7 @@ class ProjetController extends Controller
         return redirect()->back()->with('success', 'montant annuel prévu supprimé avec succès.');
     }
 	
-	public function budgetAnnuelDepense(Request $request, Projet $projet, PlanFinancement $planFinancement)
+	public function budgetAnnuelDepense(Request $request, Projet $projet, ProjetPlanFinancement $planFinancement)
     {
 		$budgets = $planFinancement->budgetsAnnuelsDepenses;
 		
@@ -686,7 +737,7 @@ class ProjetController extends Controller
         ]);
 	}
 	
-	public function storeBudgetAnnuelDepense(Request $request,Projet $projet,PlanFinancement $planFinancement)
+	public function storeBudgetAnnuelDepense(Request $request,Projet $projet,ProjetPlanFinancement $planFinancement)
     {
         // Validation
         $data = $request->validate([
@@ -697,11 +748,12 @@ class ProjetController extends Controller
 		$planFinancement->budgetsAnnuelsDepenses()->create([
 			'annee'   => $data['annee'],
 			'montant' => $data['montant'],
+			'statut_budget_id' => 2,
 		]);
         return redirect()->back()->with('success', 'montant annuel dépensé ajoutée avec succès.');
     
 	}
-	public function editBudgetAnnuelDepense(Request $request, Projet $projet, BudgetAnnuelDepense $budgetAnnuelDepense)
+	public function editBudgetAnnuelDepense(Request $request, Projet $projet, ProjetBudgetAnnuel $budgetAnnuelDepense)
     {
 		return view('projet.editBudgetAnnuelDepense', [
             'projet' => $projet,
@@ -710,7 +762,7 @@ class ProjetController extends Controller
         ]);
     }
 
-    public function updateBudgetAnnuelDepense(Request $request,Projet $projet, BudgetAnnuelDepense $budgetAnnuelDepense)
+    public function updateBudgetAnnuelDepense(Request $request,Projet $projet, ProjetBudgetAnnuel $budgetAnnuelDepense)
     {
         // Validation
         $data = $request->validate([
@@ -723,14 +775,14 @@ class ProjetController extends Controller
         return redirect()->back()->with('success', 'montant annuel dépensé modifié avec succès.');
     }
 	
-	public function destroyBudgetAnnuelDepense(Request $request,Projet $projet, BudgetAnnuelDepense $budgetAnnuelDepense)
+	public function destroyBudgetAnnuelDepense(Request $request,Projet $projet, ProjetBudgetAnnuel $budgetAnnuelDepense)
     {
         $budgetAnnuelDepense->delete();
 
         return redirect()->back()->with('success', 'montant annuel dépensé supprimé avec succès.');
     }
 	
-	public function budgetAnnuel(Request $request, Projet $projet, PlanFinancement $planFinancement)
+	public function budgetAnnuel(Request $request, Projet $projet, ProjetPlanFinancement $planFinancement)
     {
 		$budgets = $planFinancement->budgetsAnnuels;
 		
@@ -742,7 +794,7 @@ class ProjetController extends Controller
         ]);
 	}
 	
-	public function storeBudgetAnnuel(Request $request,Projet $projet,PlanFinancement $planFinancement)
+	public function storeBudgetAnnuel(Request $request,Projet $projet,ProjetPlanFinancement $planFinancement)
     {
         // Validation
         $data = $request->validate([
@@ -753,21 +805,21 @@ class ProjetController extends Controller
 		$planFinancement->budgetsAnnuels()->create([
 			'annee'   => $data['annee'],
 			'montant' => $data['montant'],
+			'statut_budget_id' => 3,
 		]);
         return redirect()->back()->with('success', 'montant annuel budgétisé ajouté avec succès.');
     
 	}
-	public function editBudgetAnnuel(Request $request, Projet $projet, BudgetAnnuel $budgetAnnuel)
+	public function editBudgetAnnuel(Request $request, Projet $projet, ProjetBudgetAnnuel $budgetAnnuel)
     {
-		$categorieDepenses = CategorieDepense::all();
-        return view('projet.editBudgetAnnuel', [
+		return view('projet.editBudgetAnnuel', [
             'projet' => $projet,
 			'budgetAnnuel' => $budgetAnnuel,
 			'breadcrumb' => 'Reférentiel > Mise à jour montant annuel budgétisé',
         ]);
     }
 
-    public function updateBudgetAnnuel(Request $request,Projet $projet, BudgetAnnuel $budgetAnnuel)
+    public function updateBudgetAnnuel(Request $request,Projet $projet, ProjetBudgetAnnuel $budgetAnnuel)
     {
         // Validation
         $data = $request->validate([
@@ -780,7 +832,7 @@ class ProjetController extends Controller
         return redirect()->back()->with('success', 'montant annuel budgétisé modifié avec succès.');
     }
 	
-	public function destroyBudgetAnnuel(Request $request,Projet $projet, BudgetAnnuel $budgetAnnuel)
+	public function destroyBudgetAnnuel(Request $request,Projet $projet, ProjetBudgetAnnuel $budgetAnnuel)
     {
         $budgetAnnuel->delete();
 
@@ -869,7 +921,7 @@ class ProjetController extends Controller
 	public function financementParComposante(Request $request, Projet $projet)
     {
 		$composantes = Composante::where('projet_id', $projet->id)->get();
-		$planFinancements = PlanFinancement::where('projet_id', $projet->id)->whereNotNull('composante_id')->get();
+		$planFinancements = ProjetPlanFinancement::where('projet_id', $projet->id)->whereNotNull('composante_id')->get();
 		
 
 		return view('projet.financementParComposante', [
@@ -904,7 +956,7 @@ class ProjetController extends Controller
 	public function editFinancementParComposante(Request $request, Projet $projet, $composanteId, $sourceFinancementId, $bailleurId, $categorieDepenseId, $natureFinancementId, $statutFinancementId)
     {
 		$composantes = Composante::where('projet_id', $projet)->get();
-		$planFinancement = PlanFinancement::where('projet_id',$projet->id)->where('bailleur_id', $bailleurId)->where('source_financement_id', $sourceFinancementId)->where('statut_financement_id', $statutFinancementId)->where('nature_financement_id', $natureFinancementId)->where('categorie_depense_id', $categorieDepenseId)->where('composante_id', $composanteId)->first();
+		$planFinancement = ProjetPlanFinancement::where('projet_id',$projet->id)->where('bailleur_id', $bailleurId)->where('source_financement_id', $sourceFinancementId)->where('statut_financement_id', $statutFinancementId)->where('nature_financement_id', $natureFinancementId)->where('categorie_depense_id', $categorieDepenseId)->where('composante_id', $composanteId)->first();
 		return view('projet.editFinancementParComposante', [
             'projet' => $projet,
 			'planFinancement' => $planFinancement,
@@ -915,7 +967,7 @@ class ProjetController extends Controller
         ]);
 	}
 	
-	public function updateFinancementParComposante(Request $request, Projet $projet, PlanFinancement $planFinancement)
+	public function updateFinancementParComposante(Request $request, Projet $projet, ProjetPlanFinancement $planFinancement)
     {
 		// Validation
         $data = $request->validate([
@@ -934,7 +986,7 @@ class ProjetController extends Controller
 	public function financementParCategorieDepense(Request $request, Projet $projet)
     {
 		$categorieDepenses = CategorieDepense::whereNull('deleted_on')->get();
-		$planFinancements = PlanFinancement::where('projet_id', $projet->id)->whereNotNull('categorie_depense_id')->get();
+		$planFinancements = ProjetPlanFinancement::where('projet_id', $projet->id)->whereNotNull('categorie_depense_id')->get();
 		return view('projet.financementParCategorieDepense', [
             'projet' => $projet,
 			'planFinancements' => $planFinancements,
@@ -967,7 +1019,7 @@ class ProjetController extends Controller
 	public function editFinancementParCategorieDepense(Request $request, Projet $projet, $composanteId, $sourceFinancementId, $bailleurId, $categorieDepenseId, $natureFinancementId, $statutFinancementId)
     {
 		$categorieDepenses = CategorieDepense::whereNull('deleted_on')->get();
-		$planFinancement = PlanFinancement::where('projet_id',$projet->id)->where('bailleur_id', $bailleurId)->where('source_financement_id', $sourceFinancementId)->where('statut_financement_id', $statutFinancementId)->where('nature_financement_id', $natureFinancementId)->where('categorie_depense_id', $categorieDepenseId)->where('composante_id', $composanteId)->first();
+		$planFinancement = ProjetPlanFinancement::where('projet_id',$projet->id)->where('bailleur_id', $bailleurId)->where('source_financement_id', $sourceFinancementId)->where('statut_financement_id', $statutFinancementId)->where('nature_financement_id', $natureFinancementId)->where('categorie_depense_id', $categorieDepenseId)->where('composante_id', $composanteId)->first();
 		return view('projet.editFinancementParCategorieDepense', [
             'projet' => $projet,
 			'planFinancement' => $planFinancement,
@@ -978,7 +1030,7 @@ class ProjetController extends Controller
         ]);
 	}
 	
-	public function updateFinancementParCategorieDepense(Request $request, Projet $projet, PlanFinancement $planFinancement)
+	public function updateFinancementParCategorieDepense(Request $request, Projet $projet, ProjetPlanFinancement $planFinancement)
     {
 		// Validation
         $data = $request->validate([
@@ -997,7 +1049,7 @@ class ProjetController extends Controller
 	public function financementParBailleur(Request $request, Projet $projet)
     {
 		$bailleurs = Bailleur::whereNull('deleted_on')->get();
-		$planFinancements = PlanFinancement::where('projet_id', $projet->id)->whereNotNull('bailleur_id')->get();
+		$planFinancements = ProjetPlanFinancement::where('projet_id', $projet->id)->whereNotNull('bailleur_id')->get();
 		return view('projet.financementParBailleur', [
             'projet' => $projet,
 			'planFinancements' => $planFinancements,
@@ -1030,7 +1082,7 @@ class ProjetController extends Controller
 	public function editFinancementParBailleur(Request $request, Projet $projet, $composanteId, $sourceFinancementId, $bailleurId, $categorieDepenseId, $natureFinancementId, $statutFinancementId)
     {
 		$bailleurs = Bailleur::whereNull('deleted_on')->get();
-		$planFinancement = PlanFinancement::where('projet_id',$projet->id)->where('bailleur_id', $bailleurId)->where('source_financement_id', $sourceFinancementId)->where('statut_financement_id', $statutFinancementId)->where('nature_financement_id', $natureFinancementId)->where('categorie_depense_id', $categorieDepenseId)->where('composante_id', $composanteId)->first();
+		$planFinancement = ProjetPlanFinancement::where('projet_id',$projet->id)->where('bailleur_id', $bailleurId)->where('source_financement_id', $sourceFinancementId)->where('statut_financement_id', $statutFinancementId)->where('nature_financement_id', $natureFinancementId)->where('categorie_depense_id', $categorieDepenseId)->where('composante_id', $composanteId)->first();
 		return view('projet.editFinancementParBailleur', [
             'projet' => $projet,
 			'planFinancement' => $planFinancement,
@@ -1041,7 +1093,7 @@ class ProjetController extends Controller
         ]);
 	}
 	
-	public function updateFinancementParBailleur(Request $request, Projet $projet, PlanFinancement $planFinancement)
+	public function updateFinancementParBailleur(Request $request, Projet $projet, ProjetPlanFinancement $planFinancement)
     {
 		// Validation
         $data = $request->validate([

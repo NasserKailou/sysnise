@@ -50,6 +50,10 @@ Route::middleware(['auth'])->group(function () {
 	Route::get('/projets/{projet}/composantes_upload', [App\Http\Controllers\ComposanteController::class, 'showUploadForm'])->name('projets.composantes.showUploadForm');
 	Route::post('/projets/{projet}/composantes_upload', [App\Http\Controllers\ComposanteController::class, 'upload'])->name('projets.composantes.upload');
 
+	Route::post('/projets/associer', [App\Http\Controllers\ProjetController::class, 'associer'])->name('projets.associer');
+	Route::delete('/projets/associations/{association}', [App\Http\Controllers\ProjetController::class, 'dissocier'])->name('projets.dissocier');
+
+
 	Route::prefix('projets/{projet}')->group(function () {
 		// Enregistrer une nouvelle pièce jointe
 		Route::post('piece_jointe_projets', [App\Http\Controllers\PieceJointeProjetController::class, 'store'])->name('projets.piece_jointe_projets.store');
@@ -159,9 +163,71 @@ Route::middleware(['auth'])->group(function () {
 		Route::delete('piece_jointes/{piece}', [App\Http\Controllers\PieceJointeController::class, 'destroy'])->name('cadre_developpements.piece_jointes.destroy');
 	});
 	
+	//financement par Bailleur
+	Route::get('financementParBailleur', [App\Http\Controllers\ProjetController::class, 'financementParBailleur'])->name('projets.financementParBailleur');
+	Route::post('financementParBailleur', [App\Http\Controllers\ProjetController::class, 'storeFinancementParBailleur'])->name('projets.financementParBailleur.store');
+	Route::get('editFinancementParBailleur/{composante_id}', [App\Http\Controllers\ProjetController::class, 'editFinancementParBailleur'])->name('projets.financementParBailleur.edit');
+	Route::post('editFinancementParBailleur/{planFinancement}', [App\Http\Controllers\ProjetController::class, 'updateFinancementParBailleur'])->name('projets.financementParBailleur.update');
+	
+	Route::get('/cadre_developpements/{cadre_developpement}/financementParResultat', [App\Http\Controllers\CadreDeveloppementController::class, 'financementParResultat'])->name('cadre_developpements.financementParResultat');
+	Route::post('/cadre_developpements/{cadre_developpement}/financementParResultat', [App\Http\Controllers\CadreDeveloppementController::class, 'soreFinancementParResultat'])->name('cadre_developpements.financementParResultat.store');
+	
+	Route::prefix('cadre_developpements/{cadre_developpement}/')->group(function () {
+		Route::get('financementParBailleur', [App\Http\Controllers\CadreDeveloppementController::class, 'financementParBailleur'])->name('cadre_developpements.financementParBailleur');
+		Route::post('financementParBailleur', [App\Http\Controllers\CadreDeveloppementController::class, 'storeFinancementParBailleur'])->name('cadre_developpements.financementParBailleur.store');
+		Route::get('editFinancementParBailleur/{financementParBailleur}', [App\Http\Controllers\CadreDeveloppementController::class, 'editFinancementParBailleur'])->name('cadre_developpements.financementParBailleur.edit');
+		Route::post('editFinancementParBailleur/{financementParBailleur}', [App\Http\Controllers\CadreDeveloppementController::class, 'updateFinancementParBailleur'])->name('cadre_developpements.financementParBailleur.update');
+		Route::delete('destroyFinancementParBailleur/{financementParBailleur}', [App\Http\Controllers\CadreDeveloppementController::class, 'destroyFinancementParBailleur'])->name('cadre_developpements.financementParBailleur.destroy');
+		
+		Route::get('montantMobiliseFB/{financementParBailleur}', [App\Http\Controllers\CadreDeveloppementController::class, 'montantMobiliseFB'])->name('cadre_developpements.financementParBailleur.montantMobilise');
+		Route::post('montantMobiliseFB/{financementParBailleur}', [App\Http\Controllers\CadreDeveloppementController::class, 'storeMontantMobiliseFB'])->name('cadre_developpements.financementParBailleur.montantMobilise.store');
+		Route::get('editMontantMobiliseFB/{montantMobilise}', [App\Http\Controllers\CadreDeveloppementController::class, 'editMontantMobiliseFB'])->name('cadre_developpements.financementParBailleur.montantMobilise.edit');
+		Route::post('editMontantMobiliseFB/{montantMobilise}', [App\Http\Controllers\CadreDeveloppementController::class, 'updateMontantMobiliseFB'])->name('cadre_developpements.financementParBailleur.montantMobilise.update');
+		Route::delete('montantMobiliseFB/{montantMobilise}', [App\Http\Controllers\CadreDeveloppementController::class, 'destroyMontantMobiliseFB'])->name('cadre_developpements.financementParBailleur.montantMobilise.destroy');
+		
+		Route::get('montantConsommeFB/{financementParBailleur}', [App\Http\Controllers\CadreDeveloppementController::class, 'montantConsommeFB'])->name('cadre_developpements.financementParBailleur.montantConsomme');
+		Route::post('montantConsommeFB/{financementParBailleur}', [App\Http\Controllers\CadreDeveloppementController::class, 'storeMontantConsommeFB'])->name('cadre_developpements.financementParBailleur.montantConsomme.store');
+		Route::get('editMontantConsommeFB/{montantConsomme}', [App\Http\Controllers\CadreDeveloppementController::class, 'editMontantConsommeFB'])->name('cadre_developpements.financementParBailleur.montantConsomme.edit');
+		Route::post('editMontantConsommeFB/{montantConsomme}', [App\Http\Controllers\CadreDeveloppementController::class, 'updateMontantConsommeFB'])->name('cadre_developpements.financementParBailleur.montantConsomme.update');
+		Route::delete('montantConsommeFB/{montantConsomme}', [App\Http\Controllers\CadreDeveloppementController::class, 'destroyMontantConsommeFB'])->name('cadre_developpements.financementParBailleur.montantConsomme.destroy');
+		
+		Route::get('montantRechercheFB/{financementParBailleur}', [App\Http\Controllers\CadreDeveloppementController::class, 'montantRechercheFB'])->name('cadre_developpements.financementParBailleur.montantRecherche');
+		Route::post('montantRechercheFB/{financementParBailleur}', [App\Http\Controllers\CadreDeveloppementController::class, 'storeMontantRechercheFB'])->name('cadre_developpements.financementParBailleur.montantRecherche.store');
+		Route::get('editMontantRechercheFB/{montantRecherche}', [App\Http\Controllers\CadreDeveloppementController::class, 'editMontantRechercheFB'])->name('cadre_developpements.financementParBailleur.montantRecherche.edit');
+		Route::post('editMontantRechercheFB/{montantRecherche}', [App\Http\Controllers\CadreDeveloppementController::class, 'updateMontantRechercheFB'])->name('cadre_developpements.financementParBailleur.montantRecherche.update');
+		Route::delete('montantRechercheFB/{montantRecherche}', [App\Http\Controllers\CadreDeveloppementController::class, 'destroyMontantRechercheFB'])->name('cadre_developpements.financementParBailleur.montantRecherche.destroy');
+		
+		Route::get('financementParResultat', [App\Http\Controllers\CadreDeveloppementController::class, 'financementParResultat'])->name('cadre_developpements.financementParResultat');
+		Route::post('financementParResultat', [App\Http\Controllers\CadreDeveloppementController::class, 'storeFinancementParResultat'])->name('cadre_developpements.financementParResultat.store');
+		Route::get('editFinancementParResultat/{financementParResultat}', [App\Http\Controllers\CadreDeveloppementController::class, 'editFinancementParResultat'])->name('cadre_developpements.financementParResultat.edit');
+		Route::post('editFinancementParResultat/{financementParResultat}', [App\Http\Controllers\CadreDeveloppementController::class, 'updateFinancementParResultat'])->name('cadre_developpements.financementParResultat.update');
+		Route::delete('destroyFinancementParResultat/{financementParResultat}', [App\Http\Controllers\CadreDeveloppementController::class, 'destroyFinancementParResultat'])->name('cadre_developpements.financementParResultat.destroy');
+		
+		Route::get('montantMobiliseFR/{financementParResultat}', [App\Http\Controllers\CadreDeveloppementController::class, 'montantMobiliseFR'])->name('cadre_developpements.financementParResultat.montantMobilise');
+		Route::post('montantMobiliseFR/{financementParResultat}', [App\Http\Controllers\CadreDeveloppementController::class, 'storeMontantMobiliseFR'])->name('cadre_developpements.financementParResultat.montantMobilise.store');
+		Route::get('editMontantMobiliseFR/{montantMobilise}', [App\Http\Controllers\CadreDeveloppementController::class, 'editMontantMobiliseFR'])->name('cadre_developpements.financementParResultat.montantMobilise.edit');
+		Route::post('editMontantMobiliseFR/{montantMobilise}', [App\Http\Controllers\CadreDeveloppementController::class, 'updateMontantMobiliseFR'])->name('cadre_developpements.financementParResultat.montantMobilise.update');
+		Route::delete('montantMobiliseFR/{montantMobilise}', [App\Http\Controllers\CadreDeveloppementController::class, 'destroyMontantMobiliseFR'])->name('cadre_developpements.financementParResultat.montantMobilise.destroy');
+		
+		Route::get('montantConsommeFR/{financementParResultat}', [App\Http\Controllers\CadreDeveloppementController::class, 'montantConsommeFR'])->name('cadre_developpements.financementParResultat.montantConsomme');
+		Route::post('montantConsommeFR/{financementParResultat}', [App\Http\Controllers\CadreDeveloppementController::class, 'storeMontantConsommeFR'])->name('cadre_developpements.financementParResultat.montantConsomme.store');
+		Route::get('editMontantConsommeFR/{montantConsomme}', [App\Http\Controllers\CadreDeveloppementController::class, 'editMontantConsommeFR'])->name('cadre_developpements.financementParResultat.montantConsomme.edit');
+		Route::post('editMontantConsommeFR/{montantConsomme}', [App\Http\Controllers\CadreDeveloppementController::class, 'updateMontantConsommeFR'])->name('cadre_developpements.financementParResultat.montantConsomme.update');
+		Route::delete('montantConsommeFR/{montantConsomme}', [App\Http\Controllers\CadreDeveloppementController::class, 'destroyMontantConsommeFR'])->name('cadre_developpements.financementParResultat.montantConsomme.destroy');
+		
+		Route::get('montantRechercheFR/{financementParResultat}', [App\Http\Controllers\CadreDeveloppementController::class, 'montantRechercheFR'])->name('cadre_developpements.financementParResultat.montantRecherche');
+		Route::post('montantRechercheFR/{financementParResultat}', [App\Http\Controllers\CadreDeveloppementController::class, 'storeMontantRechercheFR'])->name('cadre_developpements.financementParResultat.montantRecherche.store');
+		Route::get('editMontantRechercheFR/{montantRecherche}', [App\Http\Controllers\CadreDeveloppementController::class, 'editMontantRechercheFR'])->name('cadre_developpements.financementParResultat.montantRecherche.edit');
+		Route::post('editMontantRechercheFR/{montantRecherche}', [App\Http\Controllers\CadreDeveloppementController::class, 'updateMontantRechercheFR'])->name('cadre_developpements.financementParResultat.montantRecherche.update');
+		Route::delete('montantRechercheFR/{montantRecherche}', [App\Http\Controllers\CadreDeveloppementController::class, 'destroyMontantRechercheFR'])->name('cadre_developpements.financementParResultat.montantRecherche.destroy');
+		
+	
+	});
 	Route::get('/cadre_developpements/{cadre_developpement}/cadres_logiques', [App\Http\Controllers\CadreLogiqueController::class, 'index'])->name('cadre_developpements.cadres_logiques.index');
 	Route::get('/cadre_developpements/{cadre_developpement}/cadres_logiques_upload', [App\Http\Controllers\CadreLogiqueController::class, 'showUploadForm'])->name('cadre_developpements.cadres_logiques.showUploadForm');
 	Route::post('/cadre_developpements/{cadre_developpement}/cadres_logiques_upload', [App\Http\Controllers\CadreLogiqueController::class, 'upload'])->name('cadre_developpements.cadres_logiques.upload');
+	Route::post('/cadre_developpements/associer', [App\Http\Controllers\CadreDeveloppementController::class, 'associer'])->name('cadre_developpements.associer');
+	Route::delete('/cadre_developpements/associations/{association}', [App\Http\Controllers\CadreDeveloppementController::class, 'dissocier'])->name('cadre_developpements.dissocier');
 
 	Route::resource('cadre_logiques.hypothese_risques', App\Http\Controllers\HypotheseRisqueController::class);
 	Route::resource('cadre_logiques.produits', App\Http\Controllers\ProduitController::class);

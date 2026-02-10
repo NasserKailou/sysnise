@@ -1308,20 +1308,20 @@ CREATE TABLE composantes
         ON UPDATE CASCADE
         ON DELETE CASCADE
 );
-CREATE TABLE composante_indicateurs
+CREATE TABLE composante_produits
 (
 	id BIGSERIAL,
     indicateur_id bigint NOT NULL,
     composante_id bigint NOT NULL,
     created_at timestamp DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT composante_indicateurs_pkey PRIMARY KEY (id),
-    CONSTRAINT composante_indicateur_unique UNIQUE (indicateur_id, composante_id),
-    CONSTRAINT composante_indicateur_composante_fkey FOREIGN KEY (composante_id)
+    CONSTRAINT composante_produits_pkey PRIMARY KEY (id),
+    CONSTRAINT composante_produit_unique UNIQUE (indicateur_id, composante_id),
+    CONSTRAINT composante_produit_composante_fkey FOREIGN KEY (composante_id)
         REFERENCES composantes (id) MATCH SIMPLE
         ON UPDATE CASCADE
         ON DELETE CASCADE,
-    CONSTRAINT composante_indicateur_indicateur_fkey FOREIGN KEY (indicateur_id)
+    CONSTRAINT composante_produit_indicateur_fkey FOREIGN KEY (indicateur_id)
         REFERENCES indicateurs (id) MATCH SIMPLE
         ON UPDATE CASCADE
         ON DELETE CASCADE
@@ -1953,6 +1953,7 @@ update projets set secteur_id=1;
 
 ALTER TABLE projets ALTER COLUMN secteur_id SET NOT NULL;
 
+<<<<<<< HEAD
 -------------19/01/2026-----------
 ALTER TABLE plan_financements
     ALTER COLUMN composante_id DROP NOT NULL,
@@ -2032,3 +2033,281 @@ WHERE NOT EXISTS (
     WHERE c.parent_id = d.id
 );
 $$;
+=======
+
+
+
+-- debut 29/01/26 par alapriss
+-- DROP TABLE IF EXISTS public.cadre_developpement_institutions;
+
+CREATE TABLE IF NOT EXISTS public.cadre_developpement_users
+(
+    id  bigserial,
+    cadre_developpement bigint NOT NULL,
+    userr bigint NOT NULL,
+    user_id bigint NOT NULL,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    CONSTRAINT cadre_developpement_user_pkey PRIMARY KEY (id),
+    CONSTRAINT cadre_developpement_user_cadre_developpement_user_key UNIQUE (cadre_developpement, userr),
+    CONSTRAINT cadre_developpement_user_cadre_developpement_fkey FOREIGN KEY (cadre_developpement)
+        REFERENCES public.cadre_developpements (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT cadre_developpement_user_user_fkey FOREIGN KEY (userr)
+        REFERENCES public.users (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID,
+    CONSTRAINT cadre_developpement_user_user_id_fkey FOREIGN KEY (user_id)
+        REFERENCES public.users (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+)
+
+
+CREATE TABLE IF NOT EXISTS public.projet_users
+(
+    id  bigserial,
+    projet bigint NOT NULL,
+    userr bigint NOT NULL,
+    user_id bigint NOT NULL,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    CONSTRAINT projet_user_pkey PRIMARY KEY (id),
+    CONSTRAINT projet_user_projet_user_key UNIQUE (projet, userr),
+    CONSTRAINT projet_user_projet_fkey FOREIGN KEY (projet)
+        REFERENCES public.projets (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT projet_user_user_fkey FOREIGN KEY (userr)
+        REFERENCES public.users (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID,
+    CONSTRAINT projet_user_user_id_fkey FOREIGN KEY (user_id)
+        REFERENCES public.users (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+)
+
+
+-- fin 29/01/26 par alapriss
+>>>>>>> main
+
+----------update abass 02/02/2026
+DROP TABLE composante_indicateurs;
+CREATE TABLE composante_produits
+(
+	id BIGSERIAL,
+    produit_id bigint NOT NULL,
+    composante_id bigint NOT NULL,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    CONSTRAINT composante_produits_pkey PRIMARY KEY (id),
+    CONSTRAINT composante_produit_unique UNIQUE (produit_id, composante_id),
+    CONSTRAINT composante_produit_composante_fkey FOREIGN KEY (composante_id)
+        REFERENCES composantes (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT composante_produit_produit_fkey FOREIGN KEY (produit_id)
+        REFERENCES cadre_logiques (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+
+CREATE TABLE statut_budgets
+(
+    id BIGSERIAL,
+    intitule character varying(255) NOT NULL,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    CONSTRAINT statut_budgets_pkey PRIMARY KEY (id),
+    CONSTRAINT statut_budgets_intitule_unique UNIQUE (intitule)
+);
+INSERT INTO statut_budgets (intitule) VALUES
+('Prévu'),
+('Dépensé'),
+('Budgetisé');
+
+CREATE TABLE statut_montant_financements
+(
+    id BIGSERIAL,
+    intitule character varying(255) NOT NULL,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    CONSTRAINT statut_montant_financements_pkey PRIMARY KEY (id),
+    CONSTRAINT statut_montant_financements_intitule_unique UNIQUE (intitule)
+);
+INSERT INTO statut_montant_financements (intitule) VALUES
+('Mobilisé'),
+('Consommé'),
+('Recherché');
+
+
+DROP TABLE budget_annuel_prevus;
+DROP TABLE budget_annuel_depenses;
+DROP TABLE budget_annuels;
+DROP TABLE plan_financements;
+
+CREATE TABLE projet_plan_financements
+(
+    id BIGSERIAL,
+    projet_id bigint NOT NULL,
+	composante_id bigint,
+    source_financement_id bigint,
+    bailleur_id bigint,
+    statut_financement_id bigint,
+    nature_financement_id bigint,
+	categorie_depense_id bigint,
+    montant numeric(15,2),
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    CONSTRAINT projet_plan_financement_pkey PRIMARY KEY (id),
+	CONSTRAINT projet_plan_financement_unique UNIQUE (projet_id, composante_id,source_financement_id,bailleur_id,statut_financement_id,nature_financement_id,categorie_depense_id),
+    CONSTRAINT projet_plan_financement_nature_financement_id_fkey FOREIGN KEY (nature_financement_id)
+        REFERENCES nature_financements (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT projet_plan_financement_projet_id_fkey FOREIGN KEY (projet_id)
+        REFERENCES projets (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+	CONSTRAINT projet_plan_financement_composante_id_fkey FOREIGN KEY (composante_id)
+        REFERENCES composantes (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT projet_plan_financement_bailleur_id_fkey FOREIGN KEY (bailleur_id)
+        REFERENCES bailleurs (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT projet_plan_financement_source_financement_id_fkey FOREIGN KEY (source_financement_id)
+        REFERENCES source_financements (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT projet_plan_financement_statut_financement_id_fkey FOREIGN KEY (statut_financement_id)
+        REFERENCES statut_financements (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+	CONSTRAINT projet_plan_financement_categorie_depense_id_fkey FOREIGN KEY (categorie_depense_id)
+        REFERENCES categorie_depenses (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+
+CREATE TABLE projet_budget_annuels
+(
+    id BIGSERIAL,
+    plan_financement_id bigint NOT NULL,
+    annee int NOT NULL,
+	statut_budget_id int NOT NULL,
+	montant numeric(15,2),
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    CONSTRAINT projet_budget_annuel_pkey PRIMARY KEY (id),
+	CONSTRAINT projet_budget_annuel_unique UNIQUE (plan_financement_id,annee,statut_budget_id),
+    CONSTRAINT projet_budget_annuel_plan_financement_id_fkey FOREIGN KEY (plan_financement_id)
+        REFERENCES projet_plan_financements (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+	CONSTRAINT projet_budget_annuel_statut_budget_id_fkey FOREIGN KEY (statut_budget_id)
+        REFERENCES statut_budgets (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+
+ALTER TABLE cadre_developpements
+ADD COLUMN cout_total_financement bigint;
+
+CREATE TABLE cd_financement_par_bailleurs
+(
+    id BIGSERIAL,
+    cadre_developpement_id bigint NOT NULL,
+	bailleur_id bigint,
+    montant numeric(15,2),
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    CONSTRAINT cd_financement_par_bailleur_pkey PRIMARY KEY (id),
+	CONSTRAINT cd_financement_par_bailleur_cadre_developpement_id_fkey FOREIGN KEY (cadre_developpement_id)
+        REFERENCES cadre_developpements (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT cd_financement_par_bailleur_bailleur_id_fkey FOREIGN KEY (bailleur_id)
+        REFERENCES bailleurs (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+CREATE UNIQUE INDEX cd_financement_par_bailleurs_unique_active ON cd_financement_par_bailleurs (cadre_developpement_id,bailleur_id) WHERE deleted_on IS NULL;
+
+CREATE TABLE cd_financement_annuel_par_bailleurs
+(
+    id BIGSERIAL,
+    plan_financement_id bigint NOT NULL,
+    annee int NOT NULL,
+	statut_montant_financement_id int NOT NULL,
+	montant numeric(15,2),
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    CONSTRAINT cd_financement_annuel_par_bailleurs_pkey PRIMARY KEY (id),
+	CONSTRAINT cd_financement_annuel_par_bailleurs_plan_financement_id_fkey FOREIGN KEY (plan_financement_id)
+        REFERENCES cd_financement_par_bailleurs (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+	CONSTRAINT cd_financement_annuel_par_bailleurs_statut_montant_financement_id_fkey FOREIGN KEY (statut_montant_financement_id)
+        REFERENCES statut_montant_financements (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+CREATE UNIQUE INDEX cd_financement_annuel_par_bailleurs_unique_active ON cd_financement_annuel_par_bailleurs (plan_financement_id, annee, statut_montant_financement_id) WHERE deleted_on IS NULL;
+
+CREATE TABLE cd_financement_par_resultats
+(
+    id BIGSERIAL,
+    cadre_developpement_id bigint NOT NULL,
+	cadre_logique_id bigint,
+    montant numeric(15,2),
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    CONSTRAINT cd_financement_par_resultat_pkey PRIMARY KEY (id),
+	CONSTRAINT cd_financement_par_resultat_cadre_developpement_id_fkey FOREIGN KEY (cadre_developpement_id)
+        REFERENCES cadre_developpements (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT cd_financement_par_resultat_cadre_logique_id_fkey FOREIGN KEY (cadre_logique_id)
+        REFERENCES cadre_logiques (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+CREATE UNIQUE INDEX cd_financement_par_resultats_unique_active ON cd_financement_par_resultats (cadre_developpement_id,cadre_logique_id) WHERE deleted_on IS NULL;
+
+CREATE TABLE cd_financement_annuel_par_resultats
+(
+    id BIGSERIAL,
+    plan_financement_id bigint NOT NULL,
+    annee int NOT NULL,
+	statut_montant_financement_id int NOT NULL,
+	montant numeric(15,2),
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    CONSTRAINT cd_financement_annuel_par_resultats_pkey PRIMARY KEY (id),
+	CONSTRAINT cd_financement_annuel_par_resultats_plan_financement_id_fkey FOREIGN KEY (plan_financement_id)
+        REFERENCES cd_financement_par_resultats (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+	CONSTRAINT cd_financement_annuel_par_resultats_statut_montant_financement_id_fkey FOREIGN KEY (statut_montant_financement_id)
+        REFERENCES statut_montant_financements (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+CREATE UNIQUE INDEX cd_financement_annuel_par_resultats_unique_active ON cd_financement_annuel_par_resultats (plan_financement_id, annee, statut_montant_financement_id) WHERE deleted_on IS NULL;
