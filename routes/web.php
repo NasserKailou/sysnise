@@ -1,4 +1,5 @@
 <?php
+use App\Http\Controllers\ProjetPilotageController;
 use Illuminate\Support\Facades\Route;
 use App\Exports\DataTemplateExport;
 use Maatwebsite\Excel\Facades\Excel;
@@ -289,6 +290,36 @@ Route::middleware(['auth'])->group(function () {
 
 	Route::get('/afficher_cmr/{cadre_id}', [App\Http\Controllers\DonneeIndicateurController::class, 'afficherCMR']);
 	Route::get('/telecharger_cmr/{cadre_id}', [App\Http\Controllers\DonneeIndicateurController::class, 'telecharger_cmr']);
+
+
+
+
+
+	// Routes pour la gestion du pilotage/audit d'un projet
+Route::prefix('projets/{projet}')->name('projets.')->group(function () {
+    Route::get('pilotage', [ProjetPilotageController::class, 'show'])->name('pilotage.show');
+    Route::put('pilotage/general', [ProjetPilotageController::class, 'updateGeneral'])->name('pilotage.updateGeneral');
+
+    // Pilotage années
+    Route::post('pilotage-annees', [ProjetPilotageController::class, 'storePilotageAnnee'])->name('pilotage-annees.store');
+    Route::get('pilotage-annees/{annee}/edit', [ProjetPilotageController::class, 'editPilotageAnnee'])->name('pilotage-annees.edit');
+    Route::put('pilotage-annees/{annee}', [ProjetPilotageController::class, 'updatePilotageAnnee'])->name('pilotage-annees.update');
+    Route::delete('pilotage-annees/{annee}', [ProjetPilotageController::class, 'destroyPilotageAnnee'])->name('pilotage-annees.destroy');
+
+    // Audits exercices
+    Route::post('audits-exercices', [ProjetPilotageController::class, 'storeAuditExercice'])->name('audits-exercices.store');
+    Route::get('audits-exercices/{exercice}/edit', [ProjetPilotageController::class, 'editAuditExercice'])->name('audits-exercices.edit');
+    Route::put('audits-exercices/{exercice}', [ProjetPilotageController::class, 'updateAuditExercice'])->name('audits-exercices.update');
+    Route::delete('audits-exercices/{exercice}', [ProjetPilotageController::class, 'destroyAuditExercice'])->name('audits-exercices.destroy');
+
+    // Rapports
+    Route::post('rapports', [ProjetPilotageController::class, 'storeRapport'])->name('rapports.store');
+    Route::delete('rapports/{rapport}', [ProjetPilotageController::class, 'destroyRapport'])->name('rapports.destroy');
+});
+
+
+
+
 	
 });
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {

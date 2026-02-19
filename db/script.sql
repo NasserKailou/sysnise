@@ -2311,3 +2311,74 @@ CREATE TABLE cd_financement_annuel_par_resultats
         ON DELETE CASCADE
 );
 CREATE UNIQUE INDEX cd_financement_annuel_par_resultats_unique_active ON cd_financement_annuel_par_resultats (plan_financement_id, annee, statut_montant_financement_id) WHERE deleted_on IS NULL;
+
+-- debut alpariss 20260218
+-- 1. Ajout des colonnes à la table projets
+ALTER TABLE public.projets 
+ADD COLUMN dispose_organe_pilotage BOOLEAN DEFAULT NULL,
+ADD COLUMN a_audit_regulier BOOLEAN DEFAULT NULL,
+ADD COLUMN problemes_rencontres TEXT DEFAULT NULL,
+ADD COLUMN solutions_proposees TEXT DEFAULT NULL,
+ADD COLUMN recommandations TEXT DEFAULT NULL,
+ADD COLUMN rapport_rempli_par VARCHAR(255) DEFAULT NULL,
+ADD COLUMN rapport_date_remplissage DATE DEFAULT NULL;
+
+-- 2. Table projet_pilotage_annees
+CREATE TABLE public.projet_pilotage_annees (
+    id BIGSERIAL PRIMARY KEY,
+    projet_id BIGINT NOT NULL,
+    annee INTEGER NOT NULL,
+    nb_sessions_prevues INTEGER NOT NULL DEFAULT 0,
+    nb_sessions_tenues INTEGER NOT NULL DEFAULT 0,
+    nb_recommandations_formulees INTEGER NOT NULL DEFAULT 0,
+    nb_recommandations_mises_oeuvre INTEGER NOT NULL DEFAULT 0,
+    created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL,
+    updated_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL,
+    CONSTRAINT projet_pilotage_annees_projet_id_foreign 
+        FOREIGN KEY (projet_id) REFERENCES public.projets(id) ON DELETE CASCADE,
+    CONSTRAINT projet_pilotage_annees_projet_id_annee_unique 
+        UNIQUE (projet_id, annee)
+);
+
+-- 3. Table projet_pilotage_sessions
+CREATE TABLE public.projet_pilotage_sessions (
+    id BIGSERIAL PRIMARY KEY,
+    projet_pilotage_annee_id BIGINT NOT NULL,
+    date_session DATE NOT NULL,
+    created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL,
+    updated_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL,
+    CONSTRAINT projet_pilotage_sessions_projet_pilotage_annee_id_foreign 
+        FOREIGN KEY (projet_pilotage_annee_id) REFERENCES public.projet_pilotage_annees(id) ON DELETE CASCADE
+);
+
+-- 4. Table projet_audits_exercices
+CREATE TABLE public.projet_audits_exercices (
+    id BIGSERIAL PRIMARY KEY,
+    projet_id BIGINT NOT NULL,
+    exercice INTEGER NOT NULL,
+    comptes_certifies BOOLEAN DEFAULT NULL,
+    nb_recommandations_formulees INTEGER NOT NULL DEFAULT 0,
+    nb_recommandations_mises_oeuvre INTEGER NOT NULL DEFAULT 0,
+    created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL,
+    updated_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL,
+    CONSTRAINT projet_audits_exercices_projet_id_foreign 
+        FOREIGN KEY (projet_id) REFERENCES public.projets(id) ON DELETE CASCADE,
+    CONSTRAINT projet_audits_exercices_projet_id_exercice_unique 
+        UNIQUE (projet_id, exercice)
+);
+
+-- 5. Table projet_rapports
+CREATE TABLE public.projet_rapports (
+    id BIGSERIAL PRIMARY KEY,
+    projet_id BIGINT NOT NULL,
+    type VARCHAR(255) NOT NULL,
+    fichier VARCHAR(255) NOT NULL,
+    date_rapport DATE DEFAULT NULL,
+    description TEXT DEFAULT NULL,
+    created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL,
+    updated_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL,
+    CONSTRAINT projet_rapports_projet_id_foreign 
+        FOREIGN KEY (projet_id) REFERENCES public.projets(id) ON DELETE CASCADE
+);
+
+-- fin alpariss 20260218
