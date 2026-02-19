@@ -16,7 +16,7 @@ class HypotheseRisqueController extends Controller
     {
 		$cadre_logique = CadreLogique::findOrFail($cadre_logique_id);
 		$hypotheses_risques = HypotheseRisque::where('cadre_logique_id', $cadre_logique_id)->get();
-        $breadcrumb = 'Cadres stratégiques > Hypothèse et Risque',
+        $breadcrumb = 'Cadres stratégiques > Hypothèse et Risque';
 		return view('hypothese_risque.index',compact('breadcrumb','cadre_logique','hypotheses_risques'));
     
 	}
@@ -37,7 +37,7 @@ class HypotheseRisqueController extends Controller
 	
 	public function edit(CadreLogique $cadre_logique, HypotheseRisque $hypothese_risque)
     {
-		$breadcrumb = 'Cadres stratégiques > Mise à jour Hypothèse et Risque',
+		$breadcrumb = 'Cadres stratégiques > Mise à jour Hypothèse et Risque';
 		return view('hypothese_risque.edit', compact('breadcrumb','cadre_logique', 'hypothese_risque'));
     }
 
