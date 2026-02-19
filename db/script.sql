@@ -1953,7 +1953,7 @@ update projets set secteur_id=1;
 
 ALTER TABLE projets ALTER COLUMN secteur_id SET NOT NULL;
 
-<<<<<<< HEAD
+
 -------------19/01/2026-----------
 ALTER TABLE plan_financements
     ALTER COLUMN composante_id DROP NOT NULL,
@@ -2033,7 +2033,6 @@ WHERE NOT EXISTS (
     WHERE c.parent_id = d.id
 );
 $$;
-=======
 
 
 
@@ -2095,7 +2094,6 @@ CREATE TABLE IF NOT EXISTS public.projet_users
 
 
 -- fin 29/01/26 par alapriss
->>>>>>> main
 
 ----------update abass 02/02/2026
 DROP TABLE composante_indicateurs;
