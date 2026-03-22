@@ -277,7 +277,7 @@ class ProjetController extends Controller
 		$data = $request->validated();
 		$data['type_cadre_developpement_id'] = 2;
 		$data['user_id'] = auth()->id();
-		//$data['institution_tutelle_id'] = Auth::user()->institution_tutelle_id;
+		$data['institution_tutelle_id'] = Auth::user()->institution_tutelle_id;
 		$cadreDeveloppement = CadreDeveloppement::create($data);
 		$projet->cadre_developpement_id = $cadreDeveloppement->id;
 		$projet->save();
@@ -582,7 +582,8 @@ class ProjetController extends Controller
 	
 	public function storePlanFinancements(Request $request,Projet $projet)
     {
-        // Validation 
+        try{
+			// Validation 
         $data = $request->validate([
             'bailleur_id' => 'required',
 			'composante_ids' => 'required',
@@ -599,6 +600,12 @@ class ProjetController extends Controller
 		
         return redirect()->back()->with('success', 'plan de fiancement  ajoutée avec succès.');
     
+		} catch (UniqueConstraintViolationException $e) {
+			return redirect()->back()->with('error', 'Un plan de fiancement existe déjà pour cette année.');
+		} catch (\Throwable $e) {
+			 // Autres erreurs (connexion, syntaxe, etc.)
+			return redirect()->back()->with('error', 'Une erreur inattendue est survenue.');
+		}
 	}
 	
 	//public function destroyPlanFinancements($projetId, $composanteId, $sourceFinancementId, $bailleurId, $categorieDepenseId, $natureFinancementId, $statutFinancementId)
@@ -644,6 +651,7 @@ class ProjetController extends Controller
 	
 	public function updatePlanFinancements(Request $request, Projet $projet, ProjetPlanFinancement $planFinancement)
     {
+		try{
 		// Validation
         $data = $request->validate([
             'composante_ids' => 'required',
@@ -665,6 +673,12 @@ class ProjetController extends Controller
 			'montant' => $data['montant'],
 		]);
         return redirect()->route('projets.planFinancements',['projet' => $projet->id])->with('success', 'plan financement mis à jour avec succès.');
+		} catch (UniqueConstraintViolationException $e) {
+			return redirect()->back()->with('error', 'Un plan financement existe déjà pour cette année.');
+		} catch (\Throwable $e) {
+			 // Autres erreurs (connexion, syntaxe, etc.)
+			return redirect()->back()->with('error', 'Une erreur inattendue est survenue.');
+		}
 	}
 	
 	public function budgetAnnuelPrevu(Request $request, Projet $projet, ProjetPlanFinancement $planFinancement)
@@ -681,7 +695,8 @@ class ProjetController extends Controller
 	
 	public function storeBudgetAnnuelPrevu(Request $request,Projet $projet,ProjetPlanFinancement $planFinancement)
     {
-        // Validation
+       try{
+		 // Validation
         $data = $request->validate([
             'annee' => 'required',
 			'montant' => 'required',
@@ -694,6 +709,12 @@ class ProjetController extends Controller
 		]);
         return redirect()->back()->with('success', 'montant annuel prévu ajoutée avec succès.');
     
+		} catch (UniqueConstraintViolationException $e) {
+			return redirect()->back()->with('error', 'Un montant annuel prévu existe déjà pour cette année.');
+		} catch (\Throwable $e) {
+			 // Autres erreurs (connexion, syntaxe, etc.)
+			return redirect()->back()->with('error', 'Une erreur inattendue est survenue.');
+		}
 	}
 	public function editBudgetAnnuelPrevu(Request $request, Projet $projet, ProjetBudgetAnnuel $budgetAnnuelPrevu)
     {
@@ -706,7 +727,8 @@ class ProjetController extends Controller
 
     public function updateBudgetAnnuelPrevu(Request $request,Projet $projet, ProjetBudgetAnnuel $budgetAnnuelPrevu)
     {
-        // Validation
+        try{
+		// Validation
         $data = $request->validate([
             'annee' => 'required',
 			'montant' => 'required',
@@ -715,7 +737,14 @@ class ProjetController extends Controller
 		$budgetAnnuelPrevu->update($data);
 
         return redirect()->back()->with('success', 'montant annuel prévu modifié avec succès.');
-    }
+
+		} catch (UniqueConstraintViolationException $e) {
+			return redirect()->back()->with('error', 'Un montant annuel existe déjà pour cette année.');
+		} catch (\Throwable $e) {
+			 // Autres erreurs (connexion, syntaxe, etc.)
+			return redirect()->back()->with('error', 'Une erreur inattendue est survenue.');
+		}    
+	}
 	
 	public function destroyBudgetAnnuelPrevu(Request $request,Projet $projet, ProjetBudgetAnnuel $budgetAnnuelPrevu)
     {
@@ -739,7 +768,8 @@ class ProjetController extends Controller
 	
 	public function storeBudgetAnnuelDepense(Request $request,Projet $projet,ProjetPlanFinancement $planFinancement)
     {
-        // Validation
+        try{
+		// Validation
         $data = $request->validate([
             'annee' => 'required',
 			'montant' => 'required',
@@ -752,6 +782,12 @@ class ProjetController extends Controller
 		]);
         return redirect()->back()->with('success', 'montant annuel dépensé ajoutée avec succès.');
     
+		} catch (UniqueConstraintViolationException $e) {
+			return redirect()->back()->with('error', 'Un montant annuel existe déjà pour cette année.');
+		} catch (\Throwable $e) {
+			 // Autres erreurs (connexion, syntaxe, etc.)
+			return redirect()->back()->with('error', 'Une erreur inattendue est survenue.');
+		}
 	}
 	public function editBudgetAnnuelDepense(Request $request, Projet $projet, ProjetBudgetAnnuel $budgetAnnuelDepense)
     {
@@ -764,7 +800,8 @@ class ProjetController extends Controller
 
     public function updateBudgetAnnuelDepense(Request $request,Projet $projet, ProjetBudgetAnnuel $budgetAnnuelDepense)
     {
-        // Validation
+        try{
+		// Validation
         $data = $request->validate([
             'annee' => 'required',
 			'montant' => 'required',
@@ -773,7 +810,14 @@ class ProjetController extends Controller
 		$budgetAnnuelDepense->update($data);
 
         return redirect()->back()->with('success', 'montant annuel dépensé modifié avec succès.');
-    }
+    
+		} catch (UniqueConstraintViolationException $e) {
+			return redirect()->back()->with('error', 'Un montant annuel existe déjà pour cette année.');
+		} catch (\Throwable $e) {
+			 // Autres erreurs (connexion, syntaxe, etc.)
+			return redirect()->back()->with('error', 'Une erreur inattendue est survenue.');
+		}
+	}
 	
 	public function destroyBudgetAnnuelDepense(Request $request,Projet $projet, ProjetBudgetAnnuel $budgetAnnuelDepense)
     {
@@ -796,7 +840,8 @@ class ProjetController extends Controller
 	
 	public function storeBudgetAnnuel(Request $request,Projet $projet,ProjetPlanFinancement $planFinancement)
     {
-        // Validation
+        try{
+		// Validation
         $data = $request->validate([
             'annee' => 'required',
 			'montant' => 'required',
@@ -809,6 +854,12 @@ class ProjetController extends Controller
 		]);
         return redirect()->back()->with('success', 'montant annuel budgétisé ajouté avec succès.');
     
+		} catch (UniqueConstraintViolationException $e) {
+			return redirect()->back()->with('error', 'Un montant annuel existe déjà pour cette année.');
+		} catch (\Throwable $e) {
+			 // Autres erreurs (connexion, syntaxe, etc.)
+			return redirect()->back()->with('error', 'Une erreur inattendue est survenue.');
+		}
 	}
 	public function editBudgetAnnuel(Request $request, Projet $projet, ProjetBudgetAnnuel $budgetAnnuel)
     {
@@ -821,7 +872,8 @@ class ProjetController extends Controller
 
     public function updateBudgetAnnuel(Request $request,Projet $projet, ProjetBudgetAnnuel $budgetAnnuel)
     {
-        // Validation
+        try{
+		// Validation
         $data = $request->validate([
             'annee' => 'required',
 			'montant' => 'required',
@@ -830,7 +882,14 @@ class ProjetController extends Controller
 		$budgetAnnuel->update($data);
 
         return redirect()->back()->with('success', 'montant annuel budgétisé modifié avec succès.');
-    }
+    
+		} catch (UniqueConstraintViolationException $e) {
+			return redirect()->back()->with('error', 'Un montant annuel existe déjà pour cette année.');
+		} catch (\Throwable $e) {
+			 // Autres erreurs (connexion, syntaxe, etc.)
+			return redirect()->back()->with('error', 'Une erreur inattendue est survenue.');
+		}
+	}
 	
 	public function destroyBudgetAnnuel(Request $request,Projet $projet, ProjetBudgetAnnuel $budgetAnnuel)
     {

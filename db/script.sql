@@ -1789,6 +1789,9 @@ ADD COLUMN deleted_on timestamp null;
 ALTER TABLE projets
 ADD COLUMN deleted_on timestamp null;
 
+ALTER TABLE cadre_developpements
+ADD COLUMN deleted_on timestamp null;
+
 ALTER TABLE donnee_indicateurs
 ADD COLUMN statut character varying(50) null;
 
@@ -2200,6 +2203,8 @@ CREATE TABLE projet_plan_financements
         ON UPDATE CASCADE
         ON DELETE CASCADE
 );
+CREATE UNIQUE INDEX projet_plan_financements_unique_active ON projet_plan_financements (projet_id,composante_id,source_financement_id,bailleur_id,statut_financement_id,nature_financement_id,categorie_depense_id) WHERE deleted_on IS NULL;
+
 
 CREATE TABLE projet_budget_annuels
 (
@@ -2222,6 +2227,7 @@ CREATE TABLE projet_budget_annuels
         ON UPDATE CASCADE
         ON DELETE CASCADE
 );
+CREATE UNIQUE INDEX projet_budget_annuels_unique_active ON projet_budget_annuels (plan_financement_id,annee,statut_budget_id) WHERE deleted_on IS NULL;
 
 ALTER TABLE cadre_developpements
 ADD COLUMN cout_total_financement bigint;
@@ -2311,3 +2317,5 @@ CREATE TABLE cd_financement_annuel_par_resultats
         ON DELETE CASCADE
 );
 CREATE UNIQUE INDEX cd_financement_annuel_par_resultats_unique_active ON cd_financement_annuel_par_resultats (plan_financement_id, annee, statut_montant_financement_id) WHERE deleted_on IS NULL;
+
+

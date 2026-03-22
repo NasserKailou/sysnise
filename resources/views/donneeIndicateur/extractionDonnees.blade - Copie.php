@@ -1546,38 +1546,6 @@
 											action: function (e, dt, node, config) {
 												window.location.href = '/donnee_indicateurs/extractionDonnees';
 											}
-										},
-										{
-											text: '<div style="margin-left: 20px;display: inline-flex;"><div id="nouveau_frame" class="input-group input-group-sm" style="width: 350px;margin-right:10px;display:none"><input id="nom_frame" name="nom_frame"  type="text" class="form-control" placeholder="saisir le nom du frame"><span class="input-group-append"><button id="ajout_frame" type="button" class="btn btn-primary">Valider</button></span></div><button style="margin-right: 10px" id="btn_enregistrer"   class="btn btn-sm btn-primary waves-effect"><i class="mdi mdi-flash" style="padding-right:10px;padding-left:10px;"></i>Enregistrer Frame</button></div>',
-											action: function (e, dt, node, config) {
-												$('#btn_enregistrer').click(function(){
-													$("#nouveau_frame").css("display","flex");
-													$("#btn_enregistrer").css("display","none");
-													
-												});
-												$("#ajout_frame").click(function(){
-													var indicateur_data = [];
-													var zone_data = [];
-													var periode_data = [];
-													
-													Indicateurs.forEach(function(code){
-														indicateur_data.push(code);
-													});
-													Zones.forEach(function(code){
-														zone_data.push(code);
-													});
-													Periodes.forEach(function(code){
-														periode_data.push(code);
-													});
-													nom_frame = valeur = $("#nom_frame").val();
-													$.post("/ajoutSectionFrame",{nom_frame:nom_frame,indicateur_data:indicateur_data,zone_data:zone_data,periode_data:periode_data},function(dat){
-														$("#nom_frame").val('');
-														$('#operationStatus').html(msg);
-															});
-													
-												});
-						
-											}
 										}
 									]
 								});

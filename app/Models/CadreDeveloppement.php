@@ -18,6 +18,7 @@ class CadreDeveloppement extends Model
      */
     protected $fillable = [
         'intitule',
+		'type_cadre_developpement_id',
         'structure_responsable',
         'annee_debut',
         'annee_fin',

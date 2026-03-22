@@ -35,7 +35,8 @@ class CadreDeveloppementController extends Controller
         $cadreDeveloppements = CadreDeveloppement::where('type_cadre_developpement_id', 1)
             //->where('user_id', auth()->id())
             ->where('institution_tutelle_id', Auth::user()->institution_tutelle_id)
-           ->with(['cadreDeveloppementUsers.userr']) // Charger les associations avec l'institution
+           ->whereNull('deleted_on')
+		   ->with(['cadreDeveloppementUsers.userr']) // Charger les associations avec l'institution
             ->get();
 
 

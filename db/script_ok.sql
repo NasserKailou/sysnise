@@ -9,7 +9,7 @@ CREATE TABLE institution_tutelles
     CONSTRAINT institution_tutelles_intitule_unique UNIQUE (intitule)
 );
 INSERT INTO institution_tutelles (intitule) VALUES
-('Ministère de lEconomie et des Finances');
+('Ministère de l\'Economie et des Finances');
 
 CREATE TABLE users
 (
@@ -141,7 +141,8 @@ INSERT INTO population_cibles (intitule) VALUES
 ('Rurale Sédentaire'),
 ('Rurale Nomade'),
 ('Urbaine'),
-('Totale');
+('Totale'),
+('Autre');
 
 CREATE TABLE priorites
 (
@@ -1491,7 +1492,7 @@ CREATE TABLE composante_produits
         ON UPDATE CASCADE
         ON DELETE CASCADE
 );
-----------------------
+
 CREATE TABLE projet_plan_financements
 (
     id BIGSERIAL,
@@ -1537,6 +1538,7 @@ CREATE TABLE projet_plan_financements
         ON UPDATE CASCADE
         ON DELETE CASCADE
 );
+CREATE UNIQUE INDEX projet_plan_financements_unique_active ON projet_plan_financements (projet_id,composante_id,source_financement_id,bailleur_id,statut_financement_id,nature_financement_id,categorie_depense_id) WHERE deleted_on IS NULL;
 
 CREATE TABLE cd_financement_par_bailleurs
 (
@@ -1624,55 +1626,6 @@ CREATE TABLE cd_financement_annuel_par_resultats
 );
 CREATE UNIQUE INDEX cd_financement_annuel_par_resultats_unique_active ON cd_financement_annuel_par_resultats (plan_financement_id, annee, statut_montant_financement_id) WHERE deleted_on IS NULL;
 
-
-/*CREATE TABLE budget_annuel_prevus
-(
-    id BIGSERIAL,
-    plan_financement_id bigint NOT NULL,
-    annee int NOT NULL,
-    montant numeric(15,2),
-    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
-    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
-	deleted_on timestamp null,
-    CONSTRAINT budget_annuel_prevu_pkey PRIMARY KEY (id),
-    CONSTRAINT budget_annuel_prevu_plan_financement_id_fkey FOREIGN KEY (plan_financement_id)
-        REFERENCES plan_financements (id) MATCH SIMPLE
-        ON UPDATE CASCADE
-        ON DELETE CASCADE
-);
-
-CREATE TABLE budget_annuel_depenses
-(
-    id BIGSERIAL,
-    plan_financement_id bigint NOT NULL,
-    annee int NOT NULL,
-    montant numeric(15,2),
-    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
-    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
-	deleted_on timestamp null,
-    CONSTRAINT budget_annuel_depense_pkey PRIMARY KEY (id),
-    CONSTRAINT budget_annuel_depense_plan_financement_id_fkey FOREIGN KEY (plan_financement_id)
-        REFERENCES plan_financements (id) MATCH SIMPLE
-        ON UPDATE CASCADE
-        ON DELETE CASCADE
-);
-
-CREATE TABLE budget_annuels
-(
-    id BIGSERIAL,
-    plan_financement_id bigint NOT NULL,
-    annee int NOT NULL,
-	montant numeric(15,2),
-    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
-    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
-	deleted_on timestamp null,
-    CONSTRAINT budget_annuel_pkey PRIMARY KEY (id),
-    CONSTRAINT budget_annuel_plan_financement_id_fkey FOREIGN KEY (plan_financement_id)
-        REFERENCES plan_financements (id) MATCH SIMPLE
-        ON UPDATE CASCADE
-        ON DELETE CASCADE
-);*/
-
 CREATE TABLE projet_budget_annuels
 (
     id BIGSERIAL,
@@ -1694,6 +1647,8 @@ CREATE TABLE projet_budget_annuels
         ON UPDATE CASCADE
         ON DELETE CASCADE
 );
+CREATE UNIQUE INDEX projet_budget_annuels_unique_active ON projet_budget_annuels (plan_financement_id,annee,statut_budget_id) WHERE deleted_on IS NULL;
+
 
 CREATE TABLE projet_population_cible
 (
