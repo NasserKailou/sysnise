@@ -45,7 +45,33 @@ class Projet extends Model
 		'periode_prorogation',
 		'duree_prorogation',
         'user_id',
+        'dispose_organe_pilotage',
+        'a_audit_regulier',
+        'problemes_rencontres',
+        'solutions_proposees',
+        'recommandations',
+        'rapport_rempli_par',
+        'rapport_date_remplissage',
     ];
+
+    protected $casts = [
+    'date_debut_prevue'       => 'date',
+    'date_fin_prevue'         => 'date',
+    'date_debut_effective'    => 'date',
+    'date_fin_effective'      => 'date',
+    'date_approbation'        => 'date',
+    'date_signature'          => 'date',
+    'date_mise_en_vigueur'    => 'date',
+    'date_demarrage_effectif' => 'date',
+    'rapport_date_remplissage' => 'date',
+    'created_at'              => 'datetime',
+    'updated_at'              => 'datetime',
+    'deleted_on'              => 'datetime',
+    'dispose_organe_pilotage' => 'boolean',
+    'a_audit_regulier'        => 'boolean',
+];
+
+
 
     /**
      * Get the attributes that should be cast.
@@ -199,6 +225,25 @@ class Projet extends Model
     {
         return $this->projetUsers();
     }
+
+
+    public function pilotageAnnees()
+{
+    return $this->hasMany(ProjetPilotageAnnee::class);
+}
+
+public function auditsExercices()
+{
+    return $this->hasMany(ProjetAuditsExercice::class);
+}
+
+public function rapports()
+{
+    return $this->hasMany(ProjetRapport::class);
+}
+
+
+
 	
 	
 }
