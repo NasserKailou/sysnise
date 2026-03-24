@@ -47,7 +47,7 @@
                                     </a>
 
                                     <!-- Modal dynamique -->
-                                    <button class="btn btn-dark btn-sm open-modal viewAssociationsModal"
+                                    <button class="btn btn-dark btn-sm open-modal"
                                         data-id="{{ $cadre->id }}"
                                         data-intitule="{{ $cadre->intitule }}"
                                         data-bs-toggle="modal"
@@ -56,7 +56,7 @@
                                     </button>
 
                                     <!-- Association -->
-                                    <button class="btn btn-secondary btn-sm open-association-modal associationModal"
+                                    <button class="btn btn-secondary btn-sm open-association-modal"
                                         data-id="{{ $cadre->id }}"
                                         data-intitule="{{ $cadre->intitule }}"
                                         data-bs-toggle="modal"
@@ -84,20 +84,99 @@
     </div>
 </div>
 
+<!-- ===================== -->
+<!-- MODALE UNIQUE (VIEW) -->
+<!-- ===================== -->
+<div class="modal fade" id="viewAssociationsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 id="modalTitle"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="modalContent">
+                Chargement...
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===================== -->
+<!-- MODALE UNIQUE (ASSOCIER) -->
+<!-- ===================== -->
+<div class="modal fade" id="associationModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="{{ route('cadre_developpements.associer') }}" method="POST">
+                @csrf
+                <div class="modal-header">
+                    <h5 id="associationTitle"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <input type="hidden" name="cadre_developpement_id" id="cadre_id">
+
+                    <div class="mb-3">
+                        <label class="form-label">Utilisateur</label>
+                        <select class="form-select" name="user_id" required>
+                            <option value="">Sélectionner un utilisateur</option>
+                            @foreach($users as $user)
+                                <option value="{{ $user->id }}">{{ $user->email }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div id="associationWarning"></div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Associer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 @endsection
 
 @section('scripts')
 <script>
-	$(document).ready(function () {
-		$('.viewAssociationsModal').click(function(){
-				cadreId = $(this).data('id');
-				$.get('/cadre_developpements/'+cadreId+'/associations,function(dat){
-					$('#popup').html(dat);
-					$("#myModal").modal('show');
-				});
-				
-			});
-	});
+document.addEventListener("DOMContentLoaded", function () {
+
+    // Modal VIEW
+    document.querySelectorAll(".open-modal").forEach(btn => {
+        btn.addEventListener("click", function () {
+
+            let id = this.dataset.id;
+            let intitule = this.dataset.intitule;
+
+            document.getElementById("modalTitle").innerText =
+                'Associations de "' + intitule + '"';
+
+            fetch(`/cadre_developpements/${id}/associations`)
+                .then(res => res.text())
+                .then(data => {
+                    document.getElementById("modalContent").innerHTML = data;
+                });
+        });
+    });
+
+    // Modal ASSOCIER
+    document.querySelectorAll(".open-association-modal").forEach(btn => {
+        btn.addEventListener("click", function () {
+
+            let id = this.dataset.id;
+            let intitule = this.dataset.intitule;
+
+            document.getElementById("associationTitle").innerText =
+                'Associer "' + intitule + '" à un utilisateur';
+
+            document.getElementById("cadre_id").value = id;
+        });
+    });
+
+});
 </script>
 @endsection
