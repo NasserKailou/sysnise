@@ -50,8 +50,7 @@
                                     <button class="btn btn-dark btn-sm open-modal viewAssociationsModal"
                                         data-id="{{ $cadre->id }}"
                                         data-intitule="{{ $cadre->intitule }}"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#viewAssociationsModal">
+                                        data-bs-toggle="modal">
                                         <i class="fa fa-list-alt"></i>
                                     </button>
 
@@ -59,8 +58,7 @@
                                     <button class="btn btn-secondary btn-sm open-association-modal associationModal"
                                         data-id="{{ $cadre->id }}"
                                         data-intitule="{{ $cadre->intitule }}"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#associationModal">
+                                        data-bs-toggle="modal">
                                         <i class="fa fa-link"></i>
                                     </button>
 
@@ -83,21 +81,28 @@
         </div>
     </div>
 </div>
-
-
-@endsection
-
-@section('scripts')
+<div id="popup"></div>
 <script>
 	$(document).ready(function () {
+		
 		$('.viewAssociationsModal').click(function(){
 				cadreId = $(this).data('id');
-				$.get('/cadre_developpements/'+cadreId+'/associations,function(dat){
+				$.get('/cadre_developpements/'+cadreId+'/viewAssociations',function(dat){
 					$('#popup').html(dat);
-					$("#myModal").modal('show');
+					$("#viewAssociationsModal").modal('show');
+				});
+				
+			});
+			
+		$('.associationModal').click(function(){
+				cadreId = $(this).data('id');
+				$.get('/cadre_developpements/'+cadreId+'/association',function(dat){
+					$('#popup').html(dat);
+					$("#associationModal").modal('show');
 				});
 				
 			});
 	});
 </script>
+
 @endsection

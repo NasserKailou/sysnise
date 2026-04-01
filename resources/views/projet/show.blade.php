@@ -27,8 +27,13 @@
 				  
 				
 				</ul>
-			  <a href="{{ route('projets.clotureProjets', ['projet' => $projet->id]) }}"" class="btn btn-outline-secondary">Clôture </a>
-			  @if ($projet->statutProjet->id == 4)<a href="#" class="btn btn-outline-secondary">Evaluation </a>@endif
+			  <a href="#" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Gouvernance</a>
+				<ul class="dropdown-menu">
+				  <li><a class="dropdown-item" href="{{ route('projets.pilotage.show', ['projet' => $projet->id]) }}">Pilotage</a></li>
+				  <li><a class="dropdown-item" href="{{ route('projets.clotureProjets', ['projet' => $projet->id]) }}">Clôture</a></li>
+				  
+				</ul>
+			  
 			</div>
 			
 		</div>
