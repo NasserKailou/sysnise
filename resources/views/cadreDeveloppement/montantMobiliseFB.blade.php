@@ -6,7 +6,7 @@
       <div class="col-md-12 col-lg-12">
         <div class="card">
 		  <div class="card-header">
-			<strong>Montant mobilisé</strong>
+			<strong>Montant mobilisé par an : {{ $financementParBailleur->bailleur->intitule }}</strong>
 		  </div>
 		  <div class="card-body">
 			<form action="{{ route('cadre_developpements.financementParBailleur.montantMobilise.store',['cadre_developpement' => $cadreDeveloppement->id,'financementParBailleur' => $financementParBailleur->id ]) }}" method="POST">
@@ -14,13 +14,13 @@
 				<div class="row">
 					<div class="row mb-3">
 						
-						<div class="col-md-4">
+						<div class="col-md-6">
 						  <label class="form-label">Année 
 							<span style="color: red;">*</span>
 						  </label>
 						  <input name="annee" type="text" class="form-control" required>
 						</div>
-						<div class="col-md-4">
+						<div class="col-md-6">
 						  <label class="form-label">Montant 
 							<span style="color: red;">*</span>
 						  </label>
@@ -41,7 +41,7 @@
         <div class="col-md-12 col-lg-12">
             <div class="card">
                 <div class="card-header">
-                    <strong>Montants mobilisés par an</strong>
+                    <strong>Historique Montants mobilisés par an : {{ $financementParBailleur->bailleur->intitule }}</strong>
                 </div>
                 <div class="card-body">
                     <table class="dataTable table table-bordered table-striped">

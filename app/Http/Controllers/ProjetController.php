@@ -1184,6 +1184,27 @@ class ProjetController extends Controller
         return redirect()->route('projets.financementParBailleur',['projet' => $projet->id])->with('success', 'financement par catégorie de dépense mis à jour avec succès.');
 	}
 	
+	public function viewAssociations(Request $request, Projet $projet)
+    {
+		
+		return view('projet.viewAssociations', [
+            'projet' => $projet,
+        ]);
+	}
+	
+	public function association(Request $request, Projet $projet)
+    {
+		$user = Auth::user();
+		$currentUserInstitutionId = Auth::user()->institution_tutelle_id;
+		$users = User::where('institution_tutelle_id', '!=', $currentUserInstitutionId)->get();
+
+		return view('projet.association', [
+            'projet' => $projet,
+			'users' =>$users,
+        ]);
+	}
+	
+	
 }
 
 

@@ -1,4 +1,4 @@
-<aside class="main-sidebar sidebar-dark-primary elevation-4">
+<aside class="main-sidebar sidebar-dark-primary elevation-4" style="background: #213d8b;">
     <!-- Brand Logo -->
     <div class="sidebar-brand">
 	  <!--begin::Brand Link-->

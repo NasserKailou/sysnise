@@ -285,7 +285,7 @@ public function dissocier($associationId)
             'cadreDeveloppement' => $cadreDeveloppement,
 			'financementParBailleur' => $financementParBailleur,
 			'montantMobilises' => $montantMobilises,
-			'breadcrumb' => 'CadreDeveloppement > Montants prévus par année',
+			'breadcrumb' => 'CadreDeveloppement > Montants mobilisés par année',
         ]);
 	}
 	
@@ -317,7 +317,7 @@ public function dissocier($associationId)
 		return view('cadreDeveloppement.editMontantMobiliseFB', [
             'cadreDeveloppement' => $cadreDeveloppement,
 			'montantMobilise' => $montantMobilise,
-			'breadcrumb' => 'Reférentiel > Mise à jour catégorie dépense',
+			'breadcrumb' => 'CadreDeveloppement > Edit montant mobilisé',
         ]);
     }
 
@@ -390,7 +390,7 @@ public function dissocier($associationId)
 		return view('cadreDeveloppement.editMontantConsommeFB', [
             'cadreDeveloppement' => $cadreDeveloppement,
 			'montantConsomme' => $montantConsomme,
-			'breadcrumb' => 'Reférentiel > Mise à jour montant consommé',
+			'breadcrumb' => 'CadreDeveloppement > Mise à jour montant consommé',
         ]);
     }
 
@@ -498,7 +498,7 @@ public function dissocier($associationId)
 	public function financementParResultat(Request $request, CadreDeveloppement $cadreDeveloppement)
     {
 		//$resultats = Resultat::whereNull('deleted_on')->get();
-		$chaineLogiques = DB::table('view_cadre_logique')->get();
+		$chaineLogiques = DB::table('view_cadre_logique')->where('cadre_developpement_id',$cadreDeveloppement->id)->get();
 		$financementParResultats = CD_FinancementParResultat::where('cadre_developpement_id', $cadreDeveloppement->id)->whereNotNull('cadre_logique_id')->whereNull('deleted_on')->get();
 		return view('cadreDeveloppement.financementParResultat', [
             'cadreDeveloppement' => $cadreDeveloppement,
@@ -799,6 +799,26 @@ public function dissocier($associationId)
 
         return redirect()->back()->with('success', 'montant annuel recherché supprimé avec succès.');
     }
+	
+	public function viewAssociations(Request $request, CadreDeveloppement $cadre)
+    {
+		
+		return view('cadreDeveloppement.viewAssociations', [
+            'cadre' => $cadre,
+        ]);
+	}
+	
+	public function association(Request $request, CadreDeveloppement $cadre)
+    {
+		$user = Auth::user();
+		$currentUserInstitutionId = Auth::user()->institution_tutelle_id;
+		$users = User::where('institution_tutelle_id', '!=', $currentUserInstitutionId)->get();
+
+		return view('cadreDeveloppement.association', [
+            'cadre' => $cadre,
+			'users' =>$users,
+        ]);
+	}
 	
 	
 	

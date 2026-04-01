@@ -19,7 +19,9 @@
                     <p><strong>Intitulé :</strong> {{ $cadreDeveloppement->intitule }}</p>
                     <p><strong>Structure Responsable :</strong> {{ $cadreDeveloppement->structure_responsable }}</p>
                     <p><strong>Période :</strong> {{ $cadreDeveloppement->annee_debut }} - {{ $cadreDeveloppement->annee_fin }}</p>
-                    <p><strong>Coût total du financement :</strong> {{ $cadreDeveloppement->cout_total_financement }}</p>
+                    <p><strong>Coût total du financement :</strong> {{ number_format($cadreDeveloppement->cout_total_financement, 0, '.', ' ') }} FCFA</p>
+					<p><strong>Montant Accordé :</strong> {{ number_format($cadreDeveloppement->total_financement, 0, '.', ' ')  }} FCFA</p>
+					<p><strong>Reste à rechercher :</strong> {{ number_format(($cadreDeveloppement->cout_total_financement - $cadreDeveloppement->total_financement), 0, '.', ' ') }} FCFA</p>
 					<p><strong>Description :</strong> {{ $cadreDeveloppement->description }}</p>
 					<div class="d-flex gap-2 mt-3">
 						<a href="{{ route('cadre_developpements.financementParBailleur', $cadreDeveloppement->id) }}"

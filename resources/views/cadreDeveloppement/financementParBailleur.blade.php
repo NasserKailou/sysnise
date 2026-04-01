@@ -7,7 +7,7 @@
       <div class="col-md-12 col-lg-12">
         <div class="card">
 		  <div class="card-header">
-			<strong>Financement par bailleur du cadre de développement : </strong>
+			<strong>Financement par bailleur du cadre de développement : {{$cadreDeveloppement->intitule}}</strong>
 		  </div>
 		  <div class="card-body">
 			<form action="{{ route('cadre_developpements.financementParBailleur.store',['cadre_developpement' => $cadreDeveloppement->id]) }}" method="POST">
@@ -29,7 +29,7 @@
 						</div>
 						
 						<div class="col-md-12">
-						  <label class="form-label">Montant (FCFA) 
+						  <label class="form-label">Montant Accordé (FCFA) 
 							<span style="color: red;">*</span>
 						  </label>
 						  <input name="montant" type="number" class="form-control" required>
@@ -50,17 +50,17 @@
         <div class="col-md-12 col-lg-12">
             <div class="card">
                 <div class="card-header">
-                    <strong>Financements du cadre de développement</strong>
+                    <strong>Financements par bailleur du cadre de développement : {{$cadreDeveloppement->intitule}}</strong>
                 </div>
                 <div class="card-body">
                     <table class="dataTable table table-bordered table-striped">
                         <thead>
                             <tr>
                                 <th class="text-left">Bailleur</th>
-								<th class="text-left">Coût</th>
+								<th class="text-left">Montant Accordé</th>
 								<th class="text-left">Montant mobilisé</th>
 								<th class="text-left">Montant consommé</th>
-								<th class="text-left">Montant à rechercher</th>
+								<th class="text-left">Montant à mobiliser</th>
                                 <th class="text-center table-icons">Actions</th>
                             </tr>
                         </thead>
@@ -71,13 +71,12 @@
 								<td class="text-left">{{ $financement->montant ?? '-' }}</td>
                                 <td class="text-left">{{ $financement?->montantMobilises()->whereNull('deleted_on')->sum('montant') ?? 0  }}</td>
                                 <td class="text-left">{{ $financement?->montantConsommes()->whereNull('deleted_on')->sum('montant') ?? 0  }}</td>
-                                <td class="text-left">{{ $financement?->montantRecherches()->whereNull('deleted_on')->sum('montant') ?? 0  }}</td>
+                                <td class="text-left">{{ $financement->montant - $financement?->montantMobilises()->whereNull('deleted_on')->sum('montant')  ?? '-' }}</td>
 								
 								<td class="text-center table-icons">
                                     <a href="{{ route('cadre_developpements.financementParBailleur.edit', [$cadreDeveloppement->id,$financement?->id]) }}" class="btn btn-sm btn-secondary" data-bs-toggle="tooltip" data-bs-placement="top" title="Modifier"><i class="fa fa-edit"></i></a>
 									<a href="{{ route('cadre_developpements.financementParBailleur.montantMobilise', [$cadreDeveloppement->id,$financement?->id]) }}" class="btn btn-sm btn-success" data-bs-toggle="tooltip" data-bs-placement="top" title="Montant mobilisé"><i class="fa fa-money-bill-wave"></i></a>
 									<a href="{{ route('cadre_developpements.financementParBailleur.montantConsomme', [$cadreDeveloppement->id,$financement?->id]) }}" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Montant consommé"><i class="fa fa-arrow-trend-down"></i></a>
-									<a href="{{ route('cadre_developpements.financementParBailleur.montantRecherche', [$cadreDeveloppement->id,$financement?->id]) }}" class="btn btn-sm btn-warning" data-bs-toggle="tooltip" data-bs-placement="top" title="Montant à rechercher"><i class="fa fa-hand-holding-dollar"></i></a>
 									<form action="{{ route('cadre_developpements.financementParBailleur.destroy',[$cadreDeveloppement->id,$financement?->id]) }}" method="POST" style="display:inline-block;">
                                         @csrf
                                         @method('DELETE')

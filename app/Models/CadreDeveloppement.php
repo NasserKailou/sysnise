@@ -90,6 +90,43 @@ class CadreDeveloppement extends Model
 	{
 		return $this->hasMany(CD_FinancementParResultat::class);
 	}
+	
+	public function getFinancementParBailleursAttribute()
+	{
+		$totalMobilise = 0;
+		$totalConsomme = 0;
+
+		foreach ($this->financementParBailleurs as $financement) {
+			$totalMobilise += $financement->montantMobilises()->sum('montant');
+			$totalConsomme += $financement->montantConsommes()->sum('montant');
+		}
+
+		return [
+			'total_mobilise' => $totalMobilise,
+			'total_consomme' => $totalConsomme,
+		];
+	}
+	
+	public function getTotalMontantMobiliseAttribute()
+	{
+		return CD_FinancementAnnuelParBailleur::whereHas('financementParBailleur', function ($q) {
+			$q->where('cadre_developpement_id', $this->id);
+		})->where('statut_montant_financement_id', 1)
+		  ->sum('montant');
+	}
+
+	public function getTotalMontantConsommeAttribute()
+	{
+		return CD_FinancementAnnuelParBailleur::whereHas('financementParBailleur', function ($q) {
+			$q->where('cadre_developpement_id', $this->id);
+		})->where('statut_montant_financement_id', 2)
+		  ->sum('montant');
+	}
+	
+	public function getTotalFinancementAttribute()
+	{
+		return $this->financementParBailleurs()->sum('montant');
+	}
 
 	
 }

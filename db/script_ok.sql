@@ -30,8 +30,8 @@ CREATE TABLE users
         ON UPDATE CASCADE
         ON DELETE CASCADE
 );
-INSERT INTO users (id, name, email, email_verified_at, password, remember_token, created_at, updated_at) VALUES
-(1,	'sysnise',	'dev@sysnise.ne',	NULL,	'$2y$12$zFB64bIUNXOLyTfE1qlkauOz30d6DnvcoXhBN0b//IqeVD7cb.X7W',	NULL,	NULL,	NULL);
+INSERT INTO users (id, name, email, email_verified_at, password,institution_tutelle_id, remember_token, created_at, updated_at) VALUES
+(1,	'sysnise',	'dev@sysnise.ne',	NULL,	'$2y$12$zFB64bIUNXOLyTfE1qlkauOz30d6DnvcoXhBN0b//IqeVD7cb.X7W', 1,	NULL,	NULL,	NULL);
 
 
 CREATE TABLE nature_donnees
@@ -1289,7 +1289,16 @@ CREATE TABLE projets
     duree_prorogation text,
 	user_id bigint,
 	secteur_id bigint DEFAULT 1,
-    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	
+	dispose_organe_pilotage BOOLEAN DEFAULT NULL,
+	a_audit_regulier BOOLEAN DEFAULT NULL,
+	problemes_rencontres TEXT DEFAULT NULL,
+	solutions_proposees TEXT DEFAULT NULL,
+	recommandations TEXT DEFAULT NULL,
+	rapport_rempli_par VARCHAR(255) DEFAULT NULL,
+	rapport_date_remplissage DATE DEFAULT NULL;
+    
+	created_at timestamp DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
 	deleted_on timestamp null,
 	CONSTRAINT projets_pkey PRIMARY KEY (id),
@@ -1670,6 +1679,60 @@ CREATE TABLE projet_population_cible
         ON DELETE CASCADE
 );
 
+CREATE TABLE projet_pilotage_annees (
+    id BIGSERIAL PRIMARY KEY,
+    projet_id BIGINT NOT NULL,
+    annee INTEGER NOT NULL,
+    nb_sessions_prevues INTEGER NOT NULL DEFAULT 0,
+    nb_sessions_tenues INTEGER NOT NULL DEFAULT 0,
+    nb_recommandations_formulees INTEGER NOT NULL DEFAULT 0,
+    nb_recommandations_mises_oeuvre INTEGER NOT NULL DEFAULT 0,
+    created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL,
+    updated_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL,
+    CONSTRAINT projet_pilotage_annees_projet_id_foreign 
+        FOREIGN KEY (projet_id) REFERENCES projets(id) ON DELETE CASCADE,
+    CONSTRAINT projet_pilotage_annees_projet_id_annee_unique 
+        UNIQUE (projet_id, annee)
+);
+
+CREATE TABLE projet_pilotage_sessions (
+    id BIGSERIAL PRIMARY KEY,
+    projet_pilotage_annee_id BIGINT NOT NULL,
+    date_session DATE NOT NULL,
+    created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL,
+    updated_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL,
+    CONSTRAINT projet_pilotage_sessions_projet_pilotage_annee_id_foreign 
+        FOREIGN KEY (projet_pilotage_annee_id) REFERENCES projet_pilotage_annees(id) ON DELETE CASCADE
+);
+
+CREATE TABLE projet_audits_exercices (
+    id BIGSERIAL PRIMARY KEY,
+    projet_id BIGINT NOT NULL,
+    exercice INTEGER NOT NULL,
+    comptes_certifies BOOLEAN DEFAULT NULL,
+    nb_recommandations_formulees INTEGER NOT NULL DEFAULT 0,
+    nb_recommandations_mises_oeuvre INTEGER NOT NULL DEFAULT 0,
+    created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL,
+    updated_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL,
+    CONSTRAINT projet_audits_exercices_projet_id_foreign 
+        FOREIGN KEY (projet_id) REFERENCES projets(id) ON DELETE CASCADE,
+    CONSTRAINT projet_audits_exercices_projet_id_exercice_unique 
+        UNIQUE (projet_id, exercice)
+);
+
+CREATE TABLE projet_rapports (
+    id BIGSERIAL PRIMARY KEY,
+    projet_id BIGINT NOT NULL,
+    type VARCHAR(255) NOT NULL,
+    fichier VARCHAR(255) NOT NULL,
+    date_rapport DATE DEFAULT NULL,
+    description TEXT DEFAULT NULL,
+    created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL,
+    updated_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL,
+    CONSTRAINT projet_rapports_projet_id_foreign 
+        FOREIGN KEY (projet_id) REFERENCES projets(id) ON DELETE CASCADE
+);
+
 CREATE TABLE cloture_projets (
     id BIGSERIAL,
     projet_id BIGINT NOT NULL,
@@ -1696,7 +1759,7 @@ CREATE TABLE cloture_projets (
         ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS public.cadre_developpement_users
+CREATE TABLE IF NOT EXISTS cadre_developpement_users
 (
     id  bigserial,
     cadre_developpement bigint NOT NULL,
@@ -1707,23 +1770,23 @@ CREATE TABLE IF NOT EXISTS public.cadre_developpement_users
     CONSTRAINT cadre_developpement_user_pkey PRIMARY KEY (id),
     CONSTRAINT cadre_developpement_user_cadre_developpement_user_key UNIQUE (cadre_developpement, userr),
     CONSTRAINT cadre_developpement_user_cadre_developpement_fkey FOREIGN KEY (cadre_developpement)
-        REFERENCES public.cadre_developpements (id) MATCH SIMPLE
+        REFERENCES cadre_developpements (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION,
     CONSTRAINT cadre_developpement_user_user_fkey FOREIGN KEY (userr)
-        REFERENCES public.users (id) MATCH SIMPLE
+        REFERENCES users (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
         NOT VALID,
     CONSTRAINT cadre_developpement_user_user_id_fkey FOREIGN KEY (user_id)
-        REFERENCES public.users (id) MATCH SIMPLE
+        REFERENCES users (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
         NOT VALID
 );
 
 
-CREATE TABLE IF NOT EXISTS public.projet_users
+CREATE TABLE IF NOT EXISTS projet_users
 (
     id  bigserial,
     projet bigint NOT NULL,
@@ -1734,16 +1797,16 @@ CREATE TABLE IF NOT EXISTS public.projet_users
     CONSTRAINT projet_user_pkey PRIMARY KEY (id),
     CONSTRAINT projet_user_projet_user_key UNIQUE (projet, userr),
     CONSTRAINT projet_user_projet_fkey FOREIGN KEY (projet)
-        REFERENCES public.projets (id) MATCH SIMPLE
+        REFERENCES projets (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION,
     CONSTRAINT projet_user_user_fkey FOREIGN KEY (userr)
-        REFERENCES public.users (id) MATCH SIMPLE
+        REFERENCES users (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
         NOT VALID,
     CONSTRAINT projet_user_user_id_fkey FOREIGN KEY (user_id)
-        REFERENCES public.users (id) MATCH SIMPLE
+        REFERENCES users (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
         NOT VALID
@@ -1893,7 +1956,7 @@ CREATE TABLE cache_locks
     CONSTRAINT cache_locks_pkey PRIMARY KEY (key)
 );
 
-CREATE OR REPLACE VIEW public.view_extraction_donnees
+CREATE OR REPLACE VIEW view_extraction_donnees
  AS
  SELECT di.id,
     di.nature_donnee_id,
@@ -1926,7 +1989,7 @@ CREATE OR REPLACE VIEW public.view_extraction_donnees
   GROUP BY di.id, di.nature_donnee_id, nd.intitule, di.indicateur_id, i.intitule, di.zone_id, z.intitule, di.source_indicateur_id, si.intitule, di.unite_indicateur_id, ui.intitule, di.commentaire_valeur_indicateur_id, cvi.intitule, di.periode_id, p.intitule, di.valeur
   ORDER BY i.intitule, z.intitule, p.intitule;
 
-CREATE OR REPLACE VIEW public.view_cmr
+CREATE OR REPLACE VIEW view_cmr
  AS
  WITH RECURSIVE nodes AS (
          SELECT cd.id AS cadre_id,
@@ -1982,7 +2045,7 @@ CREATE OR REPLACE VIEW public.view_cmr
   ORDER BY n.cadre_developpement_id, n.parent_id NULLS FIRST, n.cadre_id, i.id;
 
 
-CREATE OR REPLACE VIEW public.view_cadre_logique_old
+CREATE OR REPLACE VIEW view_cadre_logique_old
  AS
  WITH RECURSIVE hierarchy AS (
          SELECT cl.id,

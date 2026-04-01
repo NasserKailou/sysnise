@@ -149,6 +149,8 @@ Route::middleware(['auth'])->group(function () {
 		Route::post('editClotureProjets/{clotureProjet}', [App\Http\Controllers\ProjetController::class, 'updateClotureProjets'])->name('projets.clotureProjets.update');
 		Route::delete('clotureProjets/{clotureProjet}',[App\Http\Controllers\ProjetController::class, 'destroyClotureProjets'])->name('projets.clotureProjets.destroy');
 		
+		Route::get('viewAssociations', [App\Http\Controllers\ProjetController::class, 'viewAssociations'])->name('projets.viewAssociations');
+		Route::get('association', [App\Http\Controllers\ProjetController::class, 'association'])->name('projets.association');
 		
 	});
 
@@ -221,6 +223,9 @@ Route::middleware(['auth'])->group(function () {
 		Route::get('editMontantRechercheFR/{montantRecherche}', [App\Http\Controllers\CadreDeveloppementController::class, 'editMontantRechercheFR'])->name('cadre_developpements.financementParResultat.montantRecherche.edit');
 		Route::post('editMontantRechercheFR/{montantRecherche}', [App\Http\Controllers\CadreDeveloppementController::class, 'updateMontantRechercheFR'])->name('cadre_developpements.financementParResultat.montantRecherche.update');
 		Route::delete('montantRechercheFR/{montantRecherche}', [App\Http\Controllers\CadreDeveloppementController::class, 'destroyMontantRechercheFR'])->name('cadre_developpements.financementParResultat.montantRecherche.destroy');
+		
+		Route::get('viewAssociations', [App\Http\Controllers\CadreDeveloppementController::class, 'viewAssociations'])->name('cadre_developpements.viewAssociations');
+		Route::get('association', [App\Http\Controllers\CadreDeveloppementController::class, 'association'])->name('cadre_developpements.association');
 		
 	
 	});

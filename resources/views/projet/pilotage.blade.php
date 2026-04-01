@@ -7,14 +7,14 @@
             <h1 class="h3">Pilotage & Audits - Projet : {{ $projet->sigle }} ({{ $projet->intitule }})</h1>
         </div>
         <div class="col text-end">
-            <a href="{{ route('projets.index') }}" class="btn btn-secondary">
+            <a href="{{ route('projets.show', $projet->id) }}" class="btn btn-secondary">
                 <i class="fas fa-arrow-left"></i> Retour à la liste
             </a>
         </div>
     </div>
 
     {{-- Affichage des messages flash --}}
-    @include('partials.flash')
+    {{-- @include('partials.flash')--}}
 
     {{-- Formulaire général --}}
     <div class="card mb-4">

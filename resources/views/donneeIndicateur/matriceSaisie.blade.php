@@ -19,7 +19,7 @@
                                 <th>Zone</th>
                                 <th>Source</th>
                                 <th>Unité</th>
-                                <th>Commentaire</th>
+                                {{--<th>Commentaire</th>--}}
 
                                 @foreach($periodesData as $p)
                                     <th>{{ $p->intitule }}</th>
@@ -74,7 +74,7 @@
                                     <td>{{ $zones[$m['zone_id']] }}</td>
                                     <td>{{ $sources[$m['source_indicateur_id']] }}</td>
                                     <td>{{ $unites[$m['unite_indicateur_id']] }}</td>
-                                    <td>{{ $commentaires[$m['commentaire_valeur_indicateur_id']] }}</td>
+                                    {{--<td>{{ $commentaires[$m['commentaire_valeur_indicateur_id']] }}</td>--}}
 
                                     {{-- Colonnes de saisie par période --}}
                                     @foreach($periodesData as $p)

@@ -81,6 +81,7 @@
 		@foreach($indicateurs as $indicateur)
 			zNodesIndicateur.push({
 				id: {{ $indicateur->id }},
+				/*id: @json((string) $indicateur->id),*/
 				pId: 0,
 				name: @json($indicateur->intitule)
 			});
@@ -88,8 +89,10 @@
 
 		@foreach($cadre_logiques as $cadre_logique)
 			zNodescadre_logique.push({
-				id: {{ $cadre_logique->id }},
-				pId: {{ $cadre_logique->parent_id ?? 0 }},
+				/*id: {{ $cadre_logique->id }},*/
+				id: @json((string) $cadre_logique->id),
+				/*pId: {{ $cadre_logique->parent_id ?? 0 }},*/
+				pId: @json((string) ($cadre_logique->parent_id ?? '0')),
 				name: @json($cadre_logique->intitule)
 			});
 		@endforeach
@@ -97,7 +100,9 @@
 		@foreach($periodes as $periode)
 			zNodesPeriode.push({
 				id: {{ $periode->id }},
-				pId: {{ $periode->periode_id ?? 0 }},
+				/*id: @json((string) $periode->id),*/
+				/*pId: {{ $periode->periode_id ?? 0 }},*/
+				pId: @json((string) ($periode->parent_id ?? '0')),
 				name: @json($periode->intitule)
 			});
 		@endforeach
