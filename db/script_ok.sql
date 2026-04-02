@@ -9,7 +9,7 @@ CREATE TABLE institution_tutelles
     CONSTRAINT institution_tutelles_intitule_unique UNIQUE (intitule)
 );
 INSERT INTO institution_tutelles (intitule) VALUES
-('Ministère de l\'Economie et des Finances');
+('Ministère de l''Economie et des Finances');
 
 CREATE TABLE users
 (
@@ -1296,7 +1296,7 @@ CREATE TABLE projets
 	solutions_proposees TEXT DEFAULT NULL,
 	recommandations TEXT DEFAULT NULL,
 	rapport_rempli_par VARCHAR(255) DEFAULT NULL,
-	rapport_date_remplissage DATE DEFAULT NULL;
+	rapport_date_remplissage DATE DEFAULT NULL,
     
 	created_at timestamp DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp DEFAULT CURRENT_TIMESTAMP,

@@ -10,11 +10,22 @@
     </ul>
 
     <!-- Right navbar links -->
-    <ul class="navbar-nav ml-auto">
-        <li class="nav-item">
-            <a class="nav-link" href="#" role="button">
-                <i class="fas fa-user"></i>
-            </a>
-        </li>
-    </ul>
+    <ul class="navbar-nav ms-auto">
+		<!-- Icône utilisateur -->
+		<li class="nav-item">
+			<a class="nav-link" href="#" role="button">
+				<i class="fas fa-user"></i>
+			</a>
+		</li>
+
+		<!-- Bouton déconnexion -->
+		<li class="nav-item">
+			<form action="{{ route('logout') }}" method="get" class="d-inline">
+				@csrf
+				<button type="submit" class="nav-link btn btn-link" style="text-decoration:none;">
+					<i class="fas fa-sign-out-alt"></i> Déconnexion
+				</button>
+			</form>
+		</li>
+	</ul>
 </nav>

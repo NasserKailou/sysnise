@@ -6,11 +6,13 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <strong>Liste des Projets</strong>
-                    <button class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Ajouter un projet">
-                        <a href="{{ route('projets.create') }}" style="color:#fff;text-decoration:none">
-                            <i class="fa fa-plus"></i> Nouveau
-                        </a>
-                    </button>
+                    <a href="{{ route('projets.create') }}" 
+					   class="btn btn-primary btn-sm ms-auto"
+					   data-bs-toggle="tooltip" 
+					   data-bs-placement="top" 
+					   title="Ajouter un projet">
+						<i class="fa fa-plus"></i> Nouveau
+					</a>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
