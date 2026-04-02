@@ -73,9 +73,9 @@
     <div class="card mb-4">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="card-title">Organe de pilotage - Sessions et recommandations</h5>
-            <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#modalAjoutPilotageAnnee">
+            <a type="button" class="btn btn-sm btn-success ms-auto" data-bs-toggle="modal" data-bs-target="#modalAjoutPilotageAnnee">
                 <i class="fas fa-plus"></i> Ajouter une année
-            </button>
+            </a>
         </div>
         <div class="card-body">
             @if($projet->pilotageAnnees->count() > 0)
@@ -89,7 +89,7 @@
                             <th>Dates des sessions</th>
                             <th>Recommandations formulées</th>
                             <th>Recommandations mises en œuvre</th>
-                            <th>Actions</th>
+                            <th class="text-center table-icons">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -105,7 +105,7 @@
                             </td>
                             <td>{{ $annee->nb_recommandations_formulees }}</td>
                             <td>{{ $annee->nb_recommandations_mises_oeuvre }}</td>
-                            <td>
+                            <td class="text-center table-icons">
                                 <button class="btn btn-sm btn-warning btn-edit-pilotage" data-id="{{ $annee->id }}" data-bs-toggle="modal" data-bs-target="#modalEditPilotageAnnee">
                                     <i class="fas fa-edit"></i>
                                 </button>
@@ -132,9 +132,9 @@
     <div class="card mb-4">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="card-title">Audits - Exercices comptables</h5>
-            <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#modalAjoutAuditExercice">
+            <a type="button" class="btn btn-sm btn-success ms-auto" data-bs-toggle="modal" data-bs-target="#modalAjoutAuditExercice">
                 <i class="fas fa-plus"></i> Ajouter un exercice
-            </button>
+            </a>
         </div>
         <div class="card-body">
             @if($projet->auditsExercices->count() > 0)
@@ -146,7 +146,7 @@
                             <th>Comptes certifiés sans réserves</th>
                             <th>Recommandations formulées</th>
                             <th>Recommandations mises en œuvre</th>
-                            <th>Actions</th>
+                            <th class="text-center table-icons">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -164,7 +164,7 @@
                             </td>
                             <td>{{ $exercice->nb_recommandations_formulees }}</td>
                             <td>{{ $exercice->nb_recommandations_mises_oeuvre }}</td>
-                            <td>
+                            <td class="text-center table-icons">
                                 <button class="btn btn-sm btn-warning btn-edit-audit" data-id="{{ $exercice->id }}" data-bs-toggle="modal" data-bs-target="#modalEditAuditExercice">
                                     <i class="fas fa-edit"></i>
                                 </button>
@@ -190,9 +190,9 @@
     <div class="card mb-4">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="card-title">Rapports périodiques</h5>
-            <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#modalAjoutRapport">
+            <a type="button" class="btn btn-sm btn-success ms-auto" data-bs-toggle="modal" data-bs-target="#modalAjoutRapport">
                 <i class="fas fa-plus"></i> Ajouter un rapport
-            </button>
+            </a>
         </div>
         <div class="card-body">
             @if($projet->rapports->count() > 0)
@@ -204,7 +204,7 @@
                             <th>Date du rapport</th>
                             <th>Description</th>
                             <th>Fichier</th>
-                            <th>Actions</th>
+                            <th class="text-center table-icons">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -214,7 +214,7 @@
                             <td>{{ $rapport->date_rapport ? $rapport->date_rapport->format('d/m/Y') : '' }}</td>
                             <td>{{ $rapport->description }}</td>
                             <td><a href="{{ $rapport->url }}" target="_blank" class="btn btn-sm btn-info"><i class="fas fa-download"></i> Télécharger</a></td>
-                            <td>
+                            <td class="text-center table-icons">
                                 <form action="{{ route('projets.rapports.destroy', [$projet, $rapport]) }}" method="POST" class="d-inline" onsubmit="return confirm('Supprimer ce rapport ?');">
                                     @csrf
                                     @method('DELETE')
