@@ -2044,32 +2044,6 @@ CREATE OR REPLACE VIEW view_cmr
   GROUP BY n.cadre_developpement_id, n.cadre_id, n.intitule, n.parent_id, n.niveau, i.id, i.intitule, di.valeur, z.intitule, u.intitule, s.intitule, nd.intitule, p.intitule
   ORDER BY n.cadre_developpement_id, n.parent_id NULLS FIRST, n.cadre_id, i.id;
 
-
-CREATE OR REPLACE VIEW view_cadre_logique_old
- AS
- WITH RECURSIVE hierarchy AS (
-         SELECT cl.id,
-            cl.intitule,
-            cl.cadre_logique_id AS parent_id,
-            1 AS niveau
-           FROM cadre_logiques cl
-          WHERE (cl.id IN ( SELECT ocd.cadre_logique_id
-                   FROM orientation_cadre_developpements ocd))
-        UNION ALL
-         SELECT child.id,
-            child.intitule,
-            child.cadre_logique_id AS parent_id,
-            h.niveau + 1 AS niveau
-           FROM cadre_logiques child
-             JOIN hierarchy h ON child.cadre_logique_id = h.id
-        )
- SELECT id,
-    intitule,
-    parent_id,
-    niveau
-   FROM hierarchy
-  ORDER BY niveau, parent_id NULLS FIRST, id;
-
 CREATE OR REPLACE VIEW view_arborescence_cadre_developpement AS
 WITH RECURSIVE arborescence AS (
 
@@ -2123,6 +2097,31 @@ WITH RECURSIVE arborescence AS (
 SELECT *
 FROM arborescence order by niveau,id;
 
+CREATE OR REPLACE VIEW public.view_cadre_logique
+ AS
+ WITH RECURSIVE hierarchy AS (
+         SELECT cl.id,
+            cl.intitule,
+            cl.cadre_logique_id AS parent_id,
+            1 AS niveau
+           FROM cadre_logiques cl
+          WHERE (cl.id IN ( SELECT ocd.cadre_logique_id
+                   FROM orientation_cadre_developpements ocd))
+        UNION ALL
+         SELECT child.id,
+            child.intitule,
+            child.cadre_logique_id AS parent_id,
+            h.niveau + 1 AS niveau
+           FROM cadre_logiques child
+             JOIN hierarchy h ON child.cadre_logique_id = h.id
+        )
+ SELECT id,
+    intitule,
+    parent_id,
+    niveau
+   FROM hierarchy
+  ORDER BY niveau, parent_id NULLS FIRST, id;
+
 CREATE OR REPLACE FUNCTION get_produit_from_cmr(parent_node_id BIGINT)
 RETURNS TABLE (
     id BIGINT,
@@ -2160,4 +2159,3 @@ WHERE NOT EXISTS (
     WHERE c.parent_id = d.id
 );
 $$;
-
