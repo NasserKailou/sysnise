@@ -6,7 +6,7 @@
       <div class="col-md-12 col-lg-12">
         <div class="card">
 		  <div class="card-header">
-			<strong>Montant consommé par an : {{ $financementParBailleur->bailleur->intitule }}</strong>
+			<strong>Montant décaissé par an : {{ $financementParBailleur->bailleur->intitule }}</strong>
 		  </div>
 		  <div class="card-body">
 			<form action="{{ route('cadre_developpements.financementParBailleur.montantConsomme.store',['cadre_developpement' => $cadreDeveloppement->id,'financementParBailleur' => $financementParBailleur->id ]) }}" method="POST">
@@ -41,7 +41,7 @@
         <div class="col-md-12 col-lg-12">
             <div class="card">
                 <div class="card-header">
-                    <strong>Historique Montants consommés par an : {{ $financementParBailleur->bailleur->intitule }}</strong>
+                    <strong>Historique Montants décaissés par an : {{ $financementParBailleur->bailleur->intitule }}</strong>
                 </div>
                 <div class="card-body">
                     <table class="dataTable table table-bordered table-striped">

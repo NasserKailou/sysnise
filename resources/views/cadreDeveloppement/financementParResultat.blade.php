@@ -133,7 +133,7 @@
 						</div>
 						
 						<div class="col-md-12">
-						  <label class="form-label">Montant Accordé (FCFA) 
+						  <label class="form-label">Coût global (FCFA) 
 							<span style="color: red;">*</span>
 						  </label>
 						  <input name="montant" type="number" class="form-control" required>
@@ -161,7 +161,7 @@
                         <thead>
                             <tr>
                                 <th class="text-left">Resultat</th>
-								<th class="text-left">Montant Accordé</th>
+								<th class="text-left">Coût global</th>
 								<th class="text-left">Montant mobilisé</th>
 								<th class="text-left">Montant consommé</th>
 								<th class="text-left">Montant à mobiliser</th>
