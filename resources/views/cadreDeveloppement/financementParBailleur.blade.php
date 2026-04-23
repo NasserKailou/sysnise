@@ -29,7 +29,7 @@
 						</div>
 						
 						<div class="col-md-12">
-						  <label class="form-label">Montant Accordé (FCFA) 
+						  <label class="form-label">Financement acquis (FCFA) 
 							<span style="color: red;">*</span>
 						  </label>
 						  <input name="montant" type="number" class="form-control" required>
@@ -57,10 +57,10 @@
                         <thead>
                             <tr>
                                 <th class="text-left">Bailleur</th>
-								<th class="text-left">Montant Accordé</th>
-								<th class="text-left">Montant mobilisé</th>
-								<th class="text-left">Montant consommé</th>
-								<th class="text-left">Montant à mobiliser</th>
+								<th class="text-left">Financement acquis</th>
+								<th class="text-left">Montant approuvé</th>
+								<th class="text-left">Montant décaissé</th>
+								<th class="text-left">Reste à décaisser</th>
                                 <th class="text-center table-icons">Actions</th>
                             </tr>
                         </thead>
@@ -75,8 +75,8 @@
 								
 								<td class="text-center table-icons">
                                     <a href="{{ route('cadre_developpements.financementParBailleur.edit', [$cadreDeveloppement->id,$financement?->id]) }}" class="btn btn-sm btn-secondary" data-bs-toggle="tooltip" data-bs-placement="top" title="Modifier"><i class="fa fa-edit"></i></a>
-									<a href="{{ route('cadre_developpements.financementParBailleur.montantMobilise', [$cadreDeveloppement->id,$financement?->id]) }}" class="btn btn-sm btn-success" data-bs-toggle="tooltip" data-bs-placement="top" title="Montant mobilisé"><i class="fa fa-money-bill-wave"></i></a>
-									<a href="{{ route('cadre_developpements.financementParBailleur.montantConsomme', [$cadreDeveloppement->id,$financement?->id]) }}" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Montant consommé"><i class="fa fa-arrow-trend-down"></i></a>
+									<a href="{{ route('cadre_developpements.financementParBailleur.montantMobilise', [$cadreDeveloppement->id,$financement?->id]) }}" class="btn btn-sm btn-success" data-bs-toggle="tooltip" data-bs-placement="top" title="Montant approuvé"><i class="fa fa-money-bill-wave"></i></a>
+									<a href="{{ route('cadre_developpements.financementParBailleur.montantConsomme', [$cadreDeveloppement->id,$financement?->id]) }}" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Montant décaissé"><i class="fa fa-arrow-trend-down"></i></a>
 									<form action="{{ route('cadre_developpements.financementParBailleur.destroy',[$cadreDeveloppement->id,$financement?->id]) }}" method="POST" style="display:inline-block;">
                                         @csrf
                                         @method('DELETE')

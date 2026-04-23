@@ -27,7 +27,7 @@
 						<a href="{{ route('cadre_developpements.financementParBailleur', $cadreDeveloppement->id) }}"
 						   class="btn btn-primary w-50"> 
 							<i class="fa fa-building ms-1"></i>
-							Coût par bailleur
+							Financement par bailleur
 						</a>
 
 						<a href="{{ route('cadre_developpements.financementParResultat', $cadreDeveloppement->id) }}"
