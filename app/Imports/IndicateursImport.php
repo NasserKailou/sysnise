@@ -17,7 +17,6 @@ class IndicateursImport implements ToCollection, WithHeadingRow
 
             // Vérification du doublon
             $exists = Indicateur::where('intitule', $row['intitule'])
-                        ->orWhere('code', $row['code'])
                         ->exists();
 
             if ($exists) {
