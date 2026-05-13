@@ -4,7 +4,6 @@ namespace App\Imports;
 
 use App\Models\Indicateur;
 use Illuminate\Support\Collection;
-//use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
@@ -15,41 +14,48 @@ class IndicateursImport implements ToCollection, WithHeadingRow
     public function collection(Collection $rows)
     {
         foreach ($rows as $row) {
-            try {
-                Indicateur::create([
-                    'intitule' => $row['intitule'],
-					'code' => $row['code'] ?? null,
-					'definition' => $row['definition'] ?? null,
-					'donnees_requises' => $row['donnees_requises'] ?? null,
-					'methode_calcul' => $row['methode_calcul'] ?? null,
-					'methode_collecte' => $row['methode_collecte'] ?? null,
-					'source' => $row['source'] ?? null,
-					'commentaire_limite' => $row['commentaire_limite'] ?? null,
-					'niveau_desagregation' => $row['niveau_desagregation'] ?? null,
-					'periodicite' => $row['periodicite'] ?? null,
-					'unite' => $row['unite'] ?? null,
-					'echelle' => '',
-					'lien_avec_cadre_developpement' => $row['lien_avec_cadre_developpement'] ?? null
-                ]);
-            } catch (\Throwable $e) {
-				$message = strtolower($e->getMessage());
-                // On mémorise les indicateurs non insérés
+
+            // Vérification du doublon
+            $exists = Indicateur::where('intitule', $row['intitule'])
+                        ->orWhere('code', $row['code'])
+                        ->exists();
+
+            if ($exists) {
+
                 $this->failedRows[] = [
                     'intitule' => $row['intitule'] ?? 'N/A',
-					'code'    => $row['code'] ?? 'N/A',
-                    'raison'   => (
-						str_contains($message, 'duplicate') ||
-						str_contains($message, 'unique') ||
-						str_contains($message, 'dupliquée') ||
-						str_contains($message, 'doublon')
-					)
-						? 'Doublon'
-						: 'Erreur technique',
-					
+                    'code'     => $row['code'] ?? 'N/A',
+                    'raison'   => 'Doublon',
                 ];
 
-                // On continue l'import
                 continue;
+            }
+
+            try {
+
+                Indicateur::create([
+                    'intitule' => $row['intitule'],
+                    'code' => $row['code'] ?? null,
+                    'definition' => $row['definition'] ?? null,
+                    'donnees_requises' => $row['donnees_requises'] ?? null,
+                    'methode_calcul' => $row['methode_calcul'] ?? null,
+                    'methode_collecte' => $row['methode_collecte'] ?? null,
+                    'source' => $row['source'] ?? null,
+                    'commentaire_limite' => $row['commentaire_limite'] ?? null,
+                    'niveau_desagregation' => $row['niveau_desagregation'] ?? null,
+                    'periodicite' => $row['periodicite'] ?? null,
+                    'unite' => $row['unite'] ?? null,
+                    'echelle' => '',
+                    'lien_avec_cadre_developpement' => $row['lien_avec_cadre_developpement'] ?? null
+                ]);
+
+            } catch (\Throwable $e) {
+
+                $this->failedRows[] = [
+                    'intitule' => $row['intitule'] ?? 'N/A',
+                    'code'     => $row['code'] ?? 'N/A',
+                    'raison'   => $e->getMessage(),
+                ];
             }
         }
     }
