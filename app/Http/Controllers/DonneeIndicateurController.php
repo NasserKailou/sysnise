@@ -42,7 +42,7 @@ class DonneeIndicateurController extends Controller
 	public function extractionDonneesForm()
     {
         $indicateurs = Indicateur::where('type_indicateur_id',1)->get();
-		$cadre_logiques = DB::table('view_cadre_logique')->get();
+		$cadre_logiques = DB::table('view_cadre_logique_des_cadres_strategiques')->get();
 		$periodes = Periode::orderBy('intitule', 'desc')->get();
 		$zones = Zone::all();
 		$nature_donnees = NatureDonnee::all();

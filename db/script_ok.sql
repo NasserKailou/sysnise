@@ -1264,32 +1264,28 @@ CREATE TABLE projets
     id BIGSERIAL,
     sigle character varying(255) NOT NULL,
     intitule character varying(255) NOT NULL,
+	statut_projet_id bigint,
     priorite_id bigint,
     institution_tutelle_id bigint,
-    direction_agence character varying(255),
     contact character varying(255),
+	annee_demarrage integer,
+    date_debut_prevue date,
+    date_fin_prevue date,
+	date_approbation date,
+    date_signature date,
+	date_mise_en_vigueur date,
+    date_debut_effective date,
+    date_fin_effective date,
+	duree integer,
     cout double precision,
 	cout_devise DOUBLE PRECISION,
 	devise_id BIGINT,
-    annee_demarrage integer,
-    date_debut_prevue date,
-    date_fin_prevue date,
-    duree integer,
-    statut_projet_id bigint,
-    date_debut_effective date,
-    date_fin_effective date,
+	date_prorogation date,
+	date_cloture_prorogation date,
+    duree_prorogation integer,
     projet_id bigint,
     cadre_developpement_id bigint,
-    date_approbation date,
-    date_signature date,
-    date_mise_en_vigueur date,
-    date_demarrage_effectif date,
-    partenaires text,
-    periode_prorogation text,
-    duree_prorogation text,
-	user_id bigint,
-	secteur_id bigint DEFAULT 1,
-	
+    user_id bigint,
 	dispose_organe_pilotage BOOLEAN DEFAULT NULL,
 	a_audit_regulier BOOLEAN DEFAULT NULL,
 	problemes_rencontres TEXT DEFAULT NULL,
@@ -1297,8 +1293,7 @@ CREATE TABLE projets
 	recommandations TEXT DEFAULT NULL,
 	rapport_rempli_par VARCHAR(255) DEFAULT NULL,
 	rapport_date_remplissage DATE DEFAULT NULL,
-    
-	created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
 	deleted_on timestamp null,
 	CONSTRAINT projets_pkey PRIMARY KEY (id),
@@ -1325,12 +1320,9 @@ CREATE TABLE projets
 	CONSTRAINT projet_devise_id_fkey FOREIGN KEY (devise_id)
         REFERENCES devises(id) MATCH SIMPLE
         ON UPDATE CASCADE
-        ON DELETE CASCADE,
-	CONSTRAINT projet_secteur_id_fkey FOREIGN KEY (secteur_id)
-        REFERENCES secteurs (id) MATCH SIMPLE
-        ON UPDATE CASCADE
         ON DELETE CASCADE
 );
+
 CREATE TABLE piece_jointe_projets
 (
     id BIGSERIAL,
@@ -1362,6 +1354,46 @@ CREATE TABLE projet_zone
         ON DELETE CASCADE,
     CONSTRAINT projet_zone_zone_id_fkey FOREIGN KEY (zone_id)
         REFERENCES zones (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+
+CREATE TABLE projet_secteur
+(
+    id BIGSERIAL,
+    projet_id bigint NOT NULL,
+    secteur_id bigint NOT NULL,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    CONSTRAINT projet_secteur_pkey PRIMARY KEY (projet_id, secteur_id),
+    CONSTRAINT projet_secteur_unique UNIQUE (id),
+	CONSTRAINT projet_secteur_projet_id_fkey FOREIGN KEY (projet_id)
+        REFERENCES projets (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT projet_secteur_secteur_id_fkey FOREIGN KEY (secteur_id)
+        REFERENCES secteurs (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+
+CREATE TABLE projet_bailleur
+(
+    id BIGSERIAL,
+    projet_id bigint NOT NULL,
+    bailleur_id bigint NOT NULL,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    CONSTRAINT projet_bailleur_pkey PRIMARY KEY (projet_id, bailleur_id),
+    CONSTRAINT projet_bailleur_unique UNIQUE (id),
+	CONSTRAINT projet_bailleur_projet_id_fkey FOREIGN KEY (projet_id)
+        REFERENCES projets (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT projet_bailleur_bailleur_id_fkey FOREIGN KEY (bailleur_id)
+        REFERENCES bailleurs (id) MATCH SIMPLE
         ON UPDATE CASCADE
         ON DELETE CASCADE
 );
@@ -2195,3 +2227,80 @@ CREATE OR REPLACE VIEW public.view_cadre_logique
     cadre_developpement_id
    FROM arborescence
   ORDER BY niveau, id;
+  
+-----------------ok cadre logique des cadre stratégique_uniquement
+CREATE OR REPLACE VIEW public.view_cadre_logique_des_cadres_strategiques
+ AS
+ WITH RECURSIVE arborescence AS (
+         SELECT 'cd_'::text || cd.id AS id,
+            cd.intitule,
+            NULL::text AS parent_id,
+            0 AS niveau,
+            cd.id AS cadre_developpement_id
+           FROM cadre_developpements cd
+		   WHERE type_cadre_developpement_id = 1
+        UNION ALL
+         SELECT cl.id::text AS id,
+            cl.intitule,
+            'cd_'::text || ocd.cadre_developpement_id AS parent_id,
+            1 AS niveau,
+            ocd.cadre_developpement_id
+           FROM orientation_cadre_developpements ocd
+             JOIN cadre_logiques cl ON cl.id = ocd.cadre_logique_id
+        UNION ALL
+         SELECT cl.id::text AS id,
+            cl.intitule,
+            cl.cadre_logique_id::text AS parent_id,
+            a.niveau + 1 AS niveau,
+            a.cadre_developpement_id
+           FROM cadre_logiques cl
+             JOIN arborescence a ON cl.cadre_logique_id::text = a.id
+          WHERE a.niveau >= 1
+        )
+ SELECT id,
+    intitule,
+    parent_id,
+    niveau,
+    cadre_developpement_id
+   FROM arborescence
+  ORDER BY niveau, id;
+
+-----------------ok cadre logique projet
+CREATE OR REPLACE VIEW public.view_cadre_logique_des_projets
+ AS
+ WITH RECURSIVE arborescence AS (
+         SELECT 'cd_'::text || cd.id AS id,
+            cd.intitule,
+            NULL::text AS parent_id,
+            0 AS niveau,
+            cd.id AS cadre_developpement_id
+           FROM cadre_developpements cd
+		   WHERE type_cadre_developpement_id = 2
+        UNION ALL
+         SELECT cl.id::text AS id,
+            cl.intitule,
+            'cd_'::text || ocd.cadre_developpement_id AS parent_id,
+            1 AS niveau,
+            ocd.cadre_developpement_id
+           FROM orientation_cadre_developpements ocd
+             JOIN cadre_logiques cl ON cl.id = ocd.cadre_logique_id
+        UNION ALL
+         SELECT cl.id::text AS id,
+            cl.intitule,
+            cl.cadre_logique_id::text AS parent_id,
+            a.niveau + 1 AS niveau,
+            a.cadre_developpement_id
+           FROM cadre_logiques cl
+             JOIN arborescence a ON cl.cadre_logique_id::text = a.id
+          WHERE a.niveau >= 1
+        )
+ SELECT id,
+    intitule,
+    parent_id,
+    niveau,
+    cadre_developpement_id
+   FROM arborescence
+  ORDER BY niveau, id;
+  
+    
+  

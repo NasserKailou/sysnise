@@ -21,6 +21,7 @@
                                 <tr>
                                     <th class="text-left">Intitulé</th>
                                     <th class="text-left">Statut</th>
+                                    <th class="text-left">Priorité</th>
                                     <th class="text-left">Tutelle</th>
                                     <th class="text-left">Période</th>
                                     <th class="text-left">Coût</th>
@@ -33,6 +34,7 @@
                                 <tr>
                                     <td class="text-left">{{ $projet->intitule }}</td>
                                     <td class="text-left">{{ $projet->statutProjet?->intitule ?? '—'  }}</td>
+                                    <td class="text-left">{{ $projet->priorite?->intitule ?? '—'  }}</td>
                                     <td class="text-left">{{ $projet->institutionTutelle?->intitule ?? '—'  }}</td>
                                     <td class="text-left">
                                         @if($projet->date_debut_prevue && $projet->date_fin_prevue)

@@ -20,31 +20,28 @@ class Projet extends Model
     protected $fillable = [
         'sigle',
         'intitule',
-        'priorite_id',
-		'secteur_id',
-        'institution_tutelle_id',
-        'direction_agence',
-        'contact',
-        'cout',
-		'cout_devise',
-        'annee_demarrage',
-        'date_debut_prevue',
-        'date_fin_prevue',
-		'date_debut_effective',
-        'date_fin_effective',
-        'duree',
 		'statut_projet_id',
-		'projet_id',
-		'devise_id',
-		'cadre_developpement_id',
+        'priorite_id',
+        'institution_tutelle_id',
+        'contact',
+		'annee_demarrage',
+		'date_debut_prevue',
+		'date_fin_prevue',
 		'date_approbation',
 		'date_signature',
 		'date_mise_en_vigueur',
-		'date_demarrage_effectif',
-		'Partenaires',
-		'periode_prorogation',
+		'date_debut_effective',
+        'date_fin_effective',
+		'duree',
+        'cout',
+		'cout_devise',
+        'devise_id',
+		'date_prorogation',
+		'date_cloture_prorogation',
 		'duree_prorogation',
-        'user_id',
+		'projet_id',
+		'cadre_developpement_id',
+		'user_id',
         'dispose_organe_pilotage',
         'a_audit_regulier',
         'problemes_rencontres',
@@ -100,10 +97,6 @@ class Projet extends Model
         return $this->belongsTo(Priorite::class);
     }
 	
-	 public function secteur(): BelongsTo
-    {
-        return $this->belongsTo(Secteur::class);
-    }
 	
 	public function devise(): BelongsTo
     {
@@ -125,6 +118,26 @@ class Projet extends Model
     public function children()
     {
         return $this->hasMany(Projet::class, 'projet_id');
+    }
+	
+	public function secteurs()
+    {
+        return $this->belongsToMany(
+            Secteur::class,           // modèle lié
+            'projet_secteur',        // nom de la table pivot
+            'projet_id',          // clé étrangère locale dans pivot
+            'secteur_id'              // clé étrangère du modèle lié
+        )->withTimestamps();       // active la gestion automatique de created_at / updated_at
+    }
+	
+	public function bailleurs()
+    {
+        return $this->belongsToMany(
+            Secteur::class,           // modèle lié
+            'projet_bailleur',        // nom de la table pivot
+            'projet_id',          // clé étrangère locale dans pivot
+            'bailleur_id'              // clé étrangère du modèle lié
+        )->withTimestamps();       // active la gestion automatique de created_at / updated_at
     }
 	
 	public function zoneInterventions()
@@ -228,19 +241,19 @@ class Projet extends Model
 
 
     public function pilotageAnnees()
-{
-    return $this->hasMany(ProjetPilotageAnnee::class);
-}
+	{
+		return $this->hasMany(ProjetPilotageAnnee::class);
+	}
 
-public function auditsExercices()
-{
-    return $this->hasMany(ProjetAuditsExercice::class);
-}
+	public function auditsExercices()
+	{
+		return $this->hasMany(ProjetAuditsExercice::class);
+	}
 
-public function rapports()
-{
-    return $this->hasMany(ProjetRapport::class);
-}
+	public function rapports()
+	{
+		return $this->hasMany(ProjetRapport::class);
+	}
 
 
 

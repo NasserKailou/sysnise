@@ -7,7 +7,7 @@
 				display: inline-block; /* garde l'alignement avec l'icône */
 				word-break: break-word; /* coupe les mots trop longs */
 			}
-		#zoneContent,#actionMajeureContent,#secteurContent,#bailleurContent {
+		#zoneContent,#actionMajeureContent {
 			display: none;
 			background: #f8f9fa; /* gris clair */
 			border: 1px solid #ccc;
@@ -20,11 +20,11 @@
 			overflow-y: auto;
 		}
 
-		#zoneContent ul li,#actionMajeureContent ul li,#secteurContent ul li,#bailleurContent ul li {
+		#zoneContent ul li,#actionMajeureContent ul li {
 			padding: 6px 10px;
 			cursor: pointer;
 		}
-		#zoneContent ul li:hover,#actionMajeureContent ul li:hover,#secteurContent ul li:hover,#bailleurContent ul li:hover {
+		#zoneContent ul li:hover,#actionMajeureContent ul li:hover {
 			background-color: #e9ecef;
 		}
 	</style>
@@ -89,160 +89,15 @@
 			var cityOffset = $("#zone_names").offset();
 			$("#zoneContent").slideDown("fast");
 
-			$("body").bind("mousedown", onZoneBodyDown);
+			$("body").bind("mousedown", onBodyDown);
 		}
 		function hideZone() {
 			$("#zoneContent").fadeOut("fast");
-			$("body").unbind("mousedown", onZoneBodyDown);
+			$("body").unbind("mousedown", onBodyDown);
 		}
-		function onZoneBodyDown(event) {
+		function onBodyDown(event) {
 			if (!(event.target.id == "menuBtn" || event.target.id == "zone_names" || event.target.id == "zoneContent" || $(event.target).parents("#zoneContent").length>0)) {
 				hideZone();
-			}
-		}
-		/*---------------------------------------------*/
-		var zNodesSecteur = [
-			{ id:0, pId:0, name:"/", open: true}
-		];
-		
-		@foreach($secteurs as $secteur)
-			zNodesSecteur.push({
-				id: {{ $secteur->id }},
-				pId: {{ $secteur->secteur_id ?? 0 }},
-				name: @json($secteur->intitule)
-			});
-		@endforeach
-		
-		var settingSecteur = {
-			check: {
-				enable: true,
-				chkboxType: {"Y":"", "N":""}
-			},
-			view: {
-				dblClickExpand: false
-			},
-			data: {
-				simpleData: {
-					enable: true
-				}
-			},
-			callback: {
-				beforeClick: beforeClickSecteur,
-				onCheck: onCheckSecteur
-			}
-		};
-		
-		function beforeClickSecteur(treeId, treeNode) {
-			var zTree = $.fn.zTree.getZTreeObj("liste_secteur");
-			zTree.checkNode(treeNode, !treeNode.checked, null, true);
-			return false;
-		}
-		
-		function onCheckSecteur(e, treeId, treeNode) {
-			var zTree = $.fn.zTree.getZTreeObj("liste_secteur"),
-			nodes = zTree.getCheckedNodes(true),
-			secteur_names = "";secteur_ids = "";
-			for (var i=0, l=nodes.length; i<l; i++) {
-				secteur_names += nodes[i].name + ",";
-				secteur_ids += nodes[i].id + ",";
-			}
-			if (secteur_names.length > 0 ){
-				secteur_names = secteur_names.substring(0, secteur_names.length-1);
-				secteur_ids = secteur_ids.substring(0, secteur_ids.length-1);
-				}
-			var cityObj_names = $("#secteur_names");
-				cityObj_ids = $("#secteur_ids");
-			cityObj_names.attr("value", secteur_names);
-			cityObj_ids.attr("value", secteur_ids);
-		}
-
-		function showSecteur() {
-			var cityObj = $("#secteur_names");
-			var cityOffset = $("#secteur_names").offset();
-			$("#secteurContent").slideDown("fast");
-
-			$("body").bind("mousedown", onSecteurBodyDown);
-		}
-		function hideSecteur() {
-			$("#secteurContent").fadeOut("fast");
-			$("body").unbind("mousedown", onSecteurBodyDown);
-		}
-		function onSecteurBodyDown(event) {
-			if (!(event.target.id == "menuBtn" || event.target.id == "secteur_names" || event.target.id == "secteurContent" || $(event.target).parents("#secteurContent").length>0)) {
-				hideSecteur();
-			}
-		}
-		
-		/*---------------------------------------------*/
-		var zNodesBailleur = [
-			{ id:0, pId:0, name:"/", open: true}
-		];
-		
-		@foreach($bailleurs as $bailleur)
-			zNodesBailleur.push({
-				id: {{ $bailleur->id }},
-				pId: {{ $bailleur->bailleur_id ?? 0 }},
-				name: @json($bailleur->intitule)
-			});
-		@endforeach
-		
-		var settingBailleur = {
-			check: {
-				enable: true,
-				chkboxType: {"Y":"", "N":""}
-			},
-			view: {
-				dblClickExpand: false
-			},
-			data: {
-				simpleData: {
-					enable: true
-				}
-			},
-			callback: {
-				beforeClick: beforeClickBailleur,
-				onCheck: onCheckBailleur
-			}
-		};
-		
-		function beforeClickBailleur(treeId, treeNode) {
-			var zTree = $.fn.zTree.getZTreeObj("liste_bailleur");
-			zTree.checkNode(treeNode, !treeNode.checked, null, true);
-			return false;
-		}
-		
-		function onCheckBailleur(e, treeId, treeNode) {
-			var zTree = $.fn.zTree.getZTreeObj("liste_bailleur"),
-			nodes = zTree.getCheckedNodes(true),
-			bailleur_names = "";bailleur_ids = "";
-			for (var i=0, l=nodes.length; i<l; i++) {
-				bailleur_names += nodes[i].name + ",";
-				bailleur_ids += nodes[i].id + ",";
-			}
-			if (bailleur_names.length > 0 ){
-				bailleur_names = bailleur_names.substring(0, bailleur_names.length-1);
-				bailleur_ids = bailleur_ids.substring(0, bailleur_ids.length-1);
-				}
-			var cityObj_names = $("#bailleur_names");
-				cityObj_ids = $("#bailleur_ids");
-			cityObj_names.attr("value", bailleur_names);
-			cityObj_ids.attr("value", bailleur_ids);
-		}
-
-		function showBailleur() {
-			var cityObj = $("#bailleur_names");
-			var cityOffset = $("#bailleur_names").offset();
-			$("#bailleurContent").slideDown("fast");
-
-			$("body").bind("mousedown", onBailleurBodyDown);
-		}
-		function hideBailleur() {
-			$("#bailleurContent").fadeOut("fast");
-			$("body").unbind("mousedown", onBailleurBodyDown);
-		}
-		function onBailleurBodyDown(event) {
-			if (!(event.target.id == "menuBtn" || event.target.id == "bailleur_names" || event.target.id == "bailleurContent" || $(event.target).parents("#bailleurContent").length>0)) {
-				hideBailleur();
 			}
 		}
 		
@@ -250,11 +105,8 @@
 		var zNodesChaineLogique = [];
 		@foreach($chaineLogiques as $chaine)
 			zNodesChaineLogique.push({
-				/*id: {{ $chaine->id }},
+				id: {{ $chaine->id }},
 				pId: {{ $chaine->parent_id ?? 0 }},
-				*/
-				id: @json((string) $chaine->id),
-				pId: @json((string) ($chaine->parent_id ?? '0')),
 				name: @json($chaine->intitule)
 			});
 		@endforeach
@@ -318,7 +170,6 @@
 				hideChaineLogique();
 			}
 		}
-		
 		function calculerDuree() {
 			const dateDebut = document.getElementById('date_debut_prevue').value;
 			const dateFin   = document.getElementById('date_fin_prevue').value;
@@ -398,11 +249,13 @@
 							@endforeach
 						</select>
 					</div>
-					<div class="col-md-6">
+				</div>
+				<div class="row mb-3">
+					<div class="col-md-4">
 					  <label class="form-label">Ministère/Institution de tutelle 
 						<span style="color: red;">*</span>
 					  </label>
-					   <select name="institution_tutelle_id" class="form-select @error('priorite') is-invalid @enderror" disabled required>
+					   <select name="institution_tutelle_id" class="form-select @error('priorite') is-invalid @enderror" required>
 							<option value="">-- Sélectionner Ministères/Institutions --</option>
 							@foreach($institutionTutelles as $institutionTutelle)
 								<option value="{{ $institutionTutelle->id }}"
@@ -413,71 +266,70 @@
 						</select>
 					</div>
 					
-					<div class="col-md-3">
+					<div class="col-md-4">
 					  <label class="form-label">Contact</label>
 					  <input name="contact" type="text" class="form-control" value="{{ old('contact', $projet->contact) }}">
 					</div>
-					<div class="col-md-3">
-						<label class="form-label">Secteur</label>
-						<input id="secteur_ids" name="secteur_ids" type="hidden" class="form-control" readonly value="{{ old('secteur_ids', $secteurIds ?? '') }}" />
-						<div class="input-group">
-							<input id="secteur_names" name="secteur_names" type="text" class="form-control" readonly  onclick="showSecteur();" value="{{ old('secteur_names', $secteurNames ?? '') }}"/>
-							<span class="input-group-append">
-							  <button type="button" class="btn btn-sm btn-primary" id="menuBtn" href="#" onclick="showSecteur(); return false;"><i class="fa fa-search"></i></button>
-							</span>
-						</div>
-						
-						<div id="secteurContent" class="secteurContent" style="display:none;">
-							<ul id="liste_secteur" class="ztree" style="margin-top:0;"></ul>
-						</div>
+					<div class="col-md-4">
+					  <label class="form-label">Secteur 
+						<span style="color: red;">*</span>
+					  </label>
+					   <select name="secteur_id" class="form-select @error('secteur') is-invalid @enderror" required>
+							<option value="">-- Sélectionner Secteur --</option>
+							@foreach($secteurs as $secteur)
+								<option value="{{ $secteur->id }}"
+									{{ old('secteur_id', $projet->secteur->id ?? '') == $secteur->id ? 'selected' : '' }}>
+									{{ $secteur->intitule }}
+								</option>
+							@endforeach
+						</select>
 					</div>
-					<div id="annee_demarrage" class="col-md-3 mt-3" style="display: {{ $projet->statutProjet->id == 1 ? 'block' : 'none' }}">
-					  <label class="form-label">Année démarrage prévue</label>
+				</div>
+				<div class="row mb-3">
+					<div id="annee_demarrage" class="col-md-3" style="display: {{ $projet->statutProjet->id == 1 ? 'block' : 'none' }}">
+					  <label class="form-label">Année démarrage</label>
 					  <input name="annee_demarrage" type="integer" class="form-control" value="{{ old('annee_demarrage', $projet->annee_demarrage) }}">
 					</div>
-					<div id="div_date_debut_prevue" class="col-md-6 mt-3" style="display: {{ $projet->statutProjet->id == 2 ? 'block' : 'none' }}">
-					  <label class="form-label">Date d'approbation</label>
-					  <input id="date_debut_prevue" name="date_debut_prevue" type="date" class="form-control" onchange="calculerDuree()" value="{{ old('date_debut_prevue', $projet->date_debut_prevue) }}">
+					<div id="div_date_debut_prevue" class="col-md-3" style="display: {{ $projet->statutProjet->id == 2 ? 'block' : 'none' }}">
+					  <label class="form-label">Date de début</label>
+					  <input id="date_debut_prevue" name="date_debut_prevue" type="date" class="form-control" value="{{ old('date_debut_prevue', $projet->date_debut_prevue) }}">
 					</div>
-					<div id="div_date_fin_prevue" class="col-md-3 mt-3" style="display: {{ $projet->statutProjet->id == 2 ? 'block' : 'none' }}">
-					  <label class="form-label">Date de clôture</label>
-					  <input id="date_fin_prevue" name="date_fin_prevue" type="date" class="form-control" onchange="calculerDuree()" value="{{ old('date_fin_prevue', $projet->date_fin_prevue) }}">
+					<div id="div_date_fin_prevue" class="col-md-3" style="display: {{ $projet->statutProjet->id == 2 ? 'block' : 'none' }}">
+					  <label class="form-label">Date de fin</label>
+					  <input id="date_fin_prevue" name="date_fin_prevue" type="date" class="form-control" value="{{ old('date_fin_prevue', $projet->date_fin_prevue) }}">
 					</div>
-					<div  class="execution_projet col-md-6 mt-3" style="display: {{ $projet->statutProjet->id == 3 ? 'block' : 'none' }}">
+					<div  class="execution_projet col-md-3" style="display: {{ $projet->statutProjet->id == 3 ? 'block' : 'none' }}">
 					  <label class="form-label">Date d’approbation </label>
 					  <input name="date_approbation" type="date" class="form-control" value="{{ old('date_approbation', $projet->date_approbation) }}">
 					</div>
-					<div  class="execution_projet col-md-3 mt-3" style="display: {{ $projet->statutProjet->id == 3 ? 'block' : 'none' }}">
+					<div  class="execution_projet col-md-3" style="display: {{ $projet->statutProjet->id == 3 ? 'block' : 'none' }}">
 					  <label class="form-label">Date de signature  </label>
 					  <input name="date_signature" type="date" class="form-control" value="{{ old('date_signature', $projet->date_signature) }}">
 					</div>
-					<div  class="execution_projet col-md-3 mt-3" style="display: {{ $projet->statutProjet->id == 3 ? 'block' : 'none' }}">
+					<div  class="execution_projet col-md-3" style="display: {{ $projet->statutProjet->id == 3 ? 'block' : 'none' }}">
 					  <label class="form-label">Date de mise en vigueur  </label>
 					  <input name="date_mise_en_vigueur" type="date" class="form-control" value="{{ old('date_mise_en_vigueur', $projet->date_mise_en_vigueur) }}">
 					</div>
-					<div  class="execution_projet col-md-6 mt-3" style="display: {{ $projet->statutProjet->id == 3 ? 'block' : 'none' }}">
+					<div  class="execution_projet col-md-3" style="display: {{ $projet->statutProjet->id == 3 ? 'block' : 'none' }}">
 					  <label class="form-label">Date de démarrage effectif</label>
-					  <input name="date_debut_effective" type="date" class="form-control" value="{{ old('date_debut_effective', $projet->date_debut_effective) }}">
+					  <input name="date_demarrage_effectif" type="date" class="form-control" value="{{ old('date_demarrage_effectif', $projet->date_demarrage_effectif) }}">
 					</div>
-					<div  class="execution_projet col-md-3 mt-3" style="display: {{ $projet->statutProjet->id == 3 ? 'block' : 'none' }}">
-					  <label class="form-label">Date initiale de clôture </label>
-					  <input name="date_fin_effective" type="date" class="form-control" value="{{ old('date_fin_effective', $projet->date_fin_effective) }}">
-					</div>
-					<div id="duree" class="col-md-3 mt-3">
+					<div class="col-md-3">
 					  <label class="form-label">durée(mois)</label>
 					  <input id="duree" name="duree" type="integer" class="form-control" value="{{ old('duree', $projet->duree) }}">
 					</div>
-					<div id="cout" class="col-md-3 mt-3">
+					<div class="col-md-3">
 					  <label class="form-label">coût du projet (FCFA)</label>
 					  <input name="cout" type="integer" class="form-control" value="{{ old('cout', $projet->cout) }}">
 					</div>
-					<div id="cout_devise" class="col-md-3 mt-3">
-						<div>
+					
+					<div class="col-md-9">
+						<div class="mb-3">
 							<label class="form-label">Coût du projet (DEVlSE)</label>
 							<div class="input-group">
-								<input type="number" class="form-control" name="cout_devise" placeholder="montant">
+								<input type="number" class="form-control" name="cout_devise" placeholder="Saisir le montant" value="{{ old('cout_devise', $projet->cout_devise) }}">
 								<select name="devise_id" class="form-select @error('priorite') is-invalid @enderror">
-									<option value="">--dévise --</option>
+									<option value="">-- Sélectionner la dévise --</option>
 									@foreach($devises as $devise)
 										<option value="{{ $devise->id }}"
 											{{ old('devise_id', $projet->devise->id ?? '') == $devise->id ? 'selected' : '' }}>
@@ -488,35 +340,19 @@
 							</div>
 						</div>
 					</div>
-					<div class="execution_projet col-md-12 mt-3" style="display: {{ $projet->statut_projet_id == 3 ? 'block' : 'none' }}">
-						<label class="form-label">PTFs</label>
-						<input id="bailleur_ids" name="bailleur_ids" type="hidden" class="form-control" readonly value="{{ old('bailleur_ids', $bailleurIds ?? '') }}" />
-						<div class="input-group">
-							<input id="bailleur_names" name="bailleur_names" type="text" class="form-control" readonly  onclick="showBailleur();" value="{{ old('bailleur_names', $bailleurNames ?? '') }}"/>
-							<span class="input-group-append">
-							  <button type="button" class="btn btn-sm btn-primary" id="menuBtn" href="#" onclick="showBailleur(); return false;"><i class="fa fa-search"></i></button>
-							</span>
-						</div>
-						
-						<div id="bailleurContent" class="bailleurContent" style="display:none;">
-							<ul id="liste_bailleur" class="ztree" style="margin-top:0;"></ul>
-						</div>
+					<div class="execution_projet col-md-4" style="display: {{ $projet->statut_projet_id == 3 ? 'block' : 'none' }}">
+					  <label class="form-label">PTFs </label>
+					  <input name="partenaires" type="text" class="form-control" value="{{ old('partenaires', $projet->partenaires) }}">
 					</div>
-					
-					<div  class="execution_projet col-md-4 mt-3" style="display: {{ $projet->statut_projet_id == 3 ? 'block' : 'none' }}">
-					  <label class="form-label">date de la prorogation (si applicable)</label>
-					  <input name="date_prorogation" type="date" class="form-control" value="{{ old('date_prorogation', $projet->date_prorogation) }}">
+					<div  class="execution_projet col-md-4" style="display: {{ $projet->statut_projet_id == 3 ? 'block' : 'none' }}">
+					  <label class="form-label">période prorogation (si applicable)</label>
+					  <input name="periode_prorogation" type="date" class="form-control" value="{{ old('periode_prorogation', $projet->periode_prorogation) }}">
 					</div>
-					<div  class="execution_projet col-md-4 mt-3" style="display: {{ $projet->statut_projet_id == 3 ? 'block' : 'none' }}">
-					  <label class="form-label">nouvelle date clôture (si prorogation)</label>
-					  <input name="date_cloture_prorogation" type="date" class="form-control" value="{{ old('date_cloture_prorogation', $projet->date_cloture_prorogation) }}">
-					</div>
-					<div  id="duree_prorogation" class="execution_projet col-md-4 mt-3" style="display: {{ $projet->statut_projet_id == 3 ? 'block' : 'none' }}">
-					  <label class="form-label"> durée prorogation (si applicable)</label>
-					  <input name="duree_prorogation" type="number" class="form-control" value="{{ old('duree_prorogation', $projet->duree_prorogation) }}">
+					<div  class="execution_projet col-md-4" style="display: {{ $projet->statut_projet_id == 3 ? 'block' : 'none' }}">
+					  <label class="form-label">durée prorogation (si applicable)</label>
+					  <input name="duree_prorogation" type="date" class="form-control" value="{{ old('duree_prorogation', $projet->duree_prorogation) }}">
 					</div>
 				</div>
-				
 				<div class="row">
 					<div class="row mb-3">
 						<div class="col-md-12">
@@ -588,33 +424,21 @@
 	<script>
 $(document).ready(function() {
     $.fn.zTree.init($("#liste_zone"), settingZone, zNodesZone);
-	$.fn.zTree.init($("#liste_secteur"), settingSecteur, zNodesSecteur);
-	$.fn.zTree.init($("#liste_bailleur"), settingBailleur, zNodesBailleur);
 	$.fn.zTree.init($("#liste_chaine_logique"), settingChaineLogique, zNodesChaineLogique);
-	
 	$('#statut_projet_id').change(function(){
 		if($(this).val() == 1)
 		{
-			$("#duree").removeClass("col-md-4").addClass("col-md-3");
-			$("#cout").removeClass("col-md-6").addClass("col-md-3");
-			$("#cout_devise").removeClass("col-md-6").addClass("col-md-3");
 			$('#div_date_debut_prevue,#div_date_fin_prevue,.execution_projet').css('display','none');
 			$('#annee_demarrage').css('display','block');
 			
 		}
 		else if($(this).val() == 2)
 		{
-			$("#duree").removeClass("col-md-4").addClass("col-md-3");
-			$("#cout").removeClass("col-md-3").addClass("col-md-6");
-			$("#cout_devise").removeClass("col-md-3").addClass("col-md-6");
 			$('#div_date_debut_prevue,#div_date_fin_prevue').css('display','block');
 			$('#annee_demarrage,.execution_projet').css('display','none');
 		}
 		else if($(this).val() == 3)
 		{
-			$("#duree").removeClass("col-md-4").addClass("col-md-3");
-			$("#cout").removeClass("col-md-3").addClass("col-md-6");
-			$("#cout_devise").removeClass("col-md-3").addClass("col-md-6");
 			$('.execution_projet').css('display','block');
 			$('#annee_demarrage,#div_date_debut_prevue,#div_date_fin_prevue').css('display','none');
 		}

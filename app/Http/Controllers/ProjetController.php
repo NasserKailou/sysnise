@@ -88,10 +88,11 @@ class ProjetController extends Controller
 				->get();
 		$statutProjets = StatutProjet::whereNull('deleted_on')->get();
 		$zones = Zone::whereNull('deleted_on')->get();
-		$chaineLogiques = DB::table('view_cadre_logique')->get();
+		$chaineLogiques = DB::table('view_cadre_logique_des_projets')->get();
 		
 		$priorites = Priorite::all();
-		$secteurs = Secteur::all();
+		$secteurs = Secteur::whereNull('deleted_on')->get();
+		$bailleurs = Bailleur::whereNull('deleted_on')->get();
 		
         $populationCibles = PopulationCible::whereNull('deleted_on')->get();
 		$institutionTutelles = InstitutionTutelle::whereNull('deleted_on')->get();
@@ -110,6 +111,7 @@ class ProjetController extends Controller
 			'institutionTutelles' => $institutionTutelles,
 			'priorites' => $priorites,
 			'secteurs' => $secteurs,
+			'bailleurs' => $bailleurs,
 			'statutFinancements' => $statutFinancements,
 			'natureFinancements' => $natureFinancements,
 			'sourceFinancements' => $sourceFinancements,
@@ -126,9 +128,18 @@ class ProjetController extends Controller
         $data = $request->validated();
 		$data['user_id'] = auth()->id();
 		$projet = Projet::create($data);
+		
 		//Récupérer les IDs de zones envoyés depuis la vue
 		$zoneIds = array_filter(explode(',', $request->input('zone_ids', '')));
 		$projet->zoneInterventions()->attach($zoneIds);
+		
+		//Récupérer les IDs de secteurs envoyés depuis la vue
+		$secteurIds = array_filter(explode(',', $request->input('secteur_ids', '')));
+		$projet->secteurs()->attach($secteurIds);
+		
+		//Récupérer les IDs de bailleurs envoyés depuis la vue
+		$bailleurIds = array_filter(explode(',', $request->input('bailleur_ids', '')));
+		$projet->bailleurs()->attach($bailleurIds);
 
 		//Récupérer les IDs de Positionnement stratégique envoyés depuis la vue
 		$cadreLogiqueIds = array_filter(explode(',', $request->input('chaine_logique_ids', '')));
@@ -207,9 +218,11 @@ class ProjetController extends Controller
 		$statutProjets = StatutProjet::whereNull('deleted_on')->get();
 		$zones = Zone::whereNull('deleted_on')->get();
 		$devises = Devise::all();
-		$secteurs = Secteur::all();
+		$secteurs = Secteur::whereNull('deleted_on')->get();
+		$bailleurs = Bailleur::whereNull('deleted_on')->get();
 		
-		$chaineLogiques = DB::table('view_cadre_logique')->get();
+		
+		$chaineLogiques = DB::table('view_cadre_logique_des_projets')->get();
 		$priorites = Priorite::all();
         $populationCibles = PopulationCible::whereNull('deleted_on')->get();
 		$institutionTutelles = InstitutionTutelle::whereNull('deleted_on')->get();
@@ -219,6 +232,14 @@ class ProjetController extends Controller
 		// Récupérer les zones liées au projet
 		$zoneNames = $projet->zoneInterventions->pluck('intitule')->implode(', ');
 		$zoneIds = $projet->zoneInterventions->pluck('id')->implode(',');
+		
+		// Récupérer les secteurs liées au projet
+		$secteurNames = $projet->secteurs->pluck('intitule')->implode(', ');
+		$secteurIds = $projet->secteurs->pluck('id')->implode(',');
+		
+		// Récupérer les bailleurs liées au projet
+		$bailleurNames = $projet->bailleurs->pluck('intitule')->implode(', ');
+		$bailleurIds = $projet->bailleurs->pluck('id')->implode(',');
 		
 		// Récupérer les actions/cadre logique liées au projet
 		$chaineLogiqueNames = $projet->positionnementStrategiques->pluck('intitule')->implode(', ');
@@ -230,6 +251,8 @@ class ProjetController extends Controller
             'projets' => $projets,
 			'projet' => $projet,
 			'zones' => $zones,
+			'secteurs' => $secteurs,
+			'bailleurs' => $bailleurs,
 			'devises' => $devises,
 			'secteurs' => $secteurs,
 			'populationCibles' => $populationCibles,
@@ -242,6 +265,10 @@ class ProjetController extends Controller
 			'statutProjets' => $statutProjets,
 			'zoneNames' => $zoneNames,
 			'zoneIds' => $zoneIds,
+			'secteurNames' => $secteurNames,
+			'secteurIds' => $secteurIds,
+			'bailleurNames' => $bailleurNames,
+			'bailleurIds' => $bailleurIds,
 			'chaineLogiqueNames' => $chaineLogiqueNames,
 			'chaineLogiqueIds' => $chaineLogiqueIds,
 			'breadcrumb' => 'Projet > Mise à jour projet',
@@ -257,6 +284,17 @@ class ProjetController extends Controller
 		$zoneIds = array_filter(explode(',', $request->input('zone_ids', '')));
 		//Synchroniser les zones sans créer de doublons
 		$projet->zoneInterventions()->sync($zoneIds);
+		
+		//Récupérer les IDs de secteurs envoyés depuis la vue
+		$secteurIds = array_filter(explode(',', $request->input('secteur_ids', '')));
+		//Synchroniser les secteurs sans créer de doublons
+		$projet->secteurs()->sync($secteurIds);
+		
+		//Récupérer les IDs de bailleurs envoyés depuis la vue
+		$bailleurIds = array_filter(explode(',', $request->input('bailleur_ids', '')));
+		//Synchroniser les zones sans créer de doublons
+		$projet->bailleurs()->sync($bailleurIds);
+		
 		//Synchroniser les positionnements stratégiques sans créer de doublons
 		$chaineLogiqueIds = array_filter(explode(',', $request->input('chaine_logique_ids', '')));
 		$projet->positionnementStrategiques()->sync($chaineLogiqueIds);
