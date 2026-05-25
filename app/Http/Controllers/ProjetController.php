@@ -88,7 +88,7 @@ class ProjetController extends Controller
 				->get();
 		$statutProjets = StatutProjet::whereNull('deleted_on')->get();
 		$zones = Zone::whereNull('deleted_on')->get();
-		$chaineLogiques = DB::table('view_cadre_logique_des_projets')->get();
+		$chaineLogiques = DB::table('view_cadre_logique_des_cadres_strategiques')->get();
 		
 		$priorites = Priorite::all();
 		$secteurs = Secteur::whereNull('deleted_on')->get();
@@ -222,7 +222,7 @@ class ProjetController extends Controller
 		$bailleurs = Bailleur::whereNull('deleted_on')->get();
 		
 		
-		$chaineLogiques = DB::table('view_cadre_logique_des_projets')->get();
+		$chaineLogiques = DB::table('view_cadre_logique_des_cadres_strategiques')->get();
 		$priorites = Priorite::all();
         $populationCibles = PopulationCible::whereNull('deleted_on')->get();
 		$institutionTutelles = InstitutionTutelle::whereNull('deleted_on')->get();

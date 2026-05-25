@@ -2229,78 +2229,112 @@ CREATE OR REPLACE VIEW public.view_cadre_logique
   ORDER BY niveau, id;
   
 -----------------ok cadre logique des cadre stratégique_uniquement
-CREATE OR REPLACE VIEW public.view_cadre_logique_des_cadres_strategiques
- AS
- WITH RECURSIVE arborescence AS (
-         SELECT 'cd_'::text || cd.id AS id,
-            cd.intitule,
-            NULL::text AS parent_id,
-            0 AS niveau,
-            cd.id AS cadre_developpement_id
-           FROM cadre_developpements cd
-		   WHERE type_cadre_developpement_id = 1
-        UNION ALL
-         SELECT cl.id::text AS id,
-            cl.intitule,
-            'cd_'::text || ocd.cadre_developpement_id AS parent_id,
-            1 AS niveau,
-            ocd.cadre_developpement_id
-           FROM orientation_cadre_developpements ocd
-             JOIN cadre_logiques cl ON cl.id = ocd.cadre_logique_id
-        UNION ALL
-         SELECT cl.id::text AS id,
-            cl.intitule,
-            cl.cadre_logique_id::text AS parent_id,
-            a.niveau + 1 AS niveau,
-            a.cadre_developpement_id
-           FROM cadre_logiques cl
-             JOIN arborescence a ON cl.cadre_logique_id::text = a.id
-          WHERE a.niveau >= 1
-        )
- SELECT id,
+CREATE OR REPLACE VIEW public.view_cadre_logique_des_cadres_strategiques AS
+WITH RECURSIVE arborescence AS (
+
+    -- Racines : uniquement les cadres stratégiques
+    SELECT 
+        'cd_'::text || cd.id AS id,
+        cd.intitule,
+        NULL::text AS parent_id,
+        0 AS niveau,
+        cd.id AS cadre_developpement_id
+    FROM cadre_developpements cd
+    WHERE cd.type_cadre_developpement_id = 1
+
+    UNION ALL
+
+    -- Premier niveau des cadres logiques liés aux cadres stratégiques
+    SELECT 
+        cl.id::text AS id,
+        cl.intitule,
+        'cd_'::text || ocd.cadre_developpement_id AS parent_id,
+        1 AS niveau,
+        ocd.cadre_developpement_id
+    FROM orientation_cadre_developpements ocd
+    JOIN cadre_logiques cl 
+        ON cl.id = ocd.cadre_logique_id
+    JOIN cadre_developpements cd
+        ON cd.id = ocd.cadre_developpement_id
+    WHERE cd.type_cadre_developpement_id = 1
+
+    UNION ALL
+
+    -- Descendance des cadres logiques
+    SELECT 
+        cl.id::text AS id,
+        cl.intitule,
+        cl.cadre_logique_id::text AS parent_id,
+        a.niveau + 1 AS niveau,
+        a.cadre_developpement_id
+    FROM cadre_logiques cl
+    JOIN arborescence a 
+        ON cl.cadre_logique_id::text = a.id
+    WHERE a.niveau >= 1
+)
+
+SELECT 
+    id,
     intitule,
     parent_id,
     niveau,
     cadre_developpement_id
-   FROM arborescence
-  ORDER BY niveau, id;
+FROM arborescence
+ORDER BY cadre_developpement_id, niveau, id;
 
 -----------------ok cadre logique projet
-CREATE OR REPLACE VIEW public.view_cadre_logique_des_projets
- AS
- WITH RECURSIVE arborescence AS (
-         SELECT 'cd_'::text || cd.id AS id,
-            cd.intitule,
-            NULL::text AS parent_id,
-            0 AS niveau,
-            cd.id AS cadre_developpement_id
-           FROM cadre_developpements cd
-		   WHERE type_cadre_developpement_id = 2
-        UNION ALL
-         SELECT cl.id::text AS id,
-            cl.intitule,
-            'cd_'::text || ocd.cadre_developpement_id AS parent_id,
-            1 AS niveau,
-            ocd.cadre_developpement_id
-           FROM orientation_cadre_developpements ocd
-             JOIN cadre_logiques cl ON cl.id = ocd.cadre_logique_id
-        UNION ALL
-         SELECT cl.id::text AS id,
-            cl.intitule,
-            cl.cadre_logique_id::text AS parent_id,
-            a.niveau + 1 AS niveau,
-            a.cadre_developpement_id
-           FROM cadre_logiques cl
-             JOIN arborescence a ON cl.cadre_logique_id::text = a.id
-          WHERE a.niveau >= 1
-        )
- SELECT id,
+CREATE OR REPLACE VIEW public.view_cadre_logique_des_projets AS
+WITH RECURSIVE arborescence AS (
+
+    -- Racines : uniquement les cadres stratégiques
+    SELECT 
+        'cd_'::text || cd.id AS id,
+        cd.intitule,
+        NULL::text AS parent_id,
+        0 AS niveau,
+        cd.id AS cadre_developpement_id
+    FROM cadre_developpements cd
+    WHERE cd.type_cadre_developpement_id = 2
+
+    UNION ALL
+
+    -- Premier niveau des cadres logiques liés aux cadres stratégiques
+    SELECT 
+        cl.id::text AS id,
+        cl.intitule,
+        'cd_'::text || ocd.cadre_developpement_id AS parent_id,
+        1 AS niveau,
+        ocd.cadre_developpement_id
+    FROM orientation_cadre_developpements ocd
+    JOIN cadre_logiques cl 
+        ON cl.id = ocd.cadre_logique_id
+    JOIN cadre_developpements cd
+        ON cd.id = ocd.cadre_developpement_id
+    WHERE cd.type_cadre_developpement_id = 2
+
+    UNION ALL
+
+    -- Descendance des cadres logiques
+    SELECT 
+        cl.id::text AS id,
+        cl.intitule,
+        cl.cadre_logique_id::text AS parent_id,
+        a.niveau + 1 AS niveau,
+        a.cadre_developpement_id
+    FROM cadre_logiques cl
+    JOIN arborescence a 
+        ON cl.cadre_logique_id::text = a.id
+    WHERE a.niveau >= 1
+)
+
+SELECT 
+    id,
     intitule,
     parent_id,
     niveau,
     cadre_developpement_id
-   FROM arborescence
-  ORDER BY niveau, id;
+FROM arborescence
+ORDER BY cadre_developpement_id, niveau, id;
   
     
   
