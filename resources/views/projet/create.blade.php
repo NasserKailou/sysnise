@@ -443,23 +443,23 @@
 					</div>
 					<div  class="execution_projet col-md-6 mt-3" style="display:none">
 					  <label class="form-label">Date d’approbation </label>
-					  <input name="date_approbation" type="date" class="form-control">
+					  <input id="date_approbation" name="date_approbation" type="date" class="form-control">
 					</div>
 					<div  class="execution_projet col-md-3 mt-3" style="display:none">
 					  <label class="form-label">Date de signature  </label>
-					  <input name="date_signature" type="date" class="form-control">
+					  <input id="date_signature" name="date_signature" type="date" class="form-control">
 					</div>
 					<div  class="execution_projet col-md-3 mt-3" style="display:none">
 					  <label class="form-label">Date de mise en vigueur  </label>
-					  <input name="date_mise_en_vigueur" type="date" class="form-control">
+					  <input id="date_mise_en_vigueur" name="date_mise_en_vigueur" type="date" class="form-control">
 					</div>
 					<div  class="execution_projet col-md-6 mt-3" style="display:none">
 					  <label class="form-label">Date de démarrage effectif</label>
-					  <input name="date_debut_effective" type="date" class="form-control">
+					  <input id="date_debut_effective" name="date_debut_effective" type="date" class="form-control">
 					</div>
 					<div  class="execution_projet col-md-3 mt-3" style="display:none">
 					  <label class="form-label">Date initiale de clôture </label>
-					  <input name="date_fin_effective" type="date" class="form-control">
+					  <input id="date_fin_effective" name="date_fin_effective" type="date" class="form-control">
 					</div>
 					<div id="div_duree" class="col-md-3 mt-3">
 					  <label class="form-label">durée(mois)</label>
@@ -508,15 +508,15 @@
 					  
 					<div  class="execution_projet col-md-4 mt-3" style="display:none">
 					  <label class="form-label">date de la prorogation (si applicable)</label>
-					  <input name="date_prorogation" type="date" class="form-control">
+					  <input id="date_prorogation" name="date_prorogation" type="date" class="form-control">
 					</div>
 					<div  class="execution_projet col-md-4 mt-3" style="display:none">
 					  <label class="form-label">nouvelle date clôture (si prorogation)</label>
-					  <input name="date_cloture_prorogation" type="date" class="form-control">
+					  <input id="date_cloture_prorogation" name="date_cloture_prorogation" type="date" class="form-control">
 					</div>
 					<div  id="div_duree_prorogation" class="execution_projet col-md-4 mt-3" style="display:none">
 					  <label class="form-label"> durée prorogation (si applicable)</label>
-					  <input name="duree_prorogation" type="number" class="form-control">
+					  <input id="duree_prorogation" name="duree_prorogation" type="number" class="form-control">
 					</div>
 					
 				</div>
@@ -593,7 +593,8 @@ $(document).ready(function() {
 	$.fn.zTree.init($("#liste_secteur"), settingSecteur, zNodesSecteur);
 	$.fn.zTree.init($("#liste_bailleur"), settingBailleur, zNodesBailleur);
 	$.fn.zTree.init($("#liste_chaine_logique"), settingChaineLogique, zNodesChaineLogique);
-	 $("#date_debut_prevue, #date_fin_prevue").on("change", calculerDureeMois);
+	$("#date_debut_prevue, #date_fin_prevue, #date_approbation, #date_fin_effective, #date_cloture_prorogation").on("change", calculerDureeMois);
+	$("#date_prorogation, #date_cloture_prorogation").on("change", calculerDureeProrogation);
 	$('#statut_projet_id').change(function(){
 		if($(this).val() == 1)
 		{
@@ -623,11 +624,65 @@ $(document).ready(function() {
 	});
 	
 	function calculerDureeMois() {
-		const dateDebut = $("#date_debut_prevue").val();
-		const dateFin = $("#date_fin_prevue").val();
+		let dateDebut = null;
+		let dateFin = null;
+		const statut = $("#statut_projet_id").val();
+
+		// Projet approuvé mais non exécuté
+		if (statut == "2") {
+			dateDebut = $("#date_debut_prevue").val();
+			dateFin = $("#date_fin_prevue").val();
+		}
+
+		// Projet en exécution
+		else if (statut == "3") {
+			dateDebut = $("#date_approbation").val();
+
+			const dateClotureProrogation =
+				$("#date_cloture_prorogation").val();
+
+			if (dateClotureProrogation) {
+				dateFin = dateClotureProrogation;
+			} else {
+				dateFin = $("#date_fin_effective").val();
+			}
+		}
 
 		if (!dateDebut || !dateFin) {
 			$("#duree").val('');
+			return;
+		}
+
+		const [anneeDebut, moisDebut, jourDebut] =
+			dateDebut.split('-').map(Number);
+
+		const [anneeFin, moisFin, jourFin] =
+			dateFin.split('-').map(Number);
+
+		const debut = new Date(anneeDebut, moisDebut - 1, jourDebut);
+		const fin = new Date(anneeFin, moisFin - 1, jourFin);
+
+		if (fin < debut) {
+			$("#duree").val('');
+			return;
+		}
+
+		let mois = (fin.getFullYear() - debut.getFullYear()) * 12;
+		mois += fin.getMonth() - debut.getMonth();
+
+		if (fin.getDate() < debut.getDate()) {
+			mois--;
+		}
+
+		$("#duree").val(mois);
+	}
+	
+	function calculerDureeProrogation() {
+		const dateDebut = $("#date_prorogation").val();
+		const dateFin = $("#date_cloture_prorogation").val();
+
+		if (!dateDebut || !dateFin) {
+			$("#duree_prorogation").val('');
 			return;
 		}
 
@@ -640,7 +695,7 @@ $(document).ready(function() {
 
 		// Vérifie que la date de fin est postérieure à la date de début
 		if (fin < debut) {
-			$("#duree").val('');
+			$("#duree_prorogation").val('');
 			return;
 		}
 
@@ -651,7 +706,7 @@ $(document).ready(function() {
 		if (fin.getDate() < debut.getDate()) {
 			mois--;
 		}
-		$("#duree").val(mois);
+		$("#duree_prorogation").val(mois);
 	}
 	
 });

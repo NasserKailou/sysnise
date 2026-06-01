@@ -433,7 +433,7 @@
 					</div>
 					<div id="annee_demarrage" class="col-md-3 mt-3" style="display: {{ $projet->statutProjet->id == 1 ? 'block' : 'none' }}">
 					  <label class="form-label">Année démarrage prévue</label>
-					  <input name="annee_demarrage" type="integer" class="form-control" value="{{ old('annee_demarrage', $projet->annee_demarrage) }}">
+					  <input id="annee_demarrage" name="annee_demarrage" type="integer" class="form-control" value="{{ old('annee_demarrage', $projet->annee_demarrage) }}">
 					</div>
 					<div id="div_date_debut_prevue" class="col-md-6 mt-3" style="display: {{ $projet->statutProjet->id == 2 ? 'block' : 'none' }}">
 					  <label class="form-label">Date d'approbation</label>
@@ -445,31 +445,31 @@
 					</div>
 					<div  class="execution_projet col-md-6 mt-3" style="display: {{ $projet->statutProjet->id == 3 ? 'block' : 'none' }}">
 					  <label class="form-label">Date d’approbation </label>
-					  <input name="date_approbation" type="date" class="form-control" value="{{ old('date_approbation', optional($projet->date_approbation)->format('Y-m-d')) }}">
+					  <input id="date_approbation" name="date_approbation" type="date" class="form-control" value="{{ old('date_approbation', optional($projet->date_approbation)->format('Y-m-d')) }}">
 					</div>
 					<div  class="execution_projet col-md-3 mt-3" style="display: {{ $projet->statutProjet->id == 3 ? 'block' : 'none' }}">
 					  <label class="form-label">Date de signature  </label>
-					  <input name="date_signature" type="date" class="form-control" value="{{ old('date_signature', optional($projet->date_signature)->format('Y-m-d')) }}">
+					  <input id="date_signature" name="date_signature" type="date" class="form-control" value="{{ old('date_signature', optional($projet->date_signature)->format('Y-m-d')) }}">
 					</div>
 					<div  class="execution_projet col-md-3 mt-3" style="display: {{ $projet->statutProjet->id == 3 ? 'block' : 'none' }}">
 					  <label class="form-label">Date de mise en vigueur  </label>
-					  <input name="date_mise_en_vigueur" type="date" class="form-control" value="{{ old('date_mise_en_vigueur', optional($projet->date_mise_en_vigueur)->format('Y-m-d')) }}">
+					  <input id="date_mise_en_vigueur" name="date_mise_en_vigueur" type="date" class="form-control" value="{{ old('date_mise_en_vigueur', optional($projet->date_mise_en_vigueur)->format('Y-m-d')) }}">
 					</div>
 					<div  class="execution_projet col-md-6 mt-3" style="display: {{ $projet->statutProjet->id == 3 ? 'block' : 'none' }}">
 					  <label class="form-label">Date de démarrage effectif</label>
-					  <input name="date_debut_effective" type="date" class="form-control" value="{{ old('date_debut_effective', optional($projet->date_debut_effective)->format('Y-m-d')) }}">
+					  <input id="date_debut_effective" name="date_debut_effective" type="date" class="form-control" value="{{ old('date_debut_effective', optional($projet->date_debut_effective)->format('Y-m-d')) }}">
 					</div>
 					<div  class="execution_projet col-md-3 mt-3" style="display: {{ $projet->statutProjet->id == 3 ? 'block' : 'none' }}">
 					  <label class="form-label">Date initiale de clôture </label>
-					  <input name="date_fin_effective" type="date" class="form-control" value="{{ old('date_fin_effective', optional($projet->date_fin_effective)->format('Y-m-d')) }}">
+					  <input id="date_fin_effective" name="date_fin_effective" type="date" class="form-control" value="{{ old('date_fin_effective', optional($projet->date_fin_effective)->format('Y-m-d')) }}">
 					</div>
-					<div id="duree" class="col-md-3 mt-3">
+					<div id="div_duree" class="col-md-3 mt-3">
 					  <label class="form-label">durée(mois)</label>
 					  <input id="duree" name="duree" type="integer" class="form-control" value="{{ old('duree', $projet->duree) }}">
 					</div>
-					<div id="cout" class="col-md-3 mt-3">
+					<div id="div_cout" class="col-md-3 mt-3">
 					  <label class="form-label">coût du projet (FCFA)</label>
-					  <input name="cout" type="integer" class="form-control" value="{{ old('cout', $projet->cout) }}">
+					  <input id="cout" name="cout" type="integer" class="form-control" value="{{ old('cout', $projet->cout) }}">
 					</div>
 					<div id="cout_devise" class="col-md-3 mt-3">
 						<div>
@@ -505,15 +505,15 @@
 					
 					<div  class="execution_projet col-md-4 mt-3" style="display: {{ $projet->statut_projet_id == 3 ? 'block' : 'none' }}">
 					  <label class="form-label">date de la prorogation (si applicable)</label>
-					  <input name="date_prorogation" type="date" class="form-control" value="{{ old('date_prorogation', optional($projet->date_prorogation)->format('Y-m-d')) }}">
+					  <input id="date_prorogation" name="date_prorogation" type="date" class="form-control" value="{{ old('date_prorogation', optional($projet->date_prorogation)->format('Y-m-d')) }}">
 					</div>
 					<div  class="execution_projet col-md-4 mt-3" style="display: {{ $projet->statut_projet_id == 3 ? 'block' : 'none' }}">
 					  <label class="form-label">nouvelle date clôture (si prorogation)</label>
-					  <input name="date_cloture_prorogation" type="date" class="form-control" value="{{ old('date_cloture_prorogation', optional($projet->date_cloture_prorogation)->format('Y-m-d')) }}">
+					  <input id="date_cloture_prorogation" name="date_cloture_prorogation" type="date" class="form-control" value="{{ old('date_cloture_prorogation', optional($projet->date_cloture_prorogation)->format('Y-m-d')) }}">
 					</div>
-					<div  id="duree_prorogation" class="execution_projet col-md-4 mt-3" style="display: {{ $projet->statut_projet_id == 3 ? 'block' : 'none' }}">
+					<div  id="div_duree_prorogation" class="execution_projet col-md-4 mt-3" style="display: {{ $projet->statut_projet_id == 3 ? 'block' : 'none' }}">
 					  <label class="form-label"> durée prorogation (si applicable)</label>
-					  <input name="duree_prorogation" type="number" class="form-control" value="{{ old('duree_prorogation', $projet->duree_prorogation) }}">
+					  <input id="duree_prorogation" name="duree_prorogation" type="number" class="form-control" value="{{ old('duree_prorogation', $projet->duree_prorogation) }}">
 					</div>
 				</div>
 				
@@ -591,6 +591,8 @@ $(document).ready(function() {
 	$.fn.zTree.init($("#liste_secteur"), settingSecteur, zNodesSecteur);
 	$.fn.zTree.init($("#liste_bailleur"), settingBailleur, zNodesBailleur);
 	$.fn.zTree.init($("#liste_chaine_logique"), settingChaineLogique, zNodesChaineLogique);
+	$("#date_debut_prevue, #date_fin_prevue, #date_approbation, #date_fin_effective, #date_cloture_prorogation").on("change", calculerDureeMois);
+	$("#date_prorogation, #date_cloture_prorogation").on("change", calculerDureeProrogation);
 	
 	$('#statut_projet_id').change(function(){
 		if($(this).val() == 1)
@@ -619,6 +621,92 @@ $(document).ready(function() {
 			$('#annee_demarrage,#div_date_debut_prevue,#div_date_fin_prevue').css('display','none');
 		}
 	});
+	
+	function calculerDureeMois() {
+		let dateDebut = null;
+		let dateFin = null;
+		const statut = $("#statut_projet_id").val();
+
+		// Projet approuvé mais non exécuté
+		if (statut == "2") {
+			dateDebut = $("#date_debut_prevue").val();
+			dateFin = $("#date_fin_prevue").val();
+		}
+
+		// Projet en exécution
+		else if (statut == "3") {
+			dateDebut = $("#date_approbation").val();
+
+			const dateClotureProrogation =
+				$("#date_cloture_prorogation").val();
+
+			if (dateClotureProrogation) {
+				dateFin = dateClotureProrogation;
+			} else {
+				dateFin = $("#date_fin_effective").val();
+			}
+		}
+
+		if (!dateDebut || !dateFin) {
+			$("#duree").val('');
+			return;
+		}
+
+		const [anneeDebut, moisDebut, jourDebut] =
+			dateDebut.split('-').map(Number);
+
+		const [anneeFin, moisFin, jourFin] =
+			dateFin.split('-').map(Number);
+
+		const debut = new Date(anneeDebut, moisDebut - 1, jourDebut);
+		const fin = new Date(anneeFin, moisFin - 1, jourFin);
+
+		if (fin < debut) {
+			$("#duree").val('');
+			return;
+		}
+
+		let mois = (fin.getFullYear() - debut.getFullYear()) * 12;
+		mois += fin.getMonth() - debut.getMonth();
+
+		if (fin.getDate() < debut.getDate()) {
+			mois--;
+		}
+
+		$("#duree").val(mois);
+	}
+	
+	function calculerDureeProrogation() {
+		const dateDebut = $("#date_prorogation").val();
+		const dateFin = $("#date_cloture_prorogation").val();
+
+		if (!dateDebut || !dateFin) {
+			$("#duree_prorogation").val('');
+			return;
+		}
+
+		// Conversion fiable des dates YYYY-MM-DD
+		const [anneeDebut, moisDebut, jourDebut] = dateDebut.split('-').map(Number);
+		const [anneeFin, moisFin, jourFin] = dateFin.split('-').map(Number);
+
+		const debut = new Date(anneeDebut, moisDebut - 1, jourDebut);
+		const fin = new Date(anneeFin, moisFin - 1, jourFin);
+
+		// Vérifie que la date de fin est postérieure à la date de début
+		if (fin < debut) {
+			$("#duree_prorogation").val('');
+			return;
+		}
+
+		let mois = (fin.getFullYear() - debut.getFullYear()) * 12;
+		mois += fin.getMonth() - debut.getMonth();
+
+		// Le dernier mois n'est pas complet
+		if (fin.getDate() < debut.getDate()) {
+			mois--;
+		}
+		$("#duree_prorogation").val(mois);
+	}
 });
 </script>
   </div>
