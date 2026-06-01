@@ -163,8 +163,8 @@
                             <tr>
                                 <th class="text-left">Composante</th>
 								<th class="text-left">Coût Total PAD</th>
+								<th class="text-left">Coût annuel PAD</th>
 								<th class="text-left">Budget PTBA</th>
-								<th class="text-left">Coût prévu PAD</th>
 								<th class="text-left">Mont. Dépensé</th>
                                 <th class="text-center table-icons">Actions</th>
                             </tr>
@@ -174,8 +174,8 @@
                             <tr>
                                 <td class="text-left">{{ $financement->composante->intitule ?? '-'  }}</td>
 								<td class="text-left">{{ $financement->montant ?? '-' }}</td>
+								<td class="text-left">{{ $financement?->budgetsAnnuelsPrevus()->sum('montant') ?? 0  }}</td>
                                 <td class="text-left">{{ $financement?->budgetsAnnuels()->sum('montant') ?? 0  }}</td>
-                                <td class="text-left">{{ $financement?->budgetsAnnuelsPrevus()->sum('montant') ?? 0  }}</td>
                                 <td class="text-left">{{ $financement?->budgetsAnnuelsDepenses()->sum('montant') ?? 0  }}</td>
 								
 								<td class="text-center table-icons">

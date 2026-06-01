@@ -437,31 +437,31 @@
 					</div>
 					<div id="div_date_debut_prevue" class="col-md-6 mt-3" style="display: {{ $projet->statutProjet->id == 2 ? 'block' : 'none' }}">
 					  <label class="form-label">Date d'approbation</label>
-					  <input id="date_debut_prevue" name="date_debut_prevue" type="date" class="form-control" onchange="calculerDuree()" value="{{ old('date_debut_prevue', $projet->date_debut_prevue) }}">
+					  <input id="date_debut_prevue" name="date_debut_prevue" type="date" class="form-control" onchange="calculerDuree()" value="{{ old('date_debut_prevue', optional($projet->date_debut_prevue)->format('Y-m-d')) }}">
 					</div>
 					<div id="div_date_fin_prevue" class="col-md-3 mt-3" style="display: {{ $projet->statutProjet->id == 2 ? 'block' : 'none' }}">
 					  <label class="form-label">Date de clôture</label>
-					  <input id="date_fin_prevue" name="date_fin_prevue" type="date" class="form-control" onchange="calculerDuree()" value="{{ old('date_fin_prevue', $projet->date_fin_prevue) }}">
+					  <input id="date_fin_prevue" name="date_fin_prevue" type="date" class="form-control" onchange="calculerDuree()" value="{{ old('date_fin_prevue', optional($projet->date_fin_prevue)->format('Y-m-d')) }}">
 					</div>
 					<div  class="execution_projet col-md-6 mt-3" style="display: {{ $projet->statutProjet->id == 3 ? 'block' : 'none' }}">
 					  <label class="form-label">Date d’approbation </label>
-					  <input name="date_approbation" type="date" class="form-control" value="{{ old('date_approbation', $projet->date_approbation) }}">
+					  <input name="date_approbation" type="date" class="form-control" value="{{ old('date_approbation', optional($projet->date_approbation)->format('Y-m-d')) }}">
 					</div>
 					<div  class="execution_projet col-md-3 mt-3" style="display: {{ $projet->statutProjet->id == 3 ? 'block' : 'none' }}">
 					  <label class="form-label">Date de signature  </label>
-					  <input name="date_signature" type="date" class="form-control" value="{{ old('date_signature', $projet->date_signature) }}">
+					  <input name="date_signature" type="date" class="form-control" value="{{ old('date_signature', optional($projet->date_signature)->format('Y-m-d')) }}">
 					</div>
 					<div  class="execution_projet col-md-3 mt-3" style="display: {{ $projet->statutProjet->id == 3 ? 'block' : 'none' }}">
 					  <label class="form-label">Date de mise en vigueur  </label>
-					  <input name="date_mise_en_vigueur" type="date" class="form-control" value="{{ old('date_mise_en_vigueur', $projet->date_mise_en_vigueur) }}">
+					  <input name="date_mise_en_vigueur" type="date" class="form-control" value="{{ old('date_mise_en_vigueur', optional($projet->date_mise_en_vigueur)->format('Y-m-d')) }}">
 					</div>
 					<div  class="execution_projet col-md-6 mt-3" style="display: {{ $projet->statutProjet->id == 3 ? 'block' : 'none' }}">
 					  <label class="form-label">Date de démarrage effectif</label>
-					  <input name="date_debut_effective" type="date" class="form-control" value="{{ old('date_debut_effective', $projet->date_debut_effective) }}">
+					  <input name="date_debut_effective" type="date" class="form-control" value="{{ old('date_debut_effective', optional($projet->date_debut_effective)->format('Y-m-d')) }}">
 					</div>
 					<div  class="execution_projet col-md-3 mt-3" style="display: {{ $projet->statutProjet->id == 3 ? 'block' : 'none' }}">
 					  <label class="form-label">Date initiale de clôture </label>
-					  <input name="date_fin_effective" type="date" class="form-control" value="{{ old('date_fin_effective', $projet->date_fin_effective) }}">
+					  <input name="date_fin_effective" type="date" class="form-control" value="{{ old('date_fin_effective', optional($projet->date_fin_effective)->format('Y-m-d')) }}">
 					</div>
 					<div id="duree" class="col-md-3 mt-3">
 					  <label class="form-label">durée(mois)</label>
@@ -505,11 +505,11 @@
 					
 					<div  class="execution_projet col-md-4 mt-3" style="display: {{ $projet->statut_projet_id == 3 ? 'block' : 'none' }}">
 					  <label class="form-label">date de la prorogation (si applicable)</label>
-					  <input name="date_prorogation" type="date" class="form-control" value="{{ old('date_prorogation', $projet->date_prorogation) }}">
+					  <input name="date_prorogation" type="date" class="form-control" value="{{ old('date_prorogation', optional($projet->date_prorogation)->format('Y-m-d')) }}">
 					</div>
 					<div  class="execution_projet col-md-4 mt-3" style="display: {{ $projet->statut_projet_id == 3 ? 'block' : 'none' }}">
 					  <label class="form-label">nouvelle date clôture (si prorogation)</label>
-					  <input name="date_cloture_prorogation" type="date" class="form-control" value="{{ old('date_cloture_prorogation', $projet->date_cloture_prorogation) }}">
+					  <input name="date_cloture_prorogation" type="date" class="form-control" value="{{ old('date_cloture_prorogation', optional($projet->date_cloture_prorogation)->format('Y-m-d')) }}">
 					</div>
 					<div  id="duree_prorogation" class="execution_projet col-md-4 mt-3" style="display: {{ $projet->statut_projet_id == 3 ? 'block' : 'none' }}">
 					  <label class="form-label"> durée prorogation (si applicable)</label>

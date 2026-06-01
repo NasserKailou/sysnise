@@ -175,4 +175,17 @@ class CadreLogique extends Model
 		return $this->hasOne(ComposanteProduit::class, 'produit_id');
 	}
 	
+	public function getCheminCompletAttribute()
+	{
+		$hierarchie = [];
+		$courant = $this;
+
+		while ($courant) {
+			array_unshift($hierarchie, $courant->intitule);
+			$courant = $courant->parent;
+		}
+
+		return implode(' -> ', $hierarchie);
+	}
+	
 }

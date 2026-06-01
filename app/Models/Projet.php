@@ -60,6 +60,8 @@ class Projet extends Model
     'date_signature'          => 'date',
     'date_mise_en_vigueur'    => 'date',
     'date_demarrage_effectif' => 'date',
+	'date_prorogation'   	  => 'date',
+    'date_cloture_prorogation' => 'date',
     'rapport_date_remplissage' => 'date',
     'created_at'              => 'datetime',
     'updated_at'              => 'datetime',
@@ -67,7 +69,6 @@ class Projet extends Model
     'dispose_organe_pilotage' => 'boolean',
     'a_audit_regulier'        => 'boolean',
 ];
-
 
 
     /**

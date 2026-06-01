@@ -319,7 +319,7 @@
 			}
 		}
 		
-		function calculerDuree() {
+		/*function calculerDuree() {
 			const dateDebut = document.getElementById('date_debut_prevue').value;
 			const dateFin   = document.getElementById('date_fin_prevue').value;
 
@@ -345,7 +345,8 @@
 			const duree = Math.round((fin - debut) / MS_PAR_JOUR) + 1;
 
 			document.getElementById('duree').value = duree;
-		}
+		}*/
+		
 	</script>
     <div class="row">
 	  <!-- Contenu principal -->
@@ -428,17 +429,17 @@
 							<ul id="liste_secteur" class="ztree" style="margin-top:0;"></ul>
 						</div>
 					</div>
-					<div id="annee_demarrage" class="col-md-3 mt-3">
+					<div id="div_annee_demarrage" class="col-md-3 mt-3">
 					  <label class="form-label">Année démarrage prévue</label>
 					  <input name="annee_demarrage" type="integer" class="form-control">
 					</div>
 					<div id="div_date_debut_prevue" class="col-md-6 mt-3" style="display:none">
 					  <label class="form-label">Date d'approbation</label>
-					  <input id="date_debut_prevue" name="date_debut_prevue" type="date" class="form-control" onchange="calculerDuree()">
+					  <input id="date_debut_prevue" name="date_debut_prevue" type="date" class="form-control">
 					</div>
 					<div id="div_date_fin_prevue" class="col-md-3 mt-3" style="display:none">
 					  <label class="form-label">Date de clôture</label>
-					  <input id="date_fin_prevue" name="date_fin_prevue" type="date" class="form-control" onchange="calculerDuree()">
+					  <input id="date_fin_prevue" name="date_fin_prevue" type="date" class="form-control">
 					</div>
 					<div  class="execution_projet col-md-6 mt-3" style="display:none">
 					  <label class="form-label">Date d’approbation </label>
@@ -460,16 +461,16 @@
 					  <label class="form-label">Date initiale de clôture </label>
 					  <input name="date_fin_effective" type="date" class="form-control">
 					</div>
-					<div id="duree" class="col-md-3 mt-3">
+					<div id="div_duree" class="col-md-3 mt-3">
 					  <label class="form-label">durée(mois)</label>
 					  <input id="duree" name="duree" type="integer" class="form-control">
 					</div>
-					<div id="cout" class="col-md-3 mt-3">
+					<div id="div_cout" class="col-md-3 mt-3">
 					  <label class="form-label">coût du projet (FCFA)</label>
 					  <input name="cout" type="integer" class="form-control">
 					</div>
 					
-					<div id="cout_devise" class="col-md-3 mt-3">
+					<div id="div_cout_devise" class="col-md-3 mt-3">
 						<div>
 							<label class="form-label">Coût du projet (DEVlSE)</label>
 							<div class="input-group">
@@ -513,7 +514,7 @@
 					  <label class="form-label">nouvelle date clôture (si prorogation)</label>
 					  <input name="date_cloture_prorogation" type="date" class="form-control">
 					</div>
-					<div  id="duree_prorogation" class="execution_projet col-md-4 mt-3" style="display:none">
+					<div  id="div_duree_prorogation" class="execution_projet col-md-4 mt-3" style="display:none">
 					  <label class="form-label"> durée prorogation (si applicable)</label>
 					  <input name="duree_prorogation" type="number" class="form-control">
 					</div>
@@ -592,33 +593,66 @@ $(document).ready(function() {
 	$.fn.zTree.init($("#liste_secteur"), settingSecteur, zNodesSecteur);
 	$.fn.zTree.init($("#liste_bailleur"), settingBailleur, zNodesBailleur);
 	$.fn.zTree.init($("#liste_chaine_logique"), settingChaineLogique, zNodesChaineLogique);
+	 $("#date_debut_prevue, #date_fin_prevue").on("change", calculerDureeMois);
 	$('#statut_projet_id').change(function(){
 		if($(this).val() == 1)
 		{
-			$("#duree").removeClass("col-md-4").addClass("col-md-3");
-			$("#cout").removeClass("col-md-6").addClass("col-md-3");
-			$("#cout_devise").removeClass("col-md-6").addClass("col-md-3");
+			$("#div_duree").removeClass("col-md-4").addClass("col-md-3");
+			$("#div_cout").removeClass("col-md-6").addClass("col-md-3");
+			$("#div_cout_devise").removeClass("col-md-6").addClass("col-md-3");
 			$('#div_date_debut_prevue,#div_date_fin_prevue,.execution_projet').css('display','none');
-			$('#annee_demarrage').css('display','block');
+			$('#div_annee_demarrage').css('display','block');
 			
 		}
 		else if($(this).val() == 2)
 		{
-			$("#duree").removeClass("col-md-4").addClass("col-md-3");
-			$("#cout").removeClass("col-md-3").addClass("col-md-6");
-			$("#cout_devise").removeClass("col-md-3").addClass("col-md-6");
+			$("#div_duree").removeClass("col-md-4").addClass("col-md-3");
+			$("#div_cout").removeClass("col-md-3").addClass("col-md-6");
+			$("#div_cout_devise").removeClass("col-md-3").addClass("col-md-6");
 			$('#div_date_debut_prevue,#div_date_fin_prevue').css('display','block');
-			$('#annee_demarrage,.execution_projet').css('display','none');
+			$('#div_annee_demarrage,.execution_projet').css('display','none');
 		}
 		else if($(this).val() == 3)
 		{
-			$("#duree").removeClass("col-md-4").addClass("col-md-3");
-			$("#cout").removeClass("col-md-3").addClass("col-md-6");
-			$("#cout_devise").removeClass("col-md-3").addClass("col-md-6");
+			$("#div_duree").removeClass("col-md-4").addClass("col-md-3");
+			$("#div_cout").removeClass("col-md-3").addClass("col-md-6");
+			$("#div_cout_devise").removeClass("col-md-3").addClass("col-md-6");
 			$('.execution_projet').css('display','block');
-			$('#annee_demarrage,#div_date_debut_prevue,#div_date_fin_prevue').css('display','none');
+			$('#div_annee_demarrage,#div_date_debut_prevue,#div_date_fin_prevue').css('display','none');
 		}
 	});
+	
+	function calculerDureeMois() {
+		const dateDebut = $("#date_debut_prevue").val();
+		const dateFin = $("#date_fin_prevue").val();
+
+		if (!dateDebut || !dateFin) {
+			$("#duree").val('');
+			return;
+		}
+
+		// Conversion fiable des dates YYYY-MM-DD
+		const [anneeDebut, moisDebut, jourDebut] = dateDebut.split('-').map(Number);
+		const [anneeFin, moisFin, jourFin] = dateFin.split('-').map(Number);
+
+		const debut = new Date(anneeDebut, moisDebut - 1, jourDebut);
+		const fin = new Date(anneeFin, moisFin - 1, jourFin);
+
+		// Vérifie que la date de fin est postérieure à la date de début
+		if (fin < debut) {
+			$("#duree").val('');
+			return;
+		}
+
+		let mois = (fin.getFullYear() - debut.getFullYear()) * 12;
+		mois += fin.getMonth() - debut.getMonth();
+
+		// Le dernier mois n'est pas complet
+		if (fin.getDate() < debut.getDate()) {
+			mois--;
+		}
+		$("#duree").val(mois);
+	}
 	
 });
 </script>

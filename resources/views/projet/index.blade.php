@@ -35,9 +35,25 @@
                                     <td class="text-left">{{ $projet->statutProjet?->intitule ?? '—'  }}</td>
                                     <td class="text-left">{{ $projet->institutionTutelle?->intitule ?? '—'  }}</td>
                                     <td class="text-left">
-                                        @if($projet->date_debut_prevue && $projet->date_fin_prevue)
-                                            {{ \Carbon\Carbon::parse($projet->date_debut_prevue)->format('d/m/Y') }}- {{ \Carbon\Carbon::parse($projet->date_fin_prevue)->format('d/m/Y')}}
-                                        @endif
+										@if ($projet->statutProjet->id == 1)
+											@if($projet->annee_demarrage && $projet->duree)
+												{{ $projet->annee_demarrage . ' + '. $projet->duree . ' mois'}}
+											@endif
+										@elseif ($projet->statutProjet->id == 2)
+											@if($projet->date_debut_prevue && $projet->date_fin_prevue)
+												{{ \Carbon\Carbon::parse($projet->date_debut_prevue)->format('d/m/Y') }}- {{ \Carbon\Carbon::parse($projet->date_fin_prevue)->format('d/m/Y')}}
+											@endif
+										@elseif ($projet->statutProjet->id == 3)
+											@if ($projet->date_cloture_prorogation == null)
+												@if($projet->date_approbation && $projet->date_fin_effective)
+													{{ \Carbon\Carbon::parse($projet->date_approbation)->format('d/m/Y') }}- {{ \Carbon\Carbon::parse($projet->date_fin_effective)->format('d/m/Y')}}
+												@endif
+											@else
+												@if($projet->date_approbation && $projet->date_cloture_prorogation)
+													{{ \Carbon\Carbon::parse($projet->date_approbation)->format('d/m/Y') }}- {{ \Carbon\Carbon::parse($projet->date_cloture_prorogation)->format('d/m/Y')}}
+												@endif
+											@endif
+										@endif
                                     </td>
                                     <td class="text-left">{{ $projet->cout ?? '—' }}</td>
                                     <td class="text-left">{{ $projet->zoneInterventions->pluck('intitule')->implode(', ') }}</td>

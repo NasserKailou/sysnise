@@ -20,7 +20,7 @@
 			  <a href="{{ route('projets.composantes.index', ['projet' => $projet->id]) }}" class="btn btn-outline-secondary">Composantes et Produits</a>
 			  <a href="#" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Situation Financière</a>
 				<ul class="dropdown-menu">
-				  <li><a class="dropdown-item" href="{{ route('projets.rechercheFinancements', ['projet' => $projet->id]) }}">Recherche Financement</a></li>
+				  {{--<li><a class="dropdown-item" href="{{ route('projets.rechercheFinancements', ['projet' => $projet->id]) }}">Recherche Financement</a></li>--}}
 				  <li><a class="dropdown-item" href="{{ route('projets.financementParComposante', ['projet' => $projet->id]) }}">Financement par Composante</a></li>
 				  <li><a class="dropdown-item" href="{{ route('projets.financementParCategorieDepense', ['projet' => $projet->id]) }}">Financement par Catégorie de dépense</a></li>
 				  <li><a class="dropdown-item" href="{{ route('projets.financementParBailleur', ['projet' => $projet->id]) }}">Financement par Bailleur</a></li>
@@ -53,20 +53,32 @@
 								<p><strong>Intitulé :</strong> {{ $projet?->intitule ?? '—' }}</p>
 								<p><strong>Priorité :</strong> {{ $projet->priorite?->intitule  ?? '—' }}</p>
 								<p><strong>Tutelle :</strong> {{ $projet->institutionTutelle?->intitule ?? '—' }}</p>
-								<p><strong>Secteur :</strong> {{ $projet->secteur?->intitule ?? '—' }}</p>
-								<p><strong>Direction/Agence :</strong> {{ $projet->direction_agence  ?? '—' }}</p>
+								<p><strong>Secteur :</strong> {{ $projet->secteurs->pluck('intitule')->implode(', ') ?? '—' }}</p>
 								<p><strong>Contact :</strong> {{ $projet->contact ?? '—' }}</p>
 								<p><strong>Projet liée :</strong> {{ $projet->parent?->intitule ?? '—' }}</p>
 								<p><strong>Statut :</strong> {{ $projet->statutProjet?->intitule  ?? '—' }}</p>
 							</div>
 							<div class="col-md-6">
-								<p><strong>Année Démarrage :</strong> {{ $projet->annee_demarrage ?? '—' }}</p>
-								<p><strong>Date Début prévue :</strong> {{ $projet->date_debut_prevue }}</p>
-								<p><strong>Date Fin prévue :</strong> {{ $projet->date_fin_prevue }}</p>
-								<p><strong>Durée Travaux (prévu) :</strong> {{ $projet->duree }}</p>
+								@if($projet->statutProjet?->id == 1)
+									<p><strong>Année Démarrage :</strong> {{ $projet->annee_demarrage ?? '—' }}</p>
+									<p><strong>Durée Travaux (prévu) :</strong> {{ $projet->duree }}</p>
+								@elseif ($projet->statutProjet->id == 2)
+									<p><strong>Date d'approbation :</strong> {{ $projet->date_debut_prevue }}</p>
+									<p><strong>Date de clôture :</strong> {{ $projet->date_fin_prevue }}</p>
+									<p><strong>Durée Travaux (prévu) :</strong> {{ $projet->duree }}</p>
+								@elseif ($projet->statutProjet->id == 3)
+									<p><strong>Date d'approbation :</strong> {{ $projet->date_approbation }}</p>
+									<p><strong>Date initiale de clôture :</strong> {{ $projet->date_fin_effective }}</p>
+									<p><strong>Durée Travaux (prévu) :</strong> {{ $projet->duree }}</p>
+								@endif
 								<p><strong>Coût :</strong> {{ $projet->cout }}</p>
 								<p><strong>Zones d'intervention :</strong> {{ $zoneInterventions }}</p>
-								<p><strong>Positionnements Strategiques :</strong> {{ $positionnementStrategiques }}</p>
+								<p>
+									<strong>Positionnement stratégique :</strong>
+									@foreach($projet->positionnementStrategiques as $cadre)
+										{{ $cadre->chemin_complet }}@if(!$loop->last)<br>@endif
+									@endforeach
+								</p>
 							</div>
 						</div>
 					</div>
