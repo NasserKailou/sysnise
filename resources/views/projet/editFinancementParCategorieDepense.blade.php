@@ -48,12 +48,6 @@
 	  
     </div>
 	
-	<script>
-	$(document).ready(function() {
-		$.fn.zTree.init($("#liste_composante"), settingComposante, zNodesComposante);
-		
-	});
-	</script>
 </div>
 
 @endsection

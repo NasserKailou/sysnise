@@ -29,13 +29,33 @@ class PopulationCibleController extends Controller
 		]);
     }
 
-    public function store(PopulationCibleStoreRequest $request)
+    /*public function store(PopulationCibleStoreRequest $request)
     {
         $populationCible = PopulationCible::create($request->validated());
 
         return redirect()->route('population_cibles.index')->with('success', 'mode de financement créée avec succès');
        
-    }
+    }*/
+	public function store(Request $request)
+	{
+		$request->validate([
+			'intitule' => 'required|string|max:255',
+		]);
+
+		$population = PopulationCible::create([
+			'intitule' => $request->intitule
+		]);
+
+		if ($request->ajax()) {
+			return response()->json([
+				'success' => true,
+				'message' => 'Population cible créée avec succès !',
+				'data' => $population
+			]);
+		}
+
+		return redirect()->back()->with('success', 'Population cible créée avec succès !');
+	}
 
     public function show(Request $request, PopulationCible $populationCible)
     {

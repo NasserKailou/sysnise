@@ -48,6 +48,7 @@
                                 <td class="text-left">{{ $population->intitule }}</td>
                                 <td class="text-center table-icons">
                                    <!-- <a href="" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i></a> -->
+								   <a href="{{ route('population_cibles.edit', $population->id) }}" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i></a>
                                     <form action="{{ route('population_cibles.destroy',$population->id) }}" method="POST" style="display:inline-block;">
                                         @csrf
                                         @method('DELETE')

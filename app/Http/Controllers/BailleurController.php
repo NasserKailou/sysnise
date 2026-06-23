@@ -29,13 +29,33 @@ class BailleurController extends Controller
 		]);
     }
 
-    public function store(BailleurStoreRequest $request)
+    /*public function store(BailleurStoreRequest $request)
     {
         $bailleur = Bailleur::create($request->validated());
 
         return redirect()->route('bailleurs.index')->with('success', 'Bailleur créé avec succès');
        
-    }
+    }*/
+	public function store(Request $request)
+	{
+		$request->validate([
+			'intitule' => 'required|string|max:255',
+		]);
+
+		$bailleur = Bailleur::create([
+			'intitule' => $request->intitule
+		]);
+
+		if ($request->ajax()) {
+			return response()->json([
+				'success' => true,
+				'message' => 'Bailleur créé avec succès !',
+				'data' => $bailleur
+			]);
+		}
+
+		return redirect()->back()->with('success', 'Bailleur créé avec succès !');
+	}
 
     public function show(Request $request, Bailleur $bailleur)
     {

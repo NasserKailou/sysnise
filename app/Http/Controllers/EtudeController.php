@@ -29,13 +29,35 @@ class EtudeController extends Controller
 		]);
     }
 
-    public function store(EtudeStoreRequest $request)
+    /*public function store(EtudeStoreRequest $request)
     {
         $etude = Etude::create($request->validated());
 
         return redirect()->route('etudes.index')->with('success', 'période créée avec succès');
        
-    }
+    }*/
+	public function store(Request $request)
+	{
+		$request->validate([
+			'intitule' => 'required|string|max:255',
+		]);
+
+		$etude = Etude::create([
+			'intitule' => $request->intitule
+		]);
+
+		// Si la requête est en AJAX, on retourne une réponse JSON
+		if ($request->ajax()) {
+			return response()->json([
+				'success' => true,
+				'message' => 'Étude créée avec succès !',
+				'data' => $etude
+			]);
+		}
+
+		// Comportement classique pour l'ancien formulaire index.blade.php
+		return redirect()->route('etudes.index')->with('success', 'Étude créée avec succès !');
+	}
 
     public function show(Request $request, Etude $etude)
     {

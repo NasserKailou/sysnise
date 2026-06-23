@@ -8,8 +8,31 @@ CREATE TABLE institution_tutelles
     CONSTRAINT institution_tutelles_pkey PRIMARY KEY (id),
     CONSTRAINT institution_tutelles_intitule_unique UNIQUE (intitule)
 );
-INSERT INTO institution_tutelles (intitule) VALUES
-('Ministère de l''Economie et des Finances');
+
+INSERT INTO institution_tutelles (intitule) VALUES 
+('Ministère des Affaires Etrangères, de la Coopération et des Nigériens à l\'Extérieur'),
+('Ministère de la Défense Nationale'),
+('Ministère de l\'Intérieur, de la Sécurité Publique et de l\'Administration du Territoire'),
+('Ministère de l\'Enseignement Supérieur, de la Recherche et de l\'Innovation Technologique'),
+('Ministère de la Santé et de l\'Hygiène Publiques'),
+('Ministère des Mines'),
+('Ministère de l\'Agriculture et de l\'Elevage'),
+('Ministère de la Justice et des Droits de l\'Homme, Garde des Sceaux'),
+('Ministère de l\'Economie et des Finances'),
+('Ministère du Commerce et de l\'Industrie'),
+('Ministère de l\'Energie'),
+('Ministère de l\'Urbanisme et de l\'Habitat'),
+('Ministère du Pétrole'),
+('Ministère du Tourisme et de l\'Artisanat'),
+('Ministère de la Fonction publique, du Travail et de l\'Emploi'),
+('Ministère de l\'Environnement, de l\'Hydraulique et de l\'Assainissement'),
+('Ministère de la Jeunesse et des Sports'),
+('Ministère de la Communication et des Nouvelles Technologies de l\'Information'),
+('Ministère de l\'Enseignement et de la Formation Techniques et Professionnels'),
+('Ministère de la Population, de l\'Action Sociale et de la Solidarité Nationale'),
+('Ministère des Transports et de l\'Aviation Civile'),
+('Ministère de l\'Équipement et des Infrastructures'),
+('Ministère de l\'Éducation Nationale, de l\'Alphabétisation et de la Promotion des Langues Nationales');
 
 CREATE TABLE users
 (
@@ -189,6 +212,8 @@ CREATE TABLE source_financements
 INSERT INTO source_financements (intitule) VALUES
 ('PTFs'),
 ('ETAT'),
+('Secteur/Promoteur Privé '),
+('Collectivité Territoriale '),
 ('cofinancement Etat/PTFs');
 
 CREATE TABLE source_indicateurs

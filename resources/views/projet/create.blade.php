@@ -505,16 +505,30 @@
                         <input name="prorogation " type="checkbox" class="form-check-input" id="prorogation" checked>
                         <label class="form-check-label" for="prorogation">Prorogation ? </label>
                     </div> -->
-					  
-					<div  class="execution_projet col-md-4 mt-3" style="display:none">
+					<div id="prorogation_check" class="execution_projet col-md-12 mt-3 d-flex align-items-center" style="display:none !important">
+						<label class="form-label mb-0 me-3">
+							Prorogation ?
+						</label>
+
+						<div class="form-check form-check-inline mb-0">
+							<input class="form-check-input" type="radio" name="prorogation_check" id="prorogation_check_oui" value="Oui">
+							<label class="form-check-label" for="oui">Oui</label>
+						</div>
+
+						<div class="form-check form-check-inline mb-0">
+							<input class="form-check-input" type="radio" name="prorogation_check" id="prorogation_check_non" value="Non" checked="checked">
+							<label class="form-check-label" for="non">Non</label>
+						</div>
+					</div>
+					<div  class="prorogation col-md-4 mt-3" style="display:none">
 					  <label class="form-label">date de la prorogation (si applicable)</label>
 					  <input id="date_prorogation" name="date_prorogation" type="date" class="form-control">
 					</div>
-					<div  class="execution_projet col-md-4 mt-3" style="display:none">
+					<div  class="prorogation col-md-4 mt-3" style="display:none">
 					  <label class="form-label">nouvelle date clôture (si prorogation)</label>
 					  <input id="date_cloture_prorogation" name="date_cloture_prorogation" type="date" class="form-control">
 					</div>
-					<div  id="div_duree_prorogation" class="execution_projet col-md-4 mt-3" style="display:none">
+					<div  id="div_duree_prorogation" class="prorogation col-md-4 mt-3" style="display:none">
 					  <label class="form-label"> durée prorogation (si applicable)</label>
 					  <input id="duree_prorogation" name="duree_prorogation" type="number" class="form-control">
 					</div>
@@ -595,13 +609,47 @@ $(document).ready(function() {
 	$.fn.zTree.init($("#liste_chaine_logique"), settingChaineLogique, zNodesChaineLogique);
 	$("#date_debut_prevue, #date_fin_prevue, #date_approbation, #date_fin_effective, #date_cloture_prorogation").on("change", calculerDureeMois);
 	$("#date_prorogation, #date_cloture_prorogation").on("change", calculerDureeProrogation);
+	 // Au changement du radio "choix"
+    $('input[name="prorogation_check"]').on('change', function () {
+
+        if ($(this).val() === 'Oui') {
+            // Afficher les blocs
+            $('.prorogation').slideDown();
+            /*$('#div_duree_prorogation').slideDown();*/
+        } 
+        else {
+            // Masquer les blocs + reset des champs
+            $('.prorogation').slideUp();
+
+            $('#date_prorogation').val('');
+            $('#date_cloture_prorogation').val('');
+            $('#duree_prorogation').val('');
+        }
+    });
+	 // Au changement du radio "choix"
+    $('input[name="choix"]').on('change', function () {
+
+        if ($(this).val() === 'Oui') {
+            // Afficher les blocs
+            $('.prorogation').slideDown();
+            $('#div_duree_prorogation').slideDown();
+        } 
+        else {
+            // Masquer les blocs + reset des champs
+            $('.prorogation').slideUp();
+
+            $('#date_prorogation').val('');
+            $('#date_cloture_prorogation').val('');
+            $('#duree_prorogation').val('');
+        }
+    });
 	$('#statut_projet_id').change(function(){
 		if($(this).val() == 1)
 		{
 			$("#div_duree").removeClass("col-md-4").addClass("col-md-3");
 			$("#div_cout").removeClass("col-md-6").addClass("col-md-3");
 			$("#div_cout_devise").removeClass("col-md-6").addClass("col-md-3");
-			$('#div_date_debut_prevue,#div_date_fin_prevue,.execution_projet').css('display','none');
+			$('#div_date_debut_prevue,#div_date_fin_prevue,.execution_projet,#prorogation_check, .prorogation').css('display','none !important');
 			$('#div_annee_demarrage').css('display','block');
 			
 		}
@@ -611,15 +659,15 @@ $(document).ready(function() {
 			$("#div_cout").removeClass("col-md-3").addClass("col-md-6");
 			$("#div_cout_devise").removeClass("col-md-3").addClass("col-md-6");
 			$('#div_date_debut_prevue,#div_date_fin_prevue').css('display','block');
-			$('#div_annee_demarrage,.execution_projet').css('display','none');
+			$('#div_annee_demarrage,.execution_projet,#prorogation_check,.prorogation').css('display','none !important');
 		}
 		else if($(this).val() == 3)
 		{
 			$("#div_duree").removeClass("col-md-4").addClass("col-md-3");
 			$("#div_cout").removeClass("col-md-3").addClass("col-md-6");
 			$("#div_cout_devise").removeClass("col-md-3").addClass("col-md-6");
-			$('.execution_projet').css('display','block');
-			$('#div_annee_demarrage,#div_date_debut_prevue,#div_date_fin_prevue').css('display','none');
+			$('.execution_projet,#prorogation_check').css('display','block');
+			$('#div_annee_demarrage,#div_date_debut_prevue,#div_date_fin_prevue').css('display','none !important');
 		}
 	});
 	

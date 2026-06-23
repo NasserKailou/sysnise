@@ -21,7 +21,7 @@
 					</div>
 				</div>
 				<div class="mt-3 text-end">
-					<a href="{{ route('projets.show', $projet->id) }}" class="btn btn-secondary"><i class="fa fa-arrow-left"></i> Retour</a>
+					<a href="{{ url()->previous() }}" class="btn btn-secondary"><i class="fa fa-arrow-left"></i> Retour</a>
 					<button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Enregistrer</button>
 				</div>
 			</form>

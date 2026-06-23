@@ -106,18 +106,21 @@ Route::middleware(['auth'])->group(function () {
 		Route::post('financementParComposante', [App\Http\Controllers\ProjetController::class, 'storeFinancementParComposante'])->name('projets.financementParComposante.store');
 		Route::get('editFinancementParComposante/{composante_id}', [App\Http\Controllers\ProjetController::class, 'editFinancementParComposante'])->name('projets.financementParComposante.edit');
 		Route::post('editFinancementParComposante/{planFinancement}', [App\Http\Controllers\ProjetController::class, 'updateFinancementParComposante'])->name('projets.financementParComposante.update');
+		Route::delete('financementParComposante/{composante_id}', [App\Http\Controllers\ProjetController::class, 'destroyFinancementParComposante'])->name('projets.financementParComposante.destroy');
 		
 		//financement par catégorie de dépense
 		Route::get('financementParCategorieDepense', [App\Http\Controllers\ProjetController::class, 'financementParCategorieDepense'])->name('projets.financementParCategorieDepense');
 		Route::post('financementParCategorieDepense', [App\Http\Controllers\ProjetController::class, 'storeFinancementParCategorieDepense'])->name('projets.financementParCategorieDepense.store');
-		Route::get('editFinancementParCategorieDepense/{composante_id}', [App\Http\Controllers\ProjetController::class, 'editFinancementParCategorieDepense'])->name('projets.financementParCategorieDepense.edit');
+		Route::get('editFinancementParCategorieDepense/{categorie_depense_id}', [App\Http\Controllers\ProjetController::class, 'editFinancementParCategorieDepense'])->name('projets.financementParCategorieDepense.edit');
 		Route::post('editFinancementParCategorieDepense/{planFinancement}', [App\Http\Controllers\ProjetController::class, 'updateFinancementParCategorieDepense'])->name('projets.financementParCategorieDepense.update');
+		Route::delete('financementParCategorieDepense/{categorie_depense_id}', [App\Http\Controllers\ProjetController::class, 'destroyFinancementParCategorieDepense'])->name('projets.financementParCategorieDepense.destroy');
 		
 		//financement par Bailleur
 		Route::get('financementParBailleur', [App\Http\Controllers\ProjetController::class, 'financementParBailleur'])->name('projets.financementParBailleur');
 		Route::post('financementParBailleur', [App\Http\Controllers\ProjetController::class, 'storeFinancementParBailleur'])->name('projets.financementParBailleur.store');
-		Route::get('editFinancementParBailleur/{composante_id}', [App\Http\Controllers\ProjetController::class, 'editFinancementParBailleur'])->name('projets.financementParBailleur.edit');
+		Route::get('editFinancementParBailleur/{bailleur_id}', [App\Http\Controllers\ProjetController::class, 'editFinancementParBailleur'])->name('projets.financementParBailleur.edit');
 		Route::post('editFinancementParBailleur/{planFinancement}', [App\Http\Controllers\ProjetController::class, 'updateFinancementParBailleur'])->name('projets.financementParBailleur.update');
+		Route::delete('financementParBailleur/{bailleur_id}', [App\Http\Controllers\ProjetController::class, 'destroyFinancementParBailleur'])->name('projets.financementParBailleur.destroy');
 		
 		//**
 		Route::get('financementParComposante/budgetAnnuelPrevu/{composante_id}', [App\Http\Controllers\ProjetController::class, 'budgetAnnuelPrevuParComposante'])->name('projets.financementParComposante.budgetAnnuelPrevu');

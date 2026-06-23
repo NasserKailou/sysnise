@@ -55,7 +55,7 @@
 											@endif
 										@endif
                                     </td>
-                                    <td class="text-left">{{ $projet->cout ?? '—' }}</td>
+                                    <td class="text-left">{{ $projet->cout ?? '—' }} FCFA</td>
                                     <td class="text-left">{{ $projet->zoneInterventions->pluck('intitule')->implode(', ') }}</td>
                                     <td class="text-center table-icons">
                                         <a href="{{ route('projets.show', $projet->id) }}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Voir le détail">

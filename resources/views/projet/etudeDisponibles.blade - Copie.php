@@ -6,40 +6,37 @@
       <div class="col-md-12 col-lg-12">
         <div class="card">
 		  <div class="card-header">
-			<strong>Plan de Financement</strong>
+			<strong>Etude Disponible : </strong>
 		  </div>
 		  <div class="card-body">
-			<form action="{{ route('projets.planFinancements.budgetAnnuelDepense.store',['projet' => $projet->id,'planFinancement' => $planFinancement->id ]) }}" method="POST">
+			<form action="{{ route('projets.etudeDisponibles.store',['projet' => $projet->id]) }}" method="POST" enctype="multipart/form-data">
 				@csrf
 				<div class="row">
 					<div class="row mb-3">
 						<div class="col-md-6">
-						  <label class="form-label">Année 
+						  <label class="form-label">Etude 
 							<span style="color: red;">*</span>
 						  </label>
-						  <input name="annee" type="text" class="form-control" required>
+						   <select name="etude_id" class="form-select @error('Etude') is-invalid @enderror" required>
+								<option value="">-- Sélectionner une étude --</option>
+								@foreach($etudes as $etude)
+									<option value="{{ $etude->id }}">
+										{{ $etude->intitule }}
+									</option>
+								@endforeach
+								<option value="0">Autre à préciser</option>
+							</select>
 						</div>
 						<div class="col-md-6">
-						  <label class="form-label">Montant 
-							<span style="color: red;">*</span>
-						  </label>
-						  <input name="montant" type="text" class="form-control" required>
+							<label class="form-label">Fichier 
+								<span style="color: red;">*</span>
+							</label>
+							<input name="fichier" type="file" class="form-control" required>
 						</div>
 					</div>
 				</div>
 				<div class="mt-3 text-end">
-					<a href="{{ 
-						route(
-							$planFinancement->bailleur ? 'projets.financementParBailleur' : (
-								($planFinancement->categorieDepense ? 'projets.financementParCategorieDepense' : (
-									($planFinancement->composante ? 'projets.financementParComposante' : 'projets.planFinancements')
-								))
-							),
-							['projet' => $projet->id]
-						) 
-					}}" class="btn btn-secondary">
-						<i class="fa fa-arrow-left"></i> Retour
-					</a>
+					<a href="{{ route('projets.show', $projet->id) }}" class="btn btn-secondary"><i class="fa fa-arrow-left"></i> Retour</a>
 					<button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Enregistrer</button>
 				</div>
 			</form>
@@ -51,25 +48,23 @@
         <div class="col-md-12 col-lg-12">
             <div class="card">
                 <div class="card-header">
-                    <strong>Prévision des montants</strong>
+                    <strong>Etudes Disponibles</strong>
                 </div>
                 <div class="card-body">
                     <table class="dataTable table table-bordered table-striped">
                         <thead>
                             <tr>
-                                <th class="text-left">Année</th>
-								<th class="text-left">Montant</th>
+                                <th class="text-left">Etude</th>
                                 <th class="text-center table-icons">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($budgets as $budget)
+                            @foreach($projet->etudeDisponibles as $ED)
                             <tr>
-                                <td class="text-left">{{ $budget->annee }}</td>
-								<td class="text-left">{{ $budget->montant }}</td>
+                                <td class="text-left">{{ $ED->intitule }}</td>
                                 <td class="text-center table-icons">
-                                    <a href="{{ route('projets.planFinancements.budgetAnnuelDepense.edit', [$projet->id, $budget->id]) }}" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i></a>
-                                    <form action="{{ route('projets.planFinancements.budgetAnnuelDepense.destroy', [$projet->id, $budget->id]) }}" method="POST" style="display:inline-block;">
+                                    <a href="{{ asset('storage/'.$ED->pivot->fichier) }}" target="_blank" class="btn btn-sm btn-success"><i class="fa fa-download"></i></a>
+									<form action="{{ route('projets.etudeDisponibles.destroy',[$projet->id,$ED->id]) }}" method="POST" style="display:inline-block;">
                                         @csrf
                                         @method('DELETE')
                                         <button class="btn btn-sm btn-danger" onclick="return confirm('Confirmer la suppression ?')"><i class="fa fa-trash"></i></button>

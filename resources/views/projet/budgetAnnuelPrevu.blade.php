@@ -14,13 +14,13 @@
 				<div class="row">
 					<div class="row mb-3">
 						
-						<div class="col-md-4">
+						<div class="col-md-6">
 						  <label class="form-label">Année 
 							<span style="color: red;">*</span>
 						  </label>
 						  <input name="annee" type="text" class="form-control" required>
 						</div>
-						<div class="col-md-4">
+						<div class="col-md-6">
 						  <label class="form-label">Montant 
 							<span style="color: red;">*</span>
 						  </label>
@@ -29,7 +29,18 @@
 					</div>
 				</div>
 				<div class="mt-3 text-end">
-					<a href="{{ route('projets.planFinancements', ['projet' => $projet->id])  }}" class="btn btn-secondary"><i class="fa fa-arrow-left"></i> Retour</a>
+					<a href="{{ 
+						route(
+							$planFinancement->bailleur ? 'projets.financementParBailleur' : (
+								($planFinancement->categorieDepense ? 'projets.financementParCategorieDepense' : (
+									($planFinancement->composante ? 'projets.financementParComposante' : 'projets.planFinancements')
+								))
+							),
+							['projet' => $projet->id]
+						) 
+					}}" class="btn btn-secondary">
+						<i class="fa fa-arrow-left"></i> Retour
+					</a>
 					<button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Enregistrer</button>
 				</div>
 			</form>

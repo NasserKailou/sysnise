@@ -61,17 +61,17 @@
 							<div class="col-md-6">
 								@if($projet->statutProjet?->id == 1)
 									<p><strong>Année Démarrage :</strong> {{ $projet->annee_demarrage ?? '—' }}</p>
-									<p><strong>Durée Travaux (prévu) :</strong> {{ $projet->duree }}</p>
+									<p><strong>Durée du Projet (mois) :</strong> {{ $projet->duree }}</p>
 								@elseif ($projet->statutProjet->id == 2)
 									<p><strong>Date d'approbation :</strong> {{ $projet->date_debut_prevue }}</p>
 									<p><strong>Date de clôture :</strong> {{ $projet->date_fin_prevue }}</p>
-									<p><strong>Durée Travaux (prévu) :</strong> {{ $projet->duree }}</p>
+									<p><strong>Durée du Projet (mois) :</strong> {{ $projet->duree }}</p>
 								@elseif ($projet->statutProjet->id == 3)
 									<p><strong>Date d'approbation :</strong> {{ $projet->date_approbation }}</p>
 									<p><strong>Date initiale de clôture :</strong> {{ $projet->date_fin_effective }}</p>
-									<p><strong>Durée Travaux (prévu) :</strong> {{ $projet->duree }}</p>
+									<p><strong>Durée du Projet (mois) :</strong> {{ $projet->duree }}</p>
 								@endif
-								<p><strong>Coût :</strong> {{ $projet->cout }}</p>
+								<p><strong>Coût :</strong> {{ $projet->cout }} FCFA</p>
 								<p><strong>Zones d'intervention :</strong> {{ $zoneInterventions }}</p>
 								<p>
 									<strong>Positionnement stratégique :</strong>

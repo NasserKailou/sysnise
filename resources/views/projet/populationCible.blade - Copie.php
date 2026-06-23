@@ -6,40 +6,36 @@
       <div class="col-md-12 col-lg-12">
         <div class="card">
 		  <div class="card-header">
-			<strong>Plan de Financement</strong>
+			<strong>Population cible du projet : </strong>
 		  </div>
 		  <div class="card-body">
-			<form action="{{ route('projets.planFinancements.budgetAnnuelDepense.store',['projet' => $projet->id,'planFinancement' => $planFinancement->id ]) }}" method="POST">
+			<form action="{{ route('projets.populationCibles.store',['projet' => $projet->id]) }}" method="POST">
 				@csrf
 				<div class="row">
 					<div class="row mb-3">
 						<div class="col-md-6">
-						  <label class="form-label">Année 
+						  <label class="form-label">Population cible 
 							<span style="color: red;">*</span>
 						  </label>
-						  <input name="annee" type="text" class="form-control" required>
+						   <select name="population_cible_id" class="form-select @error('PopulationCible') is-invalid @enderror" required>
+								<option value="">-- Sélectionner la population cible --</option>
+								@foreach($populationCibles as $population)
+									<option value="{{ $population->id }}">
+										{{ $population->intitule }}
+									</option>
+								@endforeach
+							</select>
 						</div>
 						<div class="col-md-6">
-						  <label class="form-label">Montant 
+						  <label class="form-label">Effectif 
 							<span style="color: red;">*</span>
 						  </label>
-						  <input name="montant" type="text" class="form-control" required>
+						  <input name="effectif" type="text" class="form-control" required>
 						</div>
 					</div>
 				</div>
 				<div class="mt-3 text-end">
-					<a href="{{ 
-						route(
-							$planFinancement->bailleur ? 'projets.financementParBailleur' : (
-								($planFinancement->categorieDepense ? 'projets.financementParCategorieDepense' : (
-									($planFinancement->composante ? 'projets.financementParComposante' : 'projets.planFinancements')
-								))
-							),
-							['projet' => $projet->id]
-						) 
-					}}" class="btn btn-secondary">
-						<i class="fa fa-arrow-left"></i> Retour
-					</a>
+					<a href="{{ route('projets.show', $projet->id) }}" class="btn btn-secondary"><i class="fa fa-arrow-left"></i> Retour</a>
 					<button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Enregistrer</button>
 				</div>
 			</form>
@@ -51,25 +47,25 @@
         <div class="col-md-12 col-lg-12">
             <div class="card">
                 <div class="card-header">
-                    <strong>Prévision des montants</strong>
+                    <strong>Populations Cibles</strong>
                 </div>
                 <div class="card-body">
                     <table class="dataTable table table-bordered table-striped">
                         <thead>
                             <tr>
-                                <th class="text-left">Année</th>
-								<th class="text-left">Montant</th>
+                                <th class="text-left">Poulation Cible</th>
+								<th class="text-left">Effectif</th>
                                 <th class="text-center table-icons">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($budgets as $budget)
+                            @foreach($projet->PopulationCibles as $cible)
                             <tr>
-                                <td class="text-left">{{ $budget->annee }}</td>
-								<td class="text-left">{{ $budget->montant }}</td>
+                                <td class="text-left">{{ $cible->intitule }}</td>
+								<td class="text-left">{{ $cible->pivot->effectif }}</td>
                                 <td class="text-center table-icons">
-                                    <a href="{{ route('projets.planFinancements.budgetAnnuelDepense.edit', [$projet->id, $budget->id]) }}" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i></a>
-                                    <form action="{{ route('projets.planFinancements.budgetAnnuelDepense.destroy', [$projet->id, $budget->id]) }}" method="POST" style="display:inline-block;">
+                                    <a href="{{ route('projets.populationCibles.edit', [$projet->id,$cible->id]) }}" class="btn btn-sm btn-primary"><i class="fa fa-edit"></i></a>
+                                    <form action="{{ route('projets.populationCibles.destroy',[$projet->id,$cible->id]) }}" method="POST" style="display:inline-block;">
                                         @csrf
                                         @method('DELETE')
                                         <button class="btn btn-sm btn-danger" onclick="return confirm('Confirmer la suppression ?')"><i class="fa fa-trash"></i></button>

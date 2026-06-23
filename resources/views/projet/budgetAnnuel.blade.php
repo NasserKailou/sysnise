@@ -28,7 +28,18 @@
 					</div>
 				</div>
 				<div class="mt-3 text-end">
-					<a href="{{ route('projets.planFinancements', ['projet' => $projet->id])  }}" class="btn btn-secondary"><i class="fa fa-arrow-left"></i> Retour</a>
+					<a href="{{ 
+						route(
+							$planFinancement->bailleur ? 'projets.financementParBailleur' : (
+								($planFinancement->categorieDepense ? 'projets.financementParCategorieDepense' : (
+									($planFinancement->composante ? 'projets.financementParComposante' : 'projets.planFinancements')
+								))
+							),
+							['projet' => $projet->id]
+						) 
+					}}" class="btn btn-secondary">
+						<i class="fa fa-arrow-left"></i> Retour
+					</a>
 					<button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Enregistrer</button>
 				</div>
 			</form>

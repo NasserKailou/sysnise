@@ -29,13 +29,33 @@ class CategorieDepenseController extends Controller
 		]);
     }
 
-    public function store(CategorieDepenseStoreRequest $request)
+    /*public function store(CategorieDepenseStoreRequest $request)
     {
         $categorieDepense = CategorieDepense::create($request->validated());
 
         return redirect()->route('categorie_depenses.index')->with('success', 'catégotrie dépense créée avec succès');
        
-    }
+    }*/
+	public function store(Request $request)
+	{
+		$request->validate([
+			'intitule' => 'required|string|max:255',
+		]);
+
+		$categorie = CategorieDepense::create([
+			'intitule' => $request->intitule
+		]);
+
+		if ($request->ajax()) {
+			return response()->json([
+				'success' => true,
+				'message' => 'Catégorie de dépense créée avec succès !',
+				'data' => $categorie
+			]);
+		}
+
+		return redirect()->back()->with('success', 'Catégorie de dépense créée avec succès !');
+	}
 
     public function show(Request $request, CategorieDepense $categorieDepense)
     {
