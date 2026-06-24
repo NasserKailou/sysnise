@@ -9,25 +9,24 @@
 			<strong>Plan de Financement du projet : </strong>
 		  </div>
 		  <div class="card-body">
-			<form action="{{ route('projets.financementParBailleur.store',['projet' => $projet->id]) }}" method="POST">
+			<form action="{{ route('projets.financementParCategorieDepense.store',['projet' => $projet->id]) }}" method="POST">
 				@csrf
 				<div class="row">
 					<div class="row mb-3">
 						<div class="col-md-12">
-						  <label class="form-label">Bailleur 
+						  <label class="form-label">Catégorie de dépense 
 							<span style="color: red;">*</span>
 						  </label>
-						   <select name="bailleur_id" id="bailleurSelect" class="form-select @error('PFT') is-invalid @enderror" required>
-								<option value="">-- Sélectionner un Bailleur --</option>
-								@foreach($bailleurs as $bailleur)
-									<option value="{{ $bailleur->id }}">
-										{{ $bailleur->intitule }}
+						   <select name="categorie_depense_id" id="categorieDepenseSelect" class="form-select @error('categorieDepense') is-invalid @enderror" required>
+								<option value="">-- Sélectionner une catégorie --</option>
+								@foreach($categorieDepenses as $categorie)
+									<option value="{{ $categorie->id }}">
+										{{ $categorie->intitule }}
 									</option>
 								@endforeach
 								<option value="0">Autre à préciser</option>
 							</select>
 						</div>
-						
 						<div class="col-md-12">
 						  <label class="form-label">Montant (FCFA) 
 							<span style="color: red;">*</span>
@@ -48,34 +47,35 @@
 	  <div class="col-md-12 col-lg-12">
             <div class="card">
                 <div class="card-header">
-                    <strong>Financements par Bailleur</strong>
+                    <strong>Plan de Financement</strong>
                 </div>
                 <div class="card-body">
                     <table class="dataTable table table-bordered table-striped">
                         <thead>
                             <tr>
-                                <th class="text-left">Composante</th>
-								<th class="text-left">Financement Total PAD</th>
-								<th class="text-left">Financement annuel cumulé à date</th>
-								<th class="text-left">Montant Budgetisé cumulé à date</th>
-								<th class="text-left">Montant Dépensé cumulé à date</th>
+                                <th class="text-left">Catégorie de dépense</th>
+								<th class="text-left">Coût</th>
+								<th class="text-left">Mont. Budgétisé</th>
+								<th class="text-left">Mont. PTBA</th>
+								<th class="text-left">Mont. Dépensé</th>
                                 <th class="text-center table-icons">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($planFinancements as $financement)
                             <tr>
-                                <td class="text-left">{{ $financement->bailleur?->intitule }}</td>
-								<td class="text-left">{{ number_format($financement->montant, 0, ',', ' ') }} FCFA</td>
-								<td class="text-left">{{ $financement?->budgetsAnnuels()->sum('montant') ?? 0  }}</td>
+                                <td class="text-left">{{ $financement->categorieDepense->intitule ?? '-'  }}</td>
+								<td class="text-left">{{ $financement->montant ?? '-' }}</td>
+                                <td class="text-left">{{ $financement?->budgetsAnnuels()->sum('montant') ?? 0  }}</td>
                                 <td class="text-left">{{ $financement?->budgetsAnnuelsPrevus()->sum('montant') ?? 0  }}</td>
                                 <td class="text-left">{{ $financement?->budgetsAnnuelsDepenses()->sum('montant') ?? 0  }}</td>
-                                <td class="text-center table-icons">
-									<a href="{{ route('projets.financementParBailleur.edit', [$projet->id,$financement?->bailleur->id]) }}" class="btn btn-sm btn-secondary" data-bs-toggle="tooltip" data-bs-placement="top" title="Modifier"><i class="fa fa-edit"></i></a>
+								
+								<td class="text-center table-icons">
+                                    <a href="{{ route('projets.financementParCategorieDepense.edit', [$projet->id,$financement?->categorieDepense->id]) }}" class="btn btn-sm btn-secondary" data-bs-toggle="tooltip" data-bs-placement="top" title="Modifier"><i class="fa fa-edit"></i></a>
 									<a href="{{ route('projets.planFinancements.budgetAnnuel', [$projet->id,$financement?->id]) }}" class="btn btn-sm btn-success" data-bs-toggle="tooltip" data-bs-placement="top" title="Montant budgétisé"><i class="fa fa-hand-holding-dollar"></i></a>
 									<a href="{{ route('projets.planFinancements.budgetAnnuelPrevu', [$projet->id,$financement?->id]) }}" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Montant prévu"><i class="fa fa-money-bill-wave"></i></a>
 									<a href="{{ route('projets.planFinancements.budgetAnnuelDepense', [$projet->id,$financement?->id]) }}" class="btn btn-sm btn-warning" data-bs-toggle="tooltip" data-bs-placement="top" title="Montant dépensé"><i class="fa fa-arrow-trend-down"></i></a>
-									<form action="{{ route('projets.financementParBailleur.destroy',[$projet->id,$financement?->bailleur->id]) }}" method="POST" style="display:inline-block;">
+									<form action="{{ route('projets.financementParCategorieDepense.destroy',[$projet->id,$financement?->categorieDepense->id]) }}" method="POST" style="display:inline-block;">
                                         @csrf
                                         @method('DELETE')
                                         <button class="btn btn-sm btn-danger" onclick="return confirm('Confirmer la suppression ?')"><i class="fa fa-trash"></i></button>
@@ -90,21 +90,22 @@
         </div>
 	  
     </div>
+	
 </div>
 
-<div class="modal fade" id="addBailleurModal" tabindex="-1" aria-labelledby="addBailleurModalLabel" aria-hidden="true">
+<div class="modal fade" id="addCategorieModal" tabindex="-1" aria-labelledby="addCategorieModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addBailleurModalLabel">Nouveau Bailleur</h5>
+                <h5 class="modal-title" id="addCategorieModalLabel">Nouvelle catégorie de dépense</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-content-body p-3">
-                <form id="ajaxBailleurForm">
+                <form id="ajaxCategorieForm">
                     @csrf
                     <div class="mb-3">
-                        <label class="form-label">Intitulé / Nom du bailleur</label>
-                        <input name="intitule" id="newBailleurIntitule" type="text" class="form-control" required>
+                        <label class="form-label">Intitulé de la catégorie</label>
+                        <input name="intitule" id="newCategorieIntitule" type="text" class="form-control" required>
                     </div>
                     <div class="text-end">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
@@ -120,23 +121,23 @@
 <script>
 $(document).ready(function() {
     // Détecter le choix "Autre à préciser"
-    $('#bailleurSelect').on('change', function() {
+    $('#categorieDepenseSelect').on('change', function() {
         if ($(this).val() === '0') {
             // Afficher le modal Bootstrap
-            var myModal = new bootstrap.Modal(document.getElementById('addBailleurModal'));
+            var myModal = new bootstrap.Modal(document.getElementById('addCategorieModal'));
             myModal.show();
         }
     });
 
-    // Envoi du formulaire de création de bailleur en AJAX
-    $('#ajaxBailleurForm').on('submit', function(e) {
+    // Envoi du formulaire de création de catégorie en AJAX
+    $('#ajaxCategorieForm').on('submit', function(e) {
         e.preventDefault();
 
-        let intitule = $('#newBailleurIntitule').val();
+        let intitule = $('#newCategorieIntitule').val();
         let token = $("input[name='_token']").val();
 
         $.ajax({
-            url: "{{ route('bailleurs.store') }}",
+            url: "{{ route('categorie_depenses.store') }}",
             type: "POST",
             data: {
                 _token: token,
@@ -144,14 +145,14 @@ $(document).ready(function() {
             },
             success: function(response) {
                 if(response.success) {
-                    // 1. Ajouter le nouveau bailleur créé au select juste avant "Autre à préciser"
-                    $('#bailleurSelect option[value="0"]').before(
+                    // 1. Ajouter la nouvelle catégorie au select juste avant "Autre à préciser"
+                    $('#categorieDepenseSelect option[value="0"]').before(
                         `<option value="${response.data.id}" selected>${response.data.intitule}</option>`
                     );
                     
                     // 2. Réinitialiser le formulaire et masquer le modal
-                    $('#ajaxBailleurForm')[0].reset();
-                    var modalElement = document.getElementById('addBailleurModal');
+                    $('#ajaxCategorieForm')[0].reset();
+                    var modalElement = document.getElementById('addCategorieModal');
                     var modalInstance = bootstrap.Modal.getInstance(modalElement);
                     modalInstance.hide();
                 } else {
@@ -159,15 +160,15 @@ $(document).ready(function() {
                 }
             },
             error: function(xhr) {
-                alert("Erreur serveur : Impossible d'ajouter le bailleur.");
+                alert("Erreur serveur : Impossible d'ajouter la catégorie de dépense.");
             }
         });
     });
 
     // Si le modal est fermé sans enregistrement, on réinitialise la sélection
-    $('#addBailleurModal').on('hidden.bs.modal', function () {
-        if($('#bailleurSelect').val() === '0'){
-            $('#bailleurSelect').val('');
+    $('#addCategorieModal').on('hidden.bs.modal', function () {
+        if($('#categorieDepenseSelect').val() === '0'){
+            $('#categorieDepenseSelect').val('');
         }
     });
 });

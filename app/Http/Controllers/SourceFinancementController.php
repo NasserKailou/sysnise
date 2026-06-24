@@ -29,13 +29,35 @@ class SourceFinancementController extends Controller
 		]);
     }
 
-    public function store(SourceFinancementStoreRequest $request)
+    /*public function store(SourceFinancementStoreRequest $request)
     {
         $sourceFinancement = SourceFinancement::create($request->validated());
 
         return redirect()->route('source_financements.index')->with('success', 'source de financement créée avec succès');
        
-    }
+    }*/
+	public function store(Request $request)
+	{
+		$request->validate([
+			'intitule' => 'required|string|max:255',
+		]);
+
+		$sourceFinancement = SourceFinancement::create([
+			'intitule' => $request->intitule
+		]);
+
+		// Si la requête est en AJAX, on retourne une réponse JSON
+		if ($request->ajax()) {
+			return response()->json([
+				'success' => true,
+				'message' => 'Source de financement créée avec succès !',
+				'data' => $sourceFinancement
+			]);
+		}
+
+		// Comportement classique / de secours
+		return redirect()->back()->with('success', 'Source de financement créée avec succès !');
+	}
 
     public function show(Request $request, SourceFinancement $sourceFinancement)
     {

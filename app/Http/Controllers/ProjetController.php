@@ -343,7 +343,7 @@ class ProjetController extends Controller
     {
 		return view('projet.editCadreProjet', [
             'projet' => $projet,
-			'breadcrumb' => 'Projet > Mise à jour projet',
+			'breadcrumb' => 'Projet > Cadre de Résultats ',
         ]);
 	}
 	

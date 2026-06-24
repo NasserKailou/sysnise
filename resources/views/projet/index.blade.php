@@ -64,12 +64,18 @@
                                         <a href="{{ route('projets.edit', $projet->id) }}" class="btn btn-success btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Modifier">
                                             <i class="fa fa-edit"></i>
                                         </a>
+										<a href="{{ route('cadre_developpements.cadres_logiques.index', $projet->cadreDeveloppement->id) }}" class="btn btn-info btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Cadre de résultat">
+											<i class="fa fa-list"></i>
+										</a>
+										<a href="{{ route('export_cadre_data_template', $projet->cadreDeveloppement->id) }}" class="btn btn-warning btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Télécharger modèle de chargement">
+											<i class="fa fa-download"></i>
+										</a>
                                         
                                         <!-- Bouton pour voir les associations -->
                                         <button class="btn btn-dark btn-sm open-modal viewAssociationsModal"
 											data-id="{{ $projet->id }}"
 											data-intitule="{{ $projet->intitule }}"
-											data-bs-toggle="modal">
+											data-bs-toggle="modal" data-bs-toggle="tooltip" data-bs-placement="top" title="Liste des utilisateurs ayant accès au cadre">
 											<i class="fa fa-list-alt"></i>
 										</button>
                                         
@@ -77,7 +83,7 @@
                                         <button class="btn btn-secondary btn-sm open-association-modal associationModal"
 											data-id="{{ $projet->id }}"
 											data-intitule="{{ $projet->intitule }}"
-											data-bs-toggle="modal">
+											data-bs-toggle="modal" data-bs-placement="top" title="Autoriser l'accès au cadre à un utilisateur">
 											<i class="fa fa-link"></i>
 										</button>
 										

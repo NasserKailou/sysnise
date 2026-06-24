@@ -31,8 +31,10 @@ class CadreLogiqueController extends Controller
 
         $indicateurs = Indicateur::all();
         $cadre_logiques = CadreLogique::getHierarchyByCadreDeveloppement($cadre_developpement_id);
-        $breadcrumb = 'Cadres stratégiques > Cadre de Résultat';
-        return view('cadreLogique.index', compact('breadcrumb', 'cadreDeveloppement', 'cadre_logiques', 'indicateurs'));
+		//$breadcrumb = 'Cadres stratégiques > Cadre de Résultat';
+        $breadcrumb = 'Cadre de Résultat';
+        
+		return view('cadreLogique.index', compact('breadcrumb', 'cadreDeveloppement', 'cadre_logiques', 'indicateurs'));
     }
 
     public function showUploadForm($cadre_developpement_id)

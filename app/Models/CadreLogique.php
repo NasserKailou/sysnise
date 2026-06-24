@@ -175,7 +175,7 @@ class CadreLogique extends Model
 		return $this->hasOne(ComposanteProduit::class, 'produit_id');
 	}
 	
-	public function getCheminCompletAttribute()
+	public function getCheminCompletAttribute_v0()
 	{
 		$hierarchie = [];
 		$courant = $this;
@@ -186,6 +186,60 @@ class CadreLogique extends Model
 		}
 
 		return implode(' -> ', $hierarchie);
+	}
+	
+	public function getCheminCompletAttribute_nok()
+	{
+		$hierarchie = [];
+
+		// Recherche du cadre de développement associé
+		$cadreDeveloppement = $this->orientations()
+			->with('cadreDeveloppement')
+			->first()?->cadreDeveloppement;
+
+		if ($cadreDeveloppement) {
+			$hierarchie[] = $cadreDeveloppement->intitule;
+		}
+
+		// Construction de la hiérarchie des cadres logiques
+		$courant = $this;
+
+		while ($courant) {
+			$hierarchie[] = $courant->intitule;
+			$courant = $courant->parent;
+		}
+
+		return implode(' -> ', $hierarchie);
+	}
+	
+	public function getCheminCompletAttribute()
+	{
+		$hierarchie = [];
+
+		// Remonter jusqu'à la racine
+		$racine = $this;
+
+		while ($racine->parent) {
+			$racine = $racine->parent;
+		}
+
+		// Cadre de développement associé à la racine
+		$orientation = $racine->orientations()->with('cadreDeveloppement')->first();
+
+		if ($orientation && $orientation->cadreDeveloppement) {
+			$hierarchie[] = $orientation->cadreDeveloppement->intitule;
+		}
+
+		// Construire la hiérarchie depuis la racine jusqu'au nœud courant
+		$courant = $this;
+		$niveaux = [];
+
+		while ($courant) {
+			array_unshift($niveaux, $courant->intitule);
+			$courant = $courant->parent;
+		}
+
+		return implode(' -> ', array_merge($hierarchie, $niveaux));
 	}
 	
 }

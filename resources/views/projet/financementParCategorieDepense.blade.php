@@ -53,11 +53,11 @@
                     <table class="dataTable table table-bordered table-striped">
                         <thead>
                             <tr>
-                                <th class="text-left">Catégorie de dépense</th>
-								<th class="text-left">Coût</th>
-								<th class="text-left">Mont. Budgétisé</th>
-								<th class="text-left">Mont. PTBA</th>
-								<th class="text-left">Mont. Dépensé</th>
+                                <th class="text-left">Composante</th>
+								<th class="text-left">Financement Total PAD</th>
+								<th class="text-left">Financement annuel cumulé à date</th>
+								<th class="text-left">Montant Budgetisé cumulé à date</th>
+								<th class="text-left">Montant Dépensé cumulé à date</th>
                                 <th class="text-center table-icons">Actions</th>
                             </tr>
                         </thead>

@@ -30,13 +30,14 @@
 						  <label class="form-label">Source de Financement 
 							<span style="color: red;">*</span>
 						  </label>
-						   <select name="source_financement_id" class="form-select @error('Etude') is-invalid @enderror" required>
+						   <select name="source_financement_id" id="sourceFinancementSelect" class="form-select @error('Etude') is-invalid @enderror" required>
 								<option value="">-- Sélectionner une source de financement --</option>
 								@foreach($sourceFinancements as $source)
 									<option value="{{ $source->id }}">
 										{{ $source->intitule }}
 									</option>
 								@endforeach
+								<option value="0">Autre à préciser</option>
 							</select>
 						</div>
 					</div>
@@ -112,59 +113,111 @@
     </div>
 </div>
 
+<div class="modal fade" id="addSourceFinancementModal" tabindex="-1" aria-labelledby="addSourceFinancementModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addSourceFinancementModalLabel">Nouvelle source de financement</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-content-body p-3">
+                <form id="ajaxSourceFinancementForm">
+                    @csrf
+                    <div class="mb-3">
+                        <label class="form-label">Intitulé de la source</label>
+                        <input name="intitule" id="newSourceFinancementIntitule" type="text" class="form-control" required>
+                    </div>
+                    <div class="text-end">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                        <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Enregistrer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 $(document).ready(function() {
-    // Détecter le choix "Autre à préciser"
+    
+    // ==========================================
+    // 1. GESTION DYNAMIQUE DU SELECT ÉTUDE
+    // ==========================================
     $('#etudeSelect').on('change', function() {
         if ($(this).val() === '0') {
-            // Initialiser et afficher le modal Bootstrap
             var myModal = new bootstrap.Modal(document.getElementById('addEtudeModal'));
             myModal.show();
         }
     });
 
-    // Soumission du formulaire en AJAX
     $('#ajaxEtudeForm').on('submit', function(e) {
         e.preventDefault();
-
         let intitule = $('#newEtudeIntitule').val();
         let token = $("input[name='_token']").val();
 
         $.ajax({
             url: "{{ route('etudes.store') }}",
             type: "POST",
-            data: {
-                _token: token,
-                intitule: intitule
-            },
+            data: { _token: token, intitule: intitule },
             success: function(response) {
                 if(response.success) {
-                    // 1. Ajouter la nouvelle étude au select juste avant l'option "Autre"
                     $('#etudeSelect option[value="0"]').before(
                         `<option value="${response.data.id}" selected>${response.data.intitule}</option>`
                     );
-                    
-                    // 2. Réinitialiser le formulaire du modal et fermer le modal
                     $('#ajaxEtudeForm')[0].reset();
-                    var modalElement = document.getElementById('addEtudeModal');
-                    var modalInstance = bootstrap.Modal.getInstance(modalElement);
+                    var modalInstance = bootstrap.Modal.getInstance(document.getElementById('addEtudeModal'));
                     modalInstance.hide();
                 } else {
-                    alert("Une erreur est survenue lors de l'enregistrement.");
+                    alert("Une erreur est survenue.");
                 }
             },
-            error: function(xhr) {
-                alert("Erreur serveur : Impossible d'ajouter l'étude.");
-            }
+            error: function() { alert("Erreur serveur : Impossible d'ajouter l'étude."); }
         });
     });
 
-    // Si l'utilisateur ferme le modal sans enregistrer, on remet le select à la valeur par défaut
     $('#addEtudeModal').on('hidden.bs.modal', function () {
-        if($('#etudeSelect').val() === '0'){
-            $('#etudeSelect').val('');
+        if($('#etudeSelect').val() === '0') { $('#etudeSelect').val(''); }
+    });
+
+    // ==========================================
+    // 2. GESTION DYNAMIQUE DU SELECT SOURCE FINANCEMENT
+    // ==========================================
+    $('#sourceFinancementSelect').on('change', function() {
+        if ($(this).val() === '0') {
+            var myModal = new bootstrap.Modal(document.getElementById('addSourceFinancementModal'));
+            myModal.show();
         }
+    });
+
+    $('#ajaxSourceFinancementForm').on('submit', function(e) {
+        e.preventDefault();
+        let intitule = $('#newSourceFinancementIntitule').val();
+        let token = $("input[name='_token']").val();
+
+        $.ajax({
+            url: "{{ route('source_financements.store') }}", // Modifiez cette route si le nom exact est différent
+            type: "POST",
+            data: { _token: token, intitule: intitule },
+            success: function(response) {
+                if(response.success) {
+                    // Ajouter l'élément juste avant l'option "Autre à préciser"
+                    $('#sourceFinancementSelect option[value="0"]').before(
+                        `<option value="${response.data.id}" selected>${response.data.intitule}</option>`
+                    );
+                    $('#ajaxSourceFinancementForm')[0].reset();
+                    var modalInstance = bootstrap.Modal.getInstance(document.getElementById('addSourceFinancementModal'));
+                    modalInstance.hide();
+                } else {
+                    alert("Une erreur est survenue.");
+                }
+            },
+            error: function() { alert("Erreur serveur : Impossible d'ajouter la source de financement."); }
+        });
+    });
+
+    $('#addSourceFinancementModal').on('hidden.bs.modal', function () {
+        if($('#sourceFinancementSelect').val() === '0') { $('#sourceFinancementSelect').val(''); }
     });
 });
 </script>

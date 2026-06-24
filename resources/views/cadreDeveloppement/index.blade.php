@@ -30,19 +30,19 @@
                                 <td>{{ $cadre->annee_debut }} - {{ $cadre->annee_fin }}</td>
                                 <td class="text-center table-icons">
 
-                                    <a href="{{ route('cadre_developpements.show', $cadre->id) }}" class="btn btn-primary btn-sm">
+                                    <a href="{{ route('cadre_developpements.show', $cadre->id) }}" class="btn btn-primary btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Voir le détail">
                                         <i class="fa fa-eye"></i>
                                     </a>
 
-                                    <a href="{{ route('cadre_developpements.cadres_logiques.index', $cadre->id) }}" class="btn btn-info btn-sm">
+                                    <a href="{{ route('cadre_developpements.cadres_logiques.index', $cadre->id) }}" class="btn btn-info btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Cadre de résultat">
                                         <i class="fa fa-list"></i>
                                     </a>
 
-                                    <a href="{{ route('cadre_developpements.edit', $cadre->id) }}" class="btn btn-success btn-sm">
+                                    <a href="{{ route('cadre_developpements.edit', $cadre->id) }}" class="btn btn-success btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Modifier">
                                         <i class="fa fa-pen"></i>
                                     </a>
 
-                                    <a href="{{ route('export_cadre_data_template', $cadre->id) }}" class="btn btn-warning btn-sm">
+                                    <a href="{{ route('export_cadre_data_template', $cadre->id) }}" class="btn btn-warning btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Télécharger modèle de chargement">
                                         <i class="fa fa-download"></i>
                                     </a>
 
@@ -50,7 +50,7 @@
                                     <button class="btn btn-dark btn-sm open-modal viewAssociationsModal"
                                         data-id="{{ $cadre->id }}"
                                         data-intitule="{{ $cadre->intitule }}"
-                                        data-bs-toggle="modal">
+                                        data-bs-toggle="modal" data-bs-toggle="tooltip" data-bs-placement="top" title="Liste des utilisateurs ayant accès au cadre">
                                         <i class="fa fa-list-alt"></i>
                                     </button>
 
@@ -58,14 +58,14 @@
                                     <button class="btn btn-secondary btn-sm open-association-modal associationModal"
                                         data-id="{{ $cadre->id }}"
                                         data-intitule="{{ $cadre->intitule }}"
-                                        data-bs-toggle="modal">
+                                        data-bs-toggle="modal" data-bs-toggle="tooltip" data-bs-placement="top" title="Autoriser l'accès au cadre à un utilisateur">
                                         <i class="fa fa-link"></i>
                                     </button>
 
                                     <form action="{{ route('cadre_developpements.destroy', $cadre->id) }}" method="POST" class="d-inline">
                                         @csrf
                                         @method('DELETE')
-                                        <button class="btn btn-danger btn-sm" onclick="return confirm('Supprimer cet élément ?')">
+                                        <button class="btn btn-danger btn-sm" onclick="return confirm('Supprimer cet élément ?')" data-bs-toggle="tooltip" data-bs-placement="top" title="Supprimer le cadre">
                                             <i class="fa fa-trash"></i>
                                         </button>
                                     </form>

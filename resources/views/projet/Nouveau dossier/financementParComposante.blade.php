@@ -162,10 +162,10 @@
                         <thead>
                             <tr>
                                 <th class="text-left">Composante</th>
-								<th class="text-left">Financement Total PAD</th>
-								<th class="text-left">Financement annuel cumulé à date</th>
-								<th class="text-left">Montant Budgetisé cumulé à date</th>
-								<th class="text-left">Montant Dépensé cumulé à date</th>
+								<th class="text-left">Coût Total PAD</th>
+								<th class="text-left">Coût annuel PAD</th>
+								<th class="text-left">Budget PTBA</th>
+								<th class="text-left">Mont. Dépensé</th>
                                 <th class="text-center table-icons">Actions</th>
                             </tr>
                         </thead>
