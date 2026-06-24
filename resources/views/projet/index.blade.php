@@ -69,7 +69,7 @@
 											<i class="fa fa-list"></i>
 										</a>
 										@endif
-										@if (!$projet->cadreDeveloppement)
+										@if ($projet->cadreDeveloppement)
 										<a href="{{ route('export_cadre_data_template', $projet->cadreDeveloppement->id) }}" class="btn btn-warning btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Télécharger modèle de chargement">
 											<i class="fa fa-download"></i>
 										</a>
