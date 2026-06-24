@@ -64,12 +64,16 @@
                                         <a href="{{ route('projets.edit', $projet->id) }}" class="btn btn-success btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Modifier">
                                             <i class="fa fa-edit"></i>
                                         </a>
+										@if ($projet->cadreDeveloppement)
 										<a href="{{ route('cadre_developpements.cadres_logiques.index', $projet->cadreDeveloppement->id) }}" class="btn btn-info btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Cadre de résultat">
 											<i class="fa fa-list"></i>
 										</a>
+										@endif
+										@if (!$projet->cadreDeveloppement)
 										<a href="{{ route('export_cadre_data_template', $projet->cadreDeveloppement->id) }}" class="btn btn-warning btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Télécharger modèle de chargement">
 											<i class="fa fa-download"></i>
 										</a>
+										@endif
                                         
                                         <!-- Bouton pour voir les associations -->
                                         <button class="btn btn-dark btn-sm open-modal viewAssociationsModal"
