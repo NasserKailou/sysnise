@@ -56,7 +56,7 @@
                             <tr>
                                 <th class="text-left">Bailleur</th>
 								<th class="text-left">Financement Total PAD</th>
-								<th class="text-left">Financement annuel cumulé à date</th>
+								<th class="text-left">Financement du PAD prévu cumulé à date</th>
 								<th class="text-left">Montant Budgetisé cumulé à date</th>
 								<th class="text-left">Montant Dépensé cumulé à date</th>
                                 <th class="text-center table-icons">Actions</th>
