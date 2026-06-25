@@ -63,8 +63,8 @@
 									<p><strong>Année Démarrage :</strong> {{ $projet->annee_demarrage ?? '—' }}</p>
 									<p><strong>Durée du Projet (mois) :</strong> {{ $projet->duree }}</p>
 								@elseif ($projet->statutProjet->id == 2)
-									<p><strong>Date d'approbation :</strong> {{ $projet->date_debut_prevue }}</p>
-									<p><strong>Date de clôture :</strong> {{ $projet->date_fin_prevue }}</p>
+									<p><strong>Date début prévue :</strong> {{ $projet->date_debut_prevue }}</p>
+									<p><strong>Date fin prévue :</strong> {{ $projet->date_fin_prevue }}</p>
 									<p><strong>Durée du Projet (mois) :</strong> {{ $projet->duree }}</p>
 								@elseif ($projet->statutProjet->id == 3)
 									<p><strong>Date d'approbation :</strong> {{ $projet->date_approbation }}</p>
