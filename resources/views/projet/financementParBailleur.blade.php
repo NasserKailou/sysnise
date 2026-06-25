@@ -54,7 +54,7 @@
                     <table class="dataTable table table-bordered table-striped">
                         <thead>
                             <tr>
-                                <th class="text-left">Composante</th>
+                                <th class="text-left">Bailleur</th>
 								<th class="text-left">Financement Total PAD</th>
 								<th class="text-left">Financement annuel cumulé à date</th>
 								<th class="text-left">Montant Budgetisé cumulé à date</th>
@@ -67,13 +67,13 @@
                             <tr>
                                 <td class="text-left">{{ $financement->bailleur?->intitule }}</td>
 								<td class="text-left">{{ number_format($financement->montant, 0, ',', ' ') }} FCFA</td>
-								<td class="text-left">{{ $financement?->budgetsAnnuels()->sum('montant') ?? 0  }}</td>
-                                <td class="text-left">{{ $financement?->budgetsAnnuelsPrevus()->sum('montant') ?? 0  }}</td>
+								<td class="text-left">{{ $financement?->budgetsAnnuelsPrevus()->sum('montant') ?? 0  }}</td>
+                                <td class="text-left">{{ $financement?->budgetsAnnuels()->sum('montant') ?? 0  }}</td>
                                 <td class="text-left">{{ $financement?->budgetsAnnuelsDepenses()->sum('montant') ?? 0  }}</td>
                                 <td class="text-center table-icons">
 									<a href="{{ route('projets.financementParBailleur.edit', [$projet->id,$financement?->bailleur->id]) }}" class="btn btn-sm btn-secondary" data-bs-toggle="tooltip" data-bs-placement="top" title="Modifier"><i class="fa fa-edit"></i></a>
-									<a href="{{ route('projets.planFinancements.budgetAnnuel', [$projet->id,$financement?->id]) }}" class="btn btn-sm btn-success" data-bs-toggle="tooltip" data-bs-placement="top" title="Montant budgétisé"><i class="fa fa-hand-holding-dollar"></i></a>
 									<a href="{{ route('projets.planFinancements.budgetAnnuelPrevu', [$projet->id,$financement?->id]) }}" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Montant prévu"><i class="fa fa-money-bill-wave"></i></a>
+									<a href="{{ route('projets.planFinancements.budgetAnnuel', [$projet->id,$financement?->id]) }}" class="btn btn-sm btn-success" data-bs-toggle="tooltip" data-bs-placement="top" title="Montant budgétisé"><i class="fa fa-hand-holding-dollar"></i></a>
 									<a href="{{ route('projets.planFinancements.budgetAnnuelDepense', [$projet->id,$financement?->id]) }}" class="btn btn-sm btn-warning" data-bs-toggle="tooltip" data-bs-placement="top" title="Montant dépensé"><i class="fa fa-arrow-trend-down"></i></a>
 									<form action="{{ route('projets.financementParBailleur.destroy',[$projet->id,$financement?->bailleur->id]) }}" method="POST" style="display:inline-block;">
                                         @csrf
