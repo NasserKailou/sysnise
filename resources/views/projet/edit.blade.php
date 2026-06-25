@@ -448,7 +448,7 @@
 						<div>
 							<label class="form-label">Coût du projet (DEVlSE)</label>
 							<div class="input-group">
-								<input type="number" class="form-control" name="cout_devise" placeholder="montant">
+								<input type="number" class="form-control" name="cout_devise" placeholder="montant" value="{{ old('cout', $projet->cout_devise) }}">
 								<select name="devise_id" class="form-select @error('priorite') is-invalid @enderror">
 									<option value="">--dévise --</option>
 									@foreach($devises as $devise)
