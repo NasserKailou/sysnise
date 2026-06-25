@@ -493,15 +493,12 @@
 							<label class="form-check-label" for="non">Non</label>
 						</div>
 					</div>
-					<div  class="prorogation col-md-4 mt-3">
-					  <label class="form-label">date signature de la prorogation</label>
+					<div  class="prorogation col-md-6 mt-3">
+					  <label class="form-label">nouvelle date clôture</label>
 					  <input id="date_prorogation" name="date_prorogation" type="date" class="form-control">
 					</div>
-					<div  class="prorogation col-md-4 mt-3">
-					  <label class="form-label">nouvelle date clôture</label>
-					  <input id="date_cloture_prorogation" name="date_cloture_prorogation" type="date" class="form-control">
-					</div>
-					<div  id="div_duree_prorogation" class="prorogation col-md-4 mt-3">
+					
+					<div  id="div_duree_prorogation" class="prorogation col-md-6 mt-3">
 					  <label class="form-label"> durée prorogation</label>
 					  <input id="duree_prorogation" name="duree_prorogation" type="number" class="form-control" disabled>
 					</div>

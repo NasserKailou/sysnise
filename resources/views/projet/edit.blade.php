@@ -491,15 +491,12 @@
 						</div>
 					</div>
 					
-					<div  class="prorogation col-md-4 mt-3 {{ $projet->statutProjet->id == 3 ? '' : 'd-none' }}">
-					  <label class="form-label">date signature de la prorogation</label>
+					<div  class="prorogation col-md-6 mt-3 {{ $projet->statutProjet->id == 3 ? '' : 'd-none' }}">
+					  <label class="form-label">nouvelle date clôture</label>
 					  <input id="date_prorogation" name="date_prorogation" type="date" class="form-control" value="{{ old('date_prorogation', optional($projet->date_prorogation)->format('Y-m-d')) }}">
 					</div>
-					<div  class="prorogation col-md-4 mt-3 {{ $projet->statutProjet->id == 3 ? '' : 'd-none' }}">
-					  <label class="form-label">nouvelle date clôture</label>
-					  <input id="date_cloture_prorogation" name="date_cloture_prorogation" type="date" class="form-control" value="{{ old('date_cloture_prorogation', optional($projet->date_cloture_prorogation)->format('Y-m-d')) }}">
-					</div>
-					<div  id="div_duree_prorogation" class="prorogation col-md-4 mt-3 {{ $projet->statutProjet->id == 3 ? '' : 'd-none' }}">
+					
+					<div  id="div_duree_prorogation" class="prorogation col-md-6 mt-3 {{ $projet->statutProjet->id == 3 ? '' : 'd-none' }}">
 					  <label class="form-label"> durée prorogation</label>
 					  <input id="duree_prorogation" name="duree_prorogation" type="number" class="form-control" disabled value="{{ old('duree_prorogation', $projet->duree_prorogation) }}">
 					</div>
