@@ -492,15 +492,15 @@
 					</div>
 					
 					<div  class="execution_projet col-md-4 mt-3 {{ $projet->statutProjet->id == 3 ? '' : 'd-none' }}">
-					  <label class="form-label">date de la prorogation (si applicable)</label>
+					  <label class="form-label">date signature de la prorogation</label>
 					  <input id="date_prorogation" name="date_prorogation" type="date" class="form-control" value="{{ old('date_prorogation', optional($projet->date_prorogation)->format('Y-m-d')) }}">
 					</div>
 					<div  class="execution_projet col-md-4 mt-3 {{ $projet->statutProjet->id == 3 ? '' : 'd-none' }}">
-					  <label class="form-label">nouvelle date clôture (si prorogation)</label>
+					  <label class="form-label">nouvelle date clôture</label>
 					  <input id="date_cloture_prorogation" name="date_cloture_prorogation" type="date" class="form-control" value="{{ old('date_cloture_prorogation', optional($projet->date_cloture_prorogation)->format('Y-m-d')) }}">
 					</div>
 					<div  id="div_duree_prorogation" class="execution_projet col-md-4 mt-3 {{ $projet->statutProjet->id == 3 ? '' : 'd-none' }}">
-					  <label class="form-label"> durée prorogation (si applicable)</label>
+					  <label class="form-label"> durée prorogation</label>
 					  <input id="duree_prorogation" name="duree_prorogation" type="number" class="form-control" disabled value="{{ old('duree_prorogation', $projet->duree_prorogation) }}">
 					</div>
 				</div>
@@ -700,7 +700,7 @@ $(document).ready(function() {
 				$('.formulation').removeClass('d-none');
 				$('.execution,#prorogation_check, .prorogation, .initialisation').addClass('d-none');
 			}
-			else if(statut == 3) // En exécution
+			else if(statut >= 3) // En exécution
 			{
 				$("#div_duree").removeClass("col-md-4 col-md-6 col-md-12").addClass("col-md-3");
 				//$("#div_cout_devise").removeClass("col-md-3 col-md-4 col-md-12").addClass("col-md-6");
