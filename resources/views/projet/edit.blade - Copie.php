@@ -319,7 +319,33 @@
 			}
 		}
 		
-		
+		function calculerDuree() {
+			const dateDebut = document.getElementById('date_debut_prevue').value;
+			const dateFin   = document.getElementById('date_fin_prevue').value;
+
+			// Si une des dates est vide, on ne calcule rien
+			if (!dateDebut || !dateFin) {
+				document.getElementById('duree').value = '';
+				return;
+			}
+
+			const debut = new Date(dateDebut);
+			const fin   = new Date(dateFin);
+
+			// Vérification de cohérence
+			if (fin < debut) {
+				alert('La date de fin doit être postérieure à la date de début.');
+				document.getElementById('duree').value = '';
+				return;
+			}
+
+			const MS_PAR_JOUR = 1000 * 60 * 60 * 24;
+
+			// Calcul de la durée en jours
+			const duree = Math.round((fin - debut) / MS_PAR_JOUR) + 1;
+
+			document.getElementById('duree').value = duree;
+		}
 	</script>
     <div class="row">
 	  <!-- Contenu principal -->
@@ -329,70 +355,73 @@
 			<strong>Projet</strong>
 		  </div>
 		  <div class="card-body">
-			<form action="{{ route('projets.store') }}" method="POST">
+			<form action="{{ route('projets.update', $projet->id) }}" method="POST">
 			@csrf
+			@method('PUT')
 			<div class="row">
 				<div class="row mb-3">
-					<div class="col-md-3 mt-3">
+					<div class="col-md-3">
 					  <label class="form-label">Sigle 
 						<span style="color: red;">*</span>
 					  </label>
-					  <input name="sigle" type="text" class="form-control" required>
-					  
+					  <input name="sigle" type="text" class="form-control" value="{{ old('sigle', $projet->sigle) }}" required>
 					</div>
-					<div class="col-md-3 mt-3">
+					<div class="col-md-3">
 					  <label class="form-label">Intitulé 
 						<span style="color: red;">*</span>
 					  </label>
-					  <input name="intitule" type="text" class="form-control" required>
+					  <input name="intitule" type="text" class="form-control" value="{{ old('intitule', $projet->intitule) }}" required>
 					</div>
-					<div class="col-md-3 mt-3">
+					<div class="col-md-3">
 					  <label class="form-label">Statut Projet 
 						<span style="color: red;">*</span>
 					  </label>
 					   <select id="statut_projet_id" name="statut_projet_id" class="form-select @error('projet') is-invalid @enderror" required>
 							<option value="">-- Sélectionner le statut --</option>
 							@foreach($statutProjets as $statut)
-								<option value="{{ $statut->id }}">
+								<option value="{{ $statut->id }}"
+									{{ old('statut_projet_id', $projet->statutProjet->id ?? '') == $statut->id ? 'selected' : '' }}>
 									{{ $statut->intitule }}
 								</option>
 							@endforeach
 						</select>
 					</div>
-					<div class="col-md-3 mt-3">
-					  <label class="form-label">Priorité </label>
-					   <select name="priorite_id" class="form-select">
+					<div class="col-md-3">
+					  <label class="form-label">Priorité</label>
+					   <select name="priorite_id" class="form-select @error('priorite') is-invalid @enderror">
 							<option value="">-- Sélectionner la priorité --</option>
 							@foreach($priorites as $priorite)
-								<option value="{{ $priorite->id }}">
+								<option value="{{ $priorite->id }}"
+									{{ old('priorite_id', $projet->priorite->id ?? '') == $priorite->id ? 'selected' : '' }}>
 									{{ $priorite->intitule }}
 								</option>
 							@endforeach
 						</select>
 					</div>
-					<div class="col-md-6 mt-3">
+					<div class="col-md-6">
 					  <label class="form-label">Ministère/Institution de tutelle 
 						<span style="color: red;">*</span>
 					  </label>
-					   <select name="institution_tutelle_id" class="form-select @error('priorite') is-invalid @enderror" required>
+					   <select name="institution_tutelle_id" class="form-select @error('priorite') is-invalid @enderror" disabled required>
 							<option value="">-- Sélectionner Ministères/Institutions --</option>
 							@foreach($institutionTutelles as $institutionTutelle)
-								<option value="{{ $institutionTutelle->id }}" @if ($instituion_tutelle_id==$institutionTutelle->id)		selected="selected" 	@endif >
+								<option value="{{ $institutionTutelle->id }}"
+									{{ old('institution_tutelle_id', $projet->institutionTutelle->id ?? '') == $institutionTutelle->id ? 'selected' : '' }}>
 									{{ $institutionTutelle->intitule }}
 								</option>
 							@endforeach
 						</select>
-						<input type="hidden"  name="institution_tutelle_id" value="{{ $instituion_tutelle_id }}">
 					</div>
-					<div class="col-md-3 mt-3">
+					
+					<div class="col-md-3">
 					  <label class="form-label">Contact</label>
-					  <input name="contact" type="text" class="form-control">
+					  <input name="contact" type="text" class="form-control" value="{{ old('contact', $projet->contact) }}">
 					</div>
-					<div class="col-md-3 mt-3">
-						<label class="form-label">Secteurs</label>
-						<input id="secteur_ids" name="secteur_ids" type="hidden" class="form-control" readonly value=""/>
+					<div class="col-md-3">
+						<label class="form-label">Secteur</label>
+						<input id="secteur_ids" name="secteur_ids" type="hidden" class="form-control" readonly value="{{ old('secteur_ids', $secteurIds ?? '') }}" />
 						<div class="input-group">
-							<input id="secteur_names" name="secteur_names" type="text" class="form-control" readonly value="" onclick="showSecteur();"/>
+							<input id="secteur_names" name="secteur_names" type="text" class="form-control" readonly  onclick="showSecteur();" value="{{ old('secteur_names', $secteurNames ?? '') }}"/>
 							<span class="input-group-append">
 							  <button type="button" class="btn btn-sm btn-primary" id="menuBtn" href="#" onclick="showSecteur(); return false;"><i class="fa fa-search"></i></button>
 							</span>
@@ -402,48 +431,47 @@
 							<ul id="liste_secteur" class="ztree" style="margin-top:0;"></ul>
 						</div>
 					</div>
-					<div class="initialisation col-md-3 mt-3">
+					<div id="annee_demarrage" class="col-md-3 mt-3" style="display: {{ $projet->statutProjet->id == 1 ? 'block' : 'none' }}">
 					  <label class="form-label">Année démarrage prévue</label>
-					  <input name="annee_demarrage" type="integer" class="form-control">
+					  <input id="annee_demarrage" name="annee_demarrage" type="integer" class="form-control" value="{{ old('annee_demarrage', $projet->annee_demarrage) }}">
 					</div>
-					<div id="div_date_debut_prevue" class="formulation col-md-3 mt-3">
-					  <label class="form-label">Date début prévue</label>
-					  <input id="date_debut_prevue" name="date_debut_prevue" type="date" class="form-control">
+					<div id="div_date_debut_prevue" class="col-md-6 mt-3" style="display: {{ $projet->statutProjet->id == 2 ? 'block' : 'none' }}">
+					  <label class="form-label">Date d'approbation</label>
+					  <input id="date_debut_prevue" name="date_debut_prevue" type="date" class="form-control" onchange="calculerDuree()" value="{{ old('date_debut_prevue', optional($projet->date_debut_prevue)->format('Y-m-d')) }}">
 					</div>
-					<div id="div_date_fin_prevue" class="formulation col-md-3 mt-3">
-					  <label class="form-label">Date fin prévue</label>
-					  <input id="date_fin_prevue" name="date_fin_prevue" type="date" class="form-control">
+					<div id="div_date_fin_prevue" class="col-md-3 mt-3" style="display: {{ $projet->statutProjet->id == 2 ? 'block' : 'none' }}">
+					  <label class="form-label">Date de clôture</label>
+					  <input id="date_fin_prevue" name="date_fin_prevue" type="date" class="form-control" onchange="calculerDuree()" value="{{ old('date_fin_prevue', optional($projet->date_fin_prevue)->format('Y-m-d')) }}">
 					</div>
-					<div  class="execution col-md-3 mt-3">
+					<div  class="execution_projet col-md-6 mt-3" style="display: {{ $projet->statutProjet->id == 3 ? 'block' : 'none' }}">
 					  <label class="form-label">Date d’approbation </label>
-					  <input id="date_approbation" name="date_approbation" type="date" class="form-control">
+					  <input id="date_approbation" name="date_approbation" type="date" class="form-control" value="{{ old('date_approbation', optional($projet->date_approbation)->format('Y-m-d')) }}">
 					</div>
-					<div  class="execution col-md-3 mt-3">
+					<div  class="execution_projet col-md-3 mt-3" style="display: {{ $projet->statutProjet->id == 3 ? 'block' : 'none' }}">
 					  <label class="form-label">Date de signature  </label>
-					  <input id="date_signature" name="date_signature" type="date" class="form-control">
+					  <input id="date_signature" name="date_signature" type="date" class="form-control" value="{{ old('date_signature', optional($projet->date_signature)->format('Y-m-d')) }}">
 					</div>
-					<div  class="execution col-md-3 mt-3">
+					<div  class="execution_projet col-md-3 mt-3" style="display: {{ $projet->statutProjet->id == 3 ? 'block' : 'none' }}">
 					  <label class="form-label">Date de mise en vigueur  </label>
-					  <input id="date_mise_en_vigueur" name="date_mise_en_vigueur" type="date" class="form-control">
+					  <input id="date_mise_en_vigueur" name="date_mise_en_vigueur" type="date" class="form-control" value="{{ old('date_mise_en_vigueur', optional($projet->date_mise_en_vigueur)->format('Y-m-d')) }}">
 					</div>
-					<div  class="execution col-md-3 mt-3">
+					<div  class="execution_projet col-md-6 mt-3" style="display: {{ $projet->statutProjet->id == 3 ? 'block' : 'none' }}">
 					  <label class="form-label">Date de démarrage effectif</label>
-					  <input id="date_debut_effective" name="date_debut_effective" type="date" class="form-control">
+					  <input id="date_debut_effective" name="date_debut_effective" type="date" class="form-control" value="{{ old('date_debut_effective', optional($projet->date_debut_effective)->format('Y-m-d')) }}">
 					</div>
-					<div  class="execution col-md-3 mt-3">
+					<div  class="execution_projet col-md-3 mt-3" style="display: {{ $projet->statutProjet->id == 3 ? 'block' : 'none' }}">
 					  <label class="form-label">Date initiale de clôture </label>
-					  <input id="date_fin_effective" name="date_fin_effective" type="date" class="form-control">
+					  <input id="date_fin_effective" name="date_fin_effective" type="date" class="form-control" value="{{ old('date_fin_effective', optional($projet->date_fin_effective)->format('Y-m-d')) }}">
 					</div>
 					<div id="div_duree" class="col-md-3 mt-3">
 					  <label class="form-label">durée(mois)</label>
-					  <input id="duree" name="duree" type="integer" class="form-control" disabled>
+					  <input id="duree" name="duree" type="integer" class="form-control" value="{{ old('duree', $projet->duree) }}">
 					</div>
-					<div id="div_cout" class="col-md-6 mt-3">
+					<div id="div_cout" class="col-md-3 mt-3">
 					  <label class="form-label">coût du projet (FCFA)</label>
-					  <input name="cout" type="integer" class="form-control">
+					  <input id="cout" name="cout" type="integer" class="form-control" value="{{ old('cout', $projet->cout) }}">
 					</div>
-					
-					<div id="div_cout_devise" class="col-md-12 mt-3">
+					<div id="cout_devise" class="col-md-3 mt-3">
 						<div>
 							<label class="form-label">Coût du projet (DEVlSE)</label>
 							<div class="input-group">
@@ -451,7 +479,8 @@
 								<select name="devise_id" class="form-select @error('priorite') is-invalid @enderror">
 									<option value="">--dévise --</option>
 									@foreach($devises as $devise)
-										<option value="{{ $devise->id }}">
+										<option value="{{ $devise->id }}"
+											{{ old('devise_id', $projet->devise->id ?? '') == $devise->id ? 'selected' : '' }}>
 											{{ $devise->intitule }}
 										</option>
 									@endforeach
@@ -459,11 +488,11 @@
 							</div>
 						</div>
 					</div>
-					<div class="execution col-md-12 mt-3">
+					<div class="execution_projet col-md-12 mt-3" style="display: {{ $projet->statut_projet_id == 3 ? 'block' : 'none' }}">
 						<label class="form-label">PTFs</label>
-						<input id="bailleur_ids" name="bailleur_ids" type="hidden" class="form-control" readonly value=""/>
+						<input id="bailleur_ids" name="bailleur_ids" type="hidden" class="form-control" readonly value="{{ old('bailleur_ids', $bailleurIds ?? '') }}" />
 						<div class="input-group">
-							<input id="bailleur_names" name="bailleur_names" type="text" class="form-control" readonly value="" onclick="showBailleur();"/>
+							<input id="bailleur_names" name="bailleur_names" type="text" class="form-control" readonly  onclick="showBailleur();" value="{{ old('bailleur_names', $bailleurNames ?? '') }}"/>
 							<span class="input-group-append">
 							  <button type="button" class="btn btn-sm btn-primary" id="menuBtn" href="#" onclick="showBailleur(); return false;"><i class="fa fa-search"></i></button>
 							</span>
@@ -474,84 +503,74 @@
 						</div>
 					</div>
 					
-					<!--<div class="col-md-3 form-check mt-3">
-                        <input name="prorogation " type="checkbox" class="form-check-input" id="prorogation" checked>
-                        <label class="form-check-label" for="prorogation">Prorogation ? </label>
-                    </div> -->
-					<div id="prorogation_check" class="execution col-md-12 mt-3 d-flex align-items-center">
-						<label class="form-label mb-0 me-3">
-							Prorogation ?
-						</label>
-
-						<div class="form-check form-check-inline mb-0">
-							<input class="form-check-input" type="radio" name="prorogation_check" id="prorogation_check_oui" value="Oui">
-							<label class="form-check-label" for="oui">Oui</label>
-						</div>
-
-						<div class="form-check form-check-inline mb-0">
-							<input class="form-check-input" type="radio" name="prorogation_check" id="prorogation_check_non" value="Non" checked="checked">
-							<label class="form-check-label" for="non">Non</label>
-						</div>
-					</div>
-					<div  class="prorogation col-md-4 mt-3">
+					<div  class="execution_projet col-md-4 mt-3" style="display: {{ $projet->statut_projet_id == 3 ? 'block' : 'none' }}">
 					  <label class="form-label">date de la prorogation (si applicable)</label>
-					  <input id="date_prorogation" name="date_prorogation" type="date" class="form-control">
+					  <input id="date_prorogation" name="date_prorogation" type="date" class="form-control" value="{{ old('date_prorogation', optional($projet->date_prorogation)->format('Y-m-d')) }}">
 					</div>
-					<div  class="prorogation col-md-4 mt-3">
+					<div  class="execution_projet col-md-4 mt-3" style="display: {{ $projet->statut_projet_id == 3 ? 'block' : 'none' }}">
 					  <label class="form-label">nouvelle date clôture (si prorogation)</label>
-					  <input id="date_cloture_prorogation" name="date_cloture_prorogation" type="date" class="form-control">
+					  <input id="date_cloture_prorogation" name="date_cloture_prorogation" type="date" class="form-control" value="{{ old('date_cloture_prorogation', optional($projet->date_cloture_prorogation)->format('Y-m-d')) }}">
 					</div>
-					<div  id="div_duree_prorogation" class="prorogation col-md-4 mt-3">
+					<div  id="div_duree_prorogation" class="execution_projet col-md-4 mt-3" style="display: {{ $projet->statut_projet_id == 3 ? 'block' : 'none' }}">
 					  <label class="form-label"> durée prorogation (si applicable)</label>
-					  <input id="duree_prorogation" name="duree_prorogation" type="number" class="form-control" disabled>
-					</div>
-					
-				</div>
-				<div class="row mt-3">
-					<div class="col-md-12">
-					  <label class="form-label">Projet lié</label>
-					   <select name="projet_id" class="form-select @error('projet') is-invalid @enderror">
-							<option value="">-- Sélectionner le projet --</option>
-							@foreach($projets as $projet)
-								<option value="{{ $projet->id }}">
-									{{ $projet->intitule }}
-								</option>
-							@endforeach
-						</select>
+					  <input id="duree_prorogation" name="duree_prorogation" type="number" class="form-control" value="{{ old('duree_prorogation', $projet->duree_prorogation) }}">
 					</div>
 				</div>
-				<div class="row mt-3">
-					<div class="col-md-12">
-						<label class="form-label">Zones d'intervention</label>
-						<input id="zone_ids" name="zone_ids" type="hidden" class="form-control" readonly value=""/>
-						<div class="input-group">
-							<input id="zone_names" name="zone_names" type="text" class="form-control" readonly value="" onclick="showZone();"/>
-							<span class="input-group-append">
-							  <button type="button" class="btn btn-sm btn-primary" id="menuBtn" href="#" onclick="showZone(); return false;"><i class="fa fa-search"></i></button>
-							</span>
-						</div>
-						
-						<div id="zoneContent" class="zoneContent" style="display:none;">
-							<ul id="liste_zone" class="ztree" style="margin-top:0;"></ul>
+				
+				<div class="row">
+					<div class="row mb-3">
+						<div class="col-md-12">
+						  <label class="form-label">Projet lié</label>
+						   <select name="projet_id" class="form-select @error('projet') is-invalid @enderror">
+								<option value="">-- Sélectionner le projet --</option>
+								@foreach($projets as $cur_project)
+									<option value="{{ $cur_project->id }}"
+										{{ old('projet_id', $projet->id ?? '') == $cur_project->id ? 'selected' : '' }}>
+										{{ $cur_project->intitule }}
+									</option>
+								@endforeach
+							</select>
+							
 						</div>
 					</div>
 				</div>
-				<div class="row mt-3">
-					<div class="col-md-12">
-						<label class="form-label">Positionnement stratégique</label>
-						<input id="chaine_logique_ids" name="chaine_logique_ids" type="hidden" class="form-control" readonly value=""/>
-						<div class="input-group">
-							<input id="chaine_logique_names" name="chaine_logique_names" type="text" class="form-control" readonly value="" onclick="showChaineLogique();"/>
-							<span class="input-group-append">
-							  <button type="button" class="btn btn-sm btn-primary" id="menuBtn" href="#" onclick="showChaineLogique(); return false;"><i class="fa fa-search"></i></button>
-							</span>
-						</div>
-						
-						<div id="chaineLogiqueContent" class="chaineLogiqueContent" style="display:none;">
-							<ul id="liste_chaine_logique" class="ztree" style="margin-top:0;"></ul>
+				<div class="row">
+					<div class="row mb-3">
+						<div class="col-md-12">
+							<label class="form-label">Zones d'intervention</label>
+							<input id="zone_ids" name="zone_ids" type="hidden" class="form-control" readonly value="{{ old('zone_ids', $zoneIds ?? '') }}" />
+							<div class="input-group">
+								<input id="zone_names" name="zone_names" type="text" class="form-control" readonly  onclick="showZone();" value="{{ old('zone_names', $zoneNames ?? '') }}"/>
+								<span class="input-group-append">
+								  <button type="button" class="btn btn-sm btn-primary" id="menuBtn" href="#" onclick="showZone(); return false;"><i class="fa fa-search"></i></button>
+								</span>
+							</div>
+							
+							<div id="zoneContent" class="zoneContent" style="display:none;">
+								<ul id="liste_zone" class="ztree" style="margin-top:0;"></ul>
+							</div>
 						</div>
 					</div>
 				</div>
+				<div class="row">
+					<div class="row mb-3">
+						<div class="col-md-12">
+							<label class="form-label">Positionnement stratégique</label>
+							<input id="chaine_logique_ids" name="chaine_logique_ids" type="hidden" class="form-control" readonly value="{{ old('chaine_logique_ids', $chaineLogiqueIds ?? '') }}"/>
+							<div class="input-group">
+								<input id="chaine_logique_names" name="chaine_logique_names" type="text" class="form-control" readonly onclick="showChaineLogique();" value="{{ old('chaine_logique_names', $chaineLogiqueNames ?? '') }}"/>
+								<span class="input-group-append">
+								  <button type="button" class="btn btn-sm btn-primary" id="menuBtn" href="#" onclick="showChaineLogique(); return false;"><i class="fa fa-search"></i></button>
+								</span>
+							</div>
+							
+							<div id="chaineLogiqueContent" class="chaineLogiqueContent" style="display:none;">
+								<ul id="liste_chaine_logique" class="ztree" style="margin-top:0;"></ul>
+							</div>
+						</div>
+					</div>
+				</div>
+				
 			  </div>
 			  
 		  </div>
@@ -567,154 +586,129 @@
       </div>
     </div>
 	<script>
-	$(document).ready(function() {
-		function calculerDureeMois() {
-			let dateDebut = null;
-			let dateFin = null;
-			const statut = $("#statut_projet_id").val();
-
-			// Projet approuvé mais non exécuté
-			if (statut == "2") {
-				dateDebut = $("#date_debut_prevue").val();
-				dateFin = $("#date_fin_prevue").val();
-			}
-
-			// Projet en exécution
-			else if (statut == "3") {
-				dateDebut = $("#date_approbation").val();
-
-				const dateClotureProrogation =
-					$("#date_cloture_prorogation").val();
-
-				if (dateClotureProrogation) {
-					dateFin = dateClotureProrogation;
-				} else {
-					dateFin = $("#date_fin_effective").val();
-				}
-			}
-
-			if (!dateDebut || !dateFin) {
-				$("#duree").val('');
-				return;
-			}
-
-			const [anneeDebut, moisDebut, jourDebut] =
-				dateDebut.split('-').map(Number);
-
-			const [anneeFin, moisFin, jourFin] =
-				dateFin.split('-').map(Number);
-
-			const debut = new Date(anneeDebut, moisDebut - 1, jourDebut);
-			const fin = new Date(anneeFin, moisFin - 1, jourFin);
-
-			if (fin < debut) {
-				$("#duree").val('');
-				return;
-			}
-
-			let mois = (fin.getFullYear() - debut.getFullYear()) * 12;
-			mois += fin.getMonth() - debut.getMonth();
-
-			if (fin.getDate() < debut.getDate()) {
-				mois--;
-			}
-
-			$("#duree").val(mois);
-		}
+$(document).ready(function() {
+    $.fn.zTree.init($("#liste_zone"), settingZone, zNodesZone);
+	$.fn.zTree.init($("#liste_secteur"), settingSecteur, zNodesSecteur);
+	$.fn.zTree.init($("#liste_bailleur"), settingBailleur, zNodesBailleur);
+	$.fn.zTree.init($("#liste_chaine_logique"), settingChaineLogique, zNodesChaineLogique);
+	$("#date_debut_prevue, #date_fin_prevue, #date_approbation, #date_fin_effective, #date_cloture_prorogation").on("change", calculerDureeMois);
+	$("#date_prorogation, #date_cloture_prorogation").on("change", calculerDureeProrogation);
 	
-		function calculerDureeProrogation() {
-			const dateDebut = $("#date_prorogation").val();
-			const dateFin = $("#date_cloture_prorogation").val();
-
-			if (!dateDebut || !dateFin) {
-				$("#duree_prorogation").val('');
-				return;
-			}
-
-			// Conversion fiable des dates YYYY-MM-DD
-			const [anneeDebut, moisDebut, jourDebut] = dateDebut.split('-').map(Number);
-			const [anneeFin, moisFin, jourFin] = dateFin.split('-').map(Number);
-
-			const debut = new Date(anneeDebut, moisDebut - 1, jourDebut);
-			const fin = new Date(anneeFin, moisFin - 1, jourFin);
-
-			// Vérifie que la date de fin est postérieure à la date de début
-			if (fin < debut) {
-				$("#duree_prorogation").val('');
-				return;
-			}
-
-			let mois = (fin.getFullYear() - debut.getFullYear()) * 12;
-			mois += fin.getMonth() - debut.getMonth();
-
-			// Le dernier mois n'est pas complet
-			if (fin.getDate() < debut.getDate()) {
-				mois--;
-			}
-			$("#duree_prorogation").val(mois);
+	$('#statut_projet_id').change(function(){
+		if($(this).val() == 1)
+		{
+			$("#duree").removeClass("col-md-4").addClass("col-md-3");
+			$("#cout").removeClass("col-md-6").addClass("col-md-3");
+			$("#cout_devise").removeClass("col-md-6").addClass("col-md-3");
+			$('#div_date_debut_prevue,#div_date_fin_prevue,.execution_projet').css('display','none');
+			$('#annee_demarrage').css('display','block');
+			
 		}
-		
-		$.fn.zTree.init($("#liste_zone"), settingZone, zNodesZone);
-		$.fn.zTree.init($("#liste_secteur"), settingSecteur, zNodesSecteur);
-		$.fn.zTree.init($("#liste_bailleur"), settingBailleur, zNodesBailleur);
-		$.fn.zTree.init($("#liste_chaine_logique"), settingChaineLogique, zNodesChaineLogique);
-		
-		$("#date_debut_prevue, #date_fin_prevue, #date_approbation, #date_fin_effective, #date_cloture_prorogation").on("change", calculerDureeMois);
-		$("#date_prorogation, #date_cloture_prorogation").on("change", calculerDureeProrogation);
-
-		// Gestion propre de la Prorogation via Radio
-		$('input[name="prorogation_check"]').on('change', function () {
-			if ($(this).val() === 'Oui') {
-				$('.prorogation').removeClass('d-none').hide().slideDown();
-			} else {
-				$('.prorogation').slideUp(function() {
-					$(this).addClass('d-none');
-				});
-				$('#date_prorogation, #date_cloture_prorogation, #duree_prorogation').val('');
-			}
-		});
-
-		// Événement de changement de Statut corrigé
-		$('#statut_projet_id').change(function(){
-			var statut = $(this).val();
-
-			// 1. On commence par cacher tous les blocs conditionnels proprement
-			//$('.execution, #prorogation_check, .prorogation, .formulation, .initialisation').addClass('d-none');
-			$('.execution,#prorogation_check,.prorogation,.formulation').addClass('d-none');
-
-			// 2. On applique les règles selon le statut choisi
-			if(statut == "1") // Initialisation / Idée
-			{
-				$('.initialisation').removeClass('d-none');
-				$('.execution,#prorogation_check, .prorogation, .formulation').addClass('d-none');
-				$("#div_cout").removeClass("col-md-3 col-md-4 col-md-12").addClass("col-md-6");
-				//$("#div_cout_devise").removeClass("col-md-3 col-md-4 col-md-6").addClass("col-md-12");
-			}
-			else if(statut == 2) // Formulation / Approuvé non exécuté
-			{
-				$("#div_cout").removeClass("col-md-4 col-md-6 col-md-12").addClass("col-md-3");
-				//$("#div_cout_devise").removeClass("col-md-3 col-md-4 col-md-6").addClass("col-md-12");
-				$('.formulation').removeClass('d-none');
-				$('.execution,#prorogation_check, .prorogation, .initialisation').addClass('d-none');
-			}
-			else if(statut == 3) // En exécution
-			{
-				$("#div_duree").removeClass("col-md-4 col-md-6 col-md-12").addClass("col-md-3");
-				//$("#div_cout_devise").removeClass("col-md-3 col-md-4 col-md-12").addClass("col-md-6");
-				$("#div_cout").removeClass("col-md-3 col-md-4 col-md-12").addClass("col-md-6");
-				$('.execution, #prorogation_check').removeClass('d-none');
-
-				// Si le radio prorogation est déjà sur "Oui", on affiche aussi les champs associés
-				if ($('#prorogation_check_oui').is(':checked')) {
-					$('.prorogation').removeClass('d-none');
-				}
-			}
-		});
-		
-		// Déclencher le changement au chargement initial si une valeur est pré-sélectionnée
-		$('#statut_projet_id').trigger('change');
+		else if($(this).val() == 2)
+		{
+			$("#duree").removeClass("col-md-4").addClass("col-md-3");
+			$("#cout").removeClass("col-md-3").addClass("col-md-6");
+			$("#cout_devise").removeClass("col-md-3").addClass("col-md-6");
+			$('#div_date_debut_prevue,#div_date_fin_prevue').css('display','block');
+			$('#annee_demarrage,.execution_projet').css('display','none');
+		}
+		else if($(this).val() == 3)
+		{
+			$("#duree").removeClass("col-md-4").addClass("col-md-3");
+			$("#cout").removeClass("col-md-3").addClass("col-md-6");
+			$("#cout_devise").removeClass("col-md-3").addClass("col-md-6");
+			$('.execution_projet').css('display','block');
+			$('#annee_demarrage,#div_date_debut_prevue,#div_date_fin_prevue').css('display','none');
+		}
 	});
-	</script>
+	
+	function calculerDureeMois() {
+		let dateDebut = null;
+		let dateFin = null;
+		const statut = $("#statut_projet_id").val();
+
+		// Projet approuvé mais non exécuté
+		if (statut == "2") {
+			dateDebut = $("#date_debut_prevue").val();
+			dateFin = $("#date_fin_prevue").val();
+		}
+
+		// Projet en exécution
+		else if (statut == "3") {
+			dateDebut = $("#date_approbation").val();
+
+			const dateClotureProrogation =
+				$("#date_cloture_prorogation").val();
+
+			if (dateClotureProrogation) {
+				dateFin = dateClotureProrogation;
+			} else {
+				dateFin = $("#date_fin_effective").val();
+			}
+		}
+
+		if (!dateDebut || !dateFin) {
+			$("#duree").val('');
+			return;
+		}
+
+		const [anneeDebut, moisDebut, jourDebut] =
+			dateDebut.split('-').map(Number);
+
+		const [anneeFin, moisFin, jourFin] =
+			dateFin.split('-').map(Number);
+
+		const debut = new Date(anneeDebut, moisDebut - 1, jourDebut);
+		const fin = new Date(anneeFin, moisFin - 1, jourFin);
+
+		if (fin < debut) {
+			$("#duree").val('');
+			return;
+		}
+
+		let mois = (fin.getFullYear() - debut.getFullYear()) * 12;
+		mois += fin.getMonth() - debut.getMonth();
+
+		if (fin.getDate() < debut.getDate()) {
+			mois--;
+		}
+
+		$("#duree").val(mois);
+	}
+	
+	function calculerDureeProrogation() {
+		const dateDebut = $("#date_prorogation").val();
+		const dateFin = $("#date_cloture_prorogation").val();
+
+		if (!dateDebut || !dateFin) {
+			$("#duree_prorogation").val('');
+			return;
+		}
+
+		// Conversion fiable des dates YYYY-MM-DD
+		const [anneeDebut, moisDebut, jourDebut] = dateDebut.split('-').map(Number);
+		const [anneeFin, moisFin, jourFin] = dateFin.split('-').map(Number);
+
+		const debut = new Date(anneeDebut, moisDebut - 1, jourDebut);
+		const fin = new Date(anneeFin, moisFin - 1, jourFin);
+
+		// Vérifie que la date de fin est postérieure à la date de début
+		if (fin < debut) {
+			$("#duree_prorogation").val('');
+			return;
+		}
+
+		let mois = (fin.getFullYear() - debut.getFullYear()) * 12;
+		mois += fin.getMonth() - debut.getMonth();
+
+		// Le dernier mois n'est pas complet
+		if (fin.getDate() < debut.getDate()) {
+			mois--;
+		}
+		$("#duree_prorogation").val(mois);
+	}
+});
+</script>
   </div>
   
 @endsection

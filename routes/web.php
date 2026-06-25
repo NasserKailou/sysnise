@@ -9,7 +9,8 @@ use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\UserRoleController;
 
 Route::middleware(['auth'])->group(function () {
-	Route::get('/', [App\Http\Controllers\DonneeIndicateurController::class, 'extractionDonneesForm'])->name('donneeIndicateur.extractionDonnees.form');
+	Route::get('/', [App\Http\Controllers\ProjetController::class, 'index'])->name('projets.index');
+	//Route::get('/', [App\Http\Controllers\DonneeIndicateurController::class, 'extractionDonneesForm'])->name('donneeIndicateur.extractionDonnees.form');
 
 	Route::get('/zones/upload', [App\Http\Controllers\ZoneController::class, 'showUploadForm'])->name('zones.showUploadForm');
 	Route::post('/zones/upload', [App\Http\Controllers\ZoneController::class, 'upload'])->name('zones.upload');
