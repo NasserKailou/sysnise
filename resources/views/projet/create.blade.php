@@ -436,7 +436,7 @@
 					</div>
 					<div id="div_duree" class="col-md-3 mt-3">
 					  <label class="form-label">durée(mois)</label>
-					  <input id="duree" name="duree" type="integer" class="form-control" disabled>
+					  <input id="duree" name="duree" type="integer" class="form-control">
 					</div>
 					<div id="div_cout" class="col-md-6 mt-3">
 					  <label class="form-label">coût du projet (FCFA)</label>
