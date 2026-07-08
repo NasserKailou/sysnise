@@ -676,7 +676,6 @@
 			var statut = $(this).val();
 
 			// 1. On commence par cacher tous les blocs conditionnels proprement
-			//$('.execution, #prorogation_check, .prorogation, .formulation, .initialisation').addClass('d-none');
 			$('.execution,#prorogation_check,.prorogation,.formulation').addClass('d-none');
 
 			// 2. On applique les règles selon le statut choisi
@@ -684,21 +683,35 @@
 			{
 				$('.initialisation').removeClass('d-none');
 				$('.execution,#prorogation_check, .prorogation, .formulation').addClass('d-none');
-				$("#div_cout").removeClass("col-md-3 col-md-4 col-md-12").addClass("col-md-6");
-				//$("#div_cout_devise").removeClass("col-md-3 col-md-4 col-md-6").addClass("col-md-12");
+				$("#div_cout")
+					.removeClass(function(index, className) {
+						return (className.match(/\bcol-md-\d+\b/g) || []).join(' ');
+					})
+					.addClass("col-md-6");
+				
 			}
 			else if(statut == 2) // Formulation / Approuvé non exécuté
 			{
-				$("#div_cout").removeClass("col-md-4 col-md-6 col-md-12").addClass("col-md-3");
-				//$("#div_cout_devise").removeClass("col-md-3 col-md-4 col-md-6").addClass("col-md-12");
+				$("#div_cout")
+					.removeClass(function(index, className) {
+						return (className.match(/\bcol-md-\d+\b/g) || []).join(' ');
+					})
+					.addClass("col-md-3");
 				$('.formulation').removeClass('d-none');
 				$('.execution,#prorogation_check, .prorogation, .initialisation').addClass('d-none');
 			}
 			else if(statut >= 3) // En exécution
 			{
-				$("#div_duree").removeClass("col-md-4 col-md-6 col-md-12").addClass("col-md-3");
-				//$("#div_cout_devise").removeClass("col-md-3 col-md-4 col-md-12").addClass("col-md-6");
-				$("#div_cout").removeClass("col-md-3 col-md-4 col-md-12").addClass("col-md-6");
+				$("#div_duree")
+					.removeClass(function(index, className) {
+						return (className.match(/\bcol-md-\d+\b/g) || []).join(' ');
+					})
+					.addClass("col-md-3");
+				$("#div_cout")
+					.removeClass(function(index, className) {
+						return (className.match(/\bcol-md-\d+\b/g) || []).join(' ');
+					})
+					.addClass("col-md-6");
 				$('.execution, #prorogation_check').removeClass('d-none');
 
 				// Si le radio prorogation est déjà sur "Oui", on affiche aussi les champs associés

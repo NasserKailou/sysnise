@@ -1,12 +1,32 @@
 @extends('layouts.app')
 @section('content')
 <div class="container-fluid">
-    <div class="row">
+    @if(session('failed_nature_donnees'))
+	<script>
+		$(function () {
+			@foreach(session('failed_nature_donnees') as $nature_donnee)
+				$(document).Toasts('create', {
+					class: 'bg-danger',
+					title: 'Import échoué',
+					body: `
+						<strong>Intitulé :</strong> {{ $nature_donnee['intitule'] }}<br>
+						<strong>Raison :</strong> {{ $nature_donnee['raison'] }}
+					`,
+					autohide: false
+				});
+			@endforeach
+		});
+	</script>
+	@endif
+	<div class="row">
 	  <!-- Contenu principal -->
       <div class="col-md-12 col-lg-12">
         <div class="card">
-		  <div class="card-header">
+		  <div class="card-header d-flex  align-items-center">
 			<strong>Nouvelle nature donnée</strong>
+			<a id="uploadNatureDonnees" href="#" class="ms-auto text-muted" title="Importer">
+				<i class="fas fa-file-upload"></i>
+			</a>
 		  </div>
 		  <div class="card-body">
 			<form action="{{ route('nature_donnees.store') }}" method="POST">
@@ -61,7 +81,17 @@
                 </div>
             </div>
         </div>
-	  
+		  <script>
+			$(document).ready(function () {
+				$('#uploadNatureDonnees').click(function(){
+					$.get('/nature_donnees/upload',function(dat){
+						$('#popup').html(dat);
+						$("#myModal").modal('show');
+					});
+					
+				});
+			});
+		</script>
     </div>
 </div>
 

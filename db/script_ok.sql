@@ -1348,6 +1348,29 @@ CREATE TABLE projets
         ON DELETE CASCADE
 );
 
+CREATE TABLE projet_prorogations (
+    id BIGSERIAL PRIMARY KEY,
+    projet_id BIGINT NOT NULL,
+    date_prorogation DATE NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_projet_prorogations_projet FOREIGN KEY (projet_id) 
+        REFERENCES projets(id) ON DELETE CASCADE
+);
+-- Création de la table pour l'historique des financements additionnels
+CREATE TABLE projet_financement_additionnels (
+    id BIGSERIAL PRIMARY KEY,
+    projet_id BIGINT NOT NULL,
+    cout NUMERIC(15, 2) NOT NULL,
+    cout_devise NUMERIC(15, 2) NULL,
+    devise_id BIGINT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_financement_additionnel_projet FOREIGN KEY (projet_id) 
+        REFERENCES projets(id) ON DELETE CASCADE,
+    CONSTRAINT fk_financement_additionnel_devise FOREIGN KEY (devise_id) 
+        REFERENCES devises(id) ON DELETE SET NULL
+);
 CREATE TABLE piece_jointe_projets
 (
     id BIGSERIAL,

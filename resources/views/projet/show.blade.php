@@ -57,21 +57,29 @@
 								<p><strong>Contact :</strong> {{ $projet->contact ?? '—' }}</p>
 								<p><strong>Projet liée :</strong> {{ $projet->parent?->intitule ?? '—' }}</p>
 								<p><strong>Statut :</strong> {{ $projet->statutProjet?->intitule  ?? '—' }}</p>
+								<p><strong>Coût initial:</strong> {{ number_format($projet->cout, 0, ',', ' ') }} FCFA</p>
+								<p><strong>Financement Additionnel :</strong> {{ number_format($projet->financementsAdditionnels->sum('cout'), 0, ',', ' ') }} FCFA</p>
+								<p><strong>Coût Total :</strong> {{ number_format($projet->financementsAdditionnels->sum('cout') + $projet->cout, 0, ',', ' ') }} FCFA</p>
 							</div>
 							<div class="col-md-6">
 								@if($projet->statutProjet?->id == 1)
 									<p><strong>Année Démarrage :</strong> {{ $projet->annee_demarrage ?? '—' }}</p>
 									<p><strong>Durée du Projet (mois) :</strong> {{ $projet->duree }}</p>
 								@elseif ($projet->statutProjet->id == 2)
-									<p><strong>Date début prévue :</strong> {{ $projet->date_debut_prevue }}</p>
-									<p><strong>Date fin prévue :</strong> {{ $projet->date_fin_prevue }}</p>
+									<p><strong>Date début prévue :</strong> {{ $projet->date_debut_prevue->format('d-m-Y') }}</p>
+									<p><strong>Date fin prévue :</strong> {{ $projet->date_fin_prevue->format('d-m-Y') }}</p>
 									<p><strong>Durée du Projet (mois) :</strong> {{ $projet->duree }}</p>
 								@elseif ($projet->statutProjet->id == 3)
-									<p><strong>Date d'approbation :</strong> {{ $projet->date_approbation }}</p>
-									<p><strong>Date initiale de clôture :</strong> {{ $projet->date_fin_effective }}</p>
-									<p><strong>Durée du Projet (mois) :</strong> {{ $projet->duree }}</p>
+									<p><strong>Date d'approbation :</strong> {{ $projet->date_approbation->format('d-m-Y') }}</p>
+									<p><strong>Date initiale de clôture :</strong> {{ $projet->date_fin_effective->format('d-m-Y') }}</p>
+									<p><strong>Durée initial du Projet (mois) :</strong> {{ $projet->duree }}</p>
 								@endif
-								<p><strong>Coût :</strong> {{ $projet->cout }} FCFA</p>
+								
+								@if(!$projet->prorogations->isEmpty())
+									<p><strong>Nouvelle date de clôture :</strong> {{ $projet->prorogations->last()->date_prorogation->format('d/m/Y') }}</p>
+									<p><strong>Durée du Projet (mois) :</strong> {{ $projet->duree_prorogation }}</p>
+								@endif
+								
 								<p><strong>Zones d'intervention :</strong> {{ $zoneInterventions }}</p>
 								<p>
 									<strong>Positionnement stratégique :</strong>

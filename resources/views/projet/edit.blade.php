@@ -440,13 +440,14 @@
 					  <label class="form-label">durée(mois)</label>
 					  <input id="duree" name="duree" type="integer" class="form-control" value="{{ old('duree', $projet->duree) }}">
 					</div>
+					<!-- coût initial du projet  -->
 					<div id="div_cout" class="col-md-6 mt-3">
-					  <label class="form-label">coût du projet (FCFA)</label>
+					  <label class="form-label">Coût initial du projet (FCFA)</label>
 					  <input id="cout" name="cout" type="integer" class="form-control" value="{{ old('cout', $projet->cout) }}">
 					</div>
 					<div id="cout_devise" class="col-md-12 mt-3">
 						<div>
-							<label class="form-label">Coût du projet (DEVlSE)</label>
+							<label class="form-label">Coût initial du projet (DEVlSE)</label>
 							<div class="input-group">
 								<input type="number" class="form-control" name="cout_devise" placeholder="montant" value="{{ old('cout', $projet->cout_devise) }}">
 								<select name="devise_id" class="form-select @error('priorite') is-invalid @enderror">
@@ -461,6 +462,88 @@
 							</div>
 						</div>
 					</div>
+					<div id="financementAdditionnel_check" class="execaution col-md-12 mt-3 d-flex align-items-center">
+						<label class="form-label mb-0 me-3">
+							Financement Additionnel ?
+						</label>
+
+						<div class="form-check form-check-inline mb-0">
+							<input class="form-check-input" type="radio" name="financementAdditionnel_check" id="financementAdditionnel_check_oui" value="Oui" {{ $projet->financementsAdditionnels->last() ? 'checked' : '' }}>
+							<label class="form-check-label" for="oui">Oui</label>
+						</div>
+
+						<div class="form-check form-check-inline mb-0">
+							<input class="form-check-input" type="radio" name="financementAdditionnel_check" id="financementAdditionnel_check_non" value="Non" {{ !$projet->financementsAdditionnels->last() ? 'checked' : '' }}>
+							<label class="form-check-label" for="non">Non</label>
+						</div>
+					</div>
+					<!-- Financement et financement Additionnel -->
+					<div id="financementAdditionnel" class="col-md-6 mt-3">
+						<label class="form-label">Montant du financement additionnel</label>
+						<div class="input-group">
+							@php
+								$dernierFinancement = $projet->financementsAdditionnels->last();
+							@endphp
+							<input type="text" class="form-control" readonly 
+								   value="{{number_format($projet->financementsAdditionnels->sum('cout'), 0, ',', ' ')}} FCFA">
+							
+							<button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#modalAddFinancement">
+								<i class="fa fa-plus"></i>
+							</button>
+							<a href="#collapseFinancements" class="btn btn-warning" data-bs-toggle="collapse" role="button" aria-expanded="false">
+								<i class="fa fa-history"> </i> ({{ $projet->financementsAdditionnels->count() }})
+							</a>
+						</div>
+
+						<div class="collapse mt-2" id="collapseFinancements">
+							<div class="card card-body p-2 bg-light">
+								@if($projet->financementsAdditionnels->isEmpty())
+									<small class="text-muted text-center">Aucun financement additionnel enregistré.</small>
+								@else
+									<table class="table table-sm table-hover mb-0">
+										<thead>
+											<tr>
+												<th>Coût (FCFA)</th>
+												<th>Coût Devise</th>
+												<th>Devise</th>
+												<th class="text-end">Actions</th>
+											</tr>
+										</thead>
+										<tbody>
+											@foreach($projet->financementsAdditionnels as $financement)
+												<tr>
+													<td>{{ number_format($financement->cout, 2, ',', ' ') }}</td>
+													<td>{{ $financement->cout_devise ? number_format($financement->cout_devise, 2, ',', ' ') : '-' }}</td>
+													<td>{{ $financement->devise?->intitule ?? '-' }}</td>
+													<td class="text-end">
+														<button type="button" class="btn btn-xs btn-warning btn-edit-financement" 
+																data-id="{{ $financement->id }}" 
+																data-cout="{{ $financement->cout }}" 
+																data-coutdevise="{{ $financement->cout_devise }}" 
+																data-devise="{{ $financement->devise_id }}">
+															Modifier
+														</button>
+														<a href="{{ route('projets.financement.destroy', $financement->id) }}" 
+														   class="btn btn-xs btn-danger" 
+														   onclick="return confirm('Supprimer ce financement additionnel ?')">
+															Suppr.
+														</a>
+													</td>
+												</tr>
+											@endforeach
+										</tbody>
+									</table>
+								@endif
+							</div>
+						</div>
+					</div>
+					<!-- Total Financement -->
+					<div id="total_financement" class="col-md-6 mt-3">
+					  <label class="form-label">Montant Total financement (FCFA)</label>
+					  <input name="total_financement" type="text" class="form-control" value="{{ number_format(($projet->financementsAdditionnels->sum('cout') + $projet->cout), 0, ',', ' ')}}" disabled>
+					</div>
+					
+					<!-- Financement et financement Additionnel -->
 					<div class="execution_projet col-md-12 mt-3 {{ $projet->statutProjet->id == 1 ? '' : 'd-none' }}">
 						<label class="form-label">PTFs</label>
 						<input id="bailleur_ids" name="bailleur_ids" type="hidden" class="form-control" readonly value="{{ old('bailleur_ids', $bailleurIds ?? '') }}" />
@@ -481,22 +564,72 @@
 						</label>
 
 						<div class="form-check form-check-inline mb-0">
-							<input class="form-check-input" type="radio" name="prorogation_check" id="prorogation_check_oui" value="Oui">
+							<input class="form-check-input" type="radio" name="prorogation_check" id="prorogation_check_oui" value="Oui" {{ $projet->prorogations->last() ? 'checked' : '' }}>
 							<label class="form-check-label" for="oui">Oui</label>
 						</div>
 
 						<div class="form-check form-check-inline mb-0">
-							<input class="form-check-input" type="radio" name="prorogation_check" id="prorogation_check_non" value="Non" checked="checked">
+							<input class="form-check-input" type="radio" name="prorogation_check" id="prorogation_check_non" value="Non" {{ !$projet->prorogations->last() ? 'checked' : '' }}>
 							<label class="form-check-label" for="non">Non</label>
 						</div>
 					</div>
 					
-					<div  class="prorogation col-md-6 mt-3 {{ $projet->statutProjet->id == 3 ? '' : 'd-none' }}">
+					<!--<div  class="prorogation col-md-6 mt-3 {{ $projet->statutProjet->id == 3 ? '' : 'd-none' }}">
 					  <label class="form-label">nouvelle date clôture</label>
 					  <input id="date_prorogation" name="date_prorogation" type="date" class="form-control" value="{{ old('date_prorogation', optional($projet->date_prorogation)->format('Y-m-d')) }}">
+					</div>-->
+					<div class="prorogation col-md-12 mt-3 {{ $projet->statutProjet->id == 3 ? '' : 'd-none' }}">
+						<label class="form-label">Nouvelle date clôture</label>
+						<div class="input-group">
+							<input type="text" class="form-control" id="date_prorogation_display" 
+								   value="{{ $projet->prorogations->last()?->date_prorogation?->format('d-m-Y') ?? $projet->date_prorogation?->format('d-m-Y') }}" readonly>
+							<button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#modalAddProrogation">
+								<i class="fa fa-plus"></i>
+							</button>
+							<a href="#collapseProrogations" class="btn btn-warning" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseProrogations">
+								<i class="fa fa-history"> </i> ({{ $projet->prorogations->count() }})
+							</a>
+						</div>
+
+						<div class="collapse mt-2" id="collapseProrogations">
+							<div class="card card-body p-2 bg-light">
+								@if($projet->prorogations->isEmpty())
+									<small class="text-muted text-center">Aucune prorogation enregistrée.</small>
+								@else
+									<table class="table table-sm table-hover mb-0">
+										<thead>
+											<tr>
+												<th>Date</th>
+												<th class="text-end">Actions</th>
+											</tr>
+										</thead>
+										<tbody>
+											@foreach($projet->prorogations as $prorogation)
+												<tr>
+													<td>{{ $prorogation->date_prorogation->format('d/m/Y') }}</td>
+													<td class="text-end">
+														<button type="button" class="btn btn-xs btn-warning btn-edit-prorogation" 
+																data-id="{{ $prorogation->id }}" 
+																data-date="{{ $prorogation->date_prorogation->format('Y-m-d') }}">
+															Modifier
+														</button>
+														
+														<a href="{{ route('projets.prorogation.destroy', $prorogation->id) }}" 
+														   class="btn btn-xs btn-danger" 
+														   onclick="return confirm('Confirmer la suppression de cette date ?')">
+															Suppr.
+														</a>
+													</td>
+												</tr>
+											@endforeach
+										</tbody>
+									</table>
+								@endif
+							</div>
+						</div>
 					</div>
 					
-					<div  id="div_duree_prorogation" class="prorogation col-md-6 mt-3 {{ $projet->statutProjet->id == 3 ? '' : 'd-none' }}">
+					<div  id="div_duree_prorogation" class="col-md-12 mt-3">
 					  <label class="form-label"> durée prorogation</label>
 					  <input id="duree_prorogation" name="duree_prorogation" type="number" class="form-control" disabled value="{{ old('duree_prorogation', $projet->duree_prorogation) }}">
 					</div>
@@ -564,10 +697,173 @@
 			<button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Enregistrer</button>
 		</div>
 		</form>
+		<!-- Boutons Modals pour financement additionnel -->
+		<div class="modal fade" id="modalAddFinancement" tabindex="-1" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<form action="{{ route('projets.financement.store', $projet->id) }}" method="POST">
+						@csrf
+						<div class="modal-header">
+							<h5 class="modal-title">Ajouter un Financement Additionnel</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+						</div>
+						<div class="modal-body">
+							<div class="mb-3">
+								<label class="form-label">Coût (FCFA) <span style="color: red;">*</span></label>
+								<input type="number" step="0.01" name="cout" class="form-control" required>
+							</div>
+							<div class="mb-3">
+								<label class="form-label">Coût en devise</label>
+								<input type="number" step="0.01" name="cout_devise" class="form-control">
+							</div>
+							<div class="mb-3">
+								<label class="form-label">Devise</label>
+								<select name="devise_id" class="form-select">
+									<option value="">Sélectionner une devise</option>
+									@foreach($devises ?? \App\Models\Devise::all() as $devise)
+										<option value="{{ $devise->id }}">{{ $devise->intitule }} ({{ $devise->sigle }})</option>
+									@endforeach
+								</select>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+							<button type="submit" class="btn btn-success">Enregistrer</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<div class="modal fade" id="modalEditFinancement" tabindex="-1" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<form id="formEditFinancement" method="POST">
+						@csrf
+						@method('PUT')
+						<div class="modal-header">
+							<h5 class="modal-title">Modifier le Financement Additionnel</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+						</div>
+						<div class="modal-body">
+							<div class="mb-3">
+								<label class="form-label">Coût (FCFA) <span style="color: red;">*</span></label>
+								<input type="number" step="0.01" id="edit_financement_cout" name="cout" class="form-control" required>
+							</div>
+							<div class="mb-3">
+								<label class="form-label">Coût en devise</label>
+								<input type="number" step="0.01" id="edit_financement_cout_devise" name="cout_devise" class="form-control">
+							</div>
+							<div class="mb-3">
+								<label class="form-label">Devise</label>
+								<select id="edit_financement_devise_id" name="devise_id" class="form-select">
+									<option value="">Sélectionner une devise</option>
+									@foreach($devises ?? \App\Models\Devise::all() as $devise)
+										<option value="{{ $devise->id }}">{{ $devise->intitule }} ({{ $devise->sigle }})</option>
+									@endforeach
+								</select>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+							<button type="submit" class="btn btn-primary">Mettre à jour</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<!-- Boutons Modals pour date Prorogation -->
+		<div class="modal fade" id="modalAddProrogation" tabindex="-1" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<form action="{{ route('projets.prorogation.store', $projet->id) }}" method="POST">
+						@csrf
+						<div class="modal-header">
+							<h5 class="modal-title">Ajouter une date de prorogation</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<div class="modal-body">
+							<div class="mb-3">
+								<label class="form-label">Nouvelle Date de prorogation <span style="color: red;">*</span></label>
+								<input type="date" name="date_prorogation" class="form-control" required>
+							</div>
+						</div>
+						<div class="modal-header">
+							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+							<button type="submit" class="btn btn-success">Enregistrer</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<div class="modal fade" id="modalEditProrogation" tabindex="-1" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<form id="formEditProrogation" method="POST">
+						@csrf
+						@method('PUT')
+						<div class="modal-header">
+							<h5 class="modal-title">Modifier la date de prorogation</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<div class="modal-body">
+							<div class="mb-3">
+								<label class="form-label">Date de prorogation <span style="color: red;">*</span></label>
+								<input type="date" id="edit_date_prorogation_field" name="date_prorogation" class="form-control" required>
+							</div>
+						</div>
+						<div class="modal-header">
+							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+							<button type="submit" class="btn btn-primary">Mettre à jour</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<!-- Fin Boutons Modals pour date Prorogation -->
+		
       </div>
     </div>
 	<script>
 $(document).ready(function() {
+		// edition et suppression de financement additionnel
+		$('.btn-edit-financement').on('click', function() {
+			var id = $(this).data('id');
+			var cout = $(this).data('cout');
+			var coutDevise = $(this).data('coutdevise');
+			var deviseId = $(this).data('devise');
+
+			// Mettre à jour dynamiquement l'action du formulaire
+			var updateUrl = "{{ url('projets/financement') }}/" + id;
+			$('#formEditFinancement').attr('action', updateUrl);
+
+			// Remplir les champs du modal
+			$('#edit_financement_cout').val(cout);
+			$('#edit_financement_cout_devise').val(coutDevise);
+			$('#edit_financement_devise_id').val(deviseId);
+
+			// Ouvrir le modal
+			var editModal = new bootstrap.Modal(document.getElementById('modalEditFinancement'));
+			editModal.show();
+		});
+		// Intercepter le clic sur le bouton "Modifier" d'une ligne de l'historique
+		$('.btn-edit-prorogation').on('click', function() {
+			var id = $(this).data('id');
+			var dateVal = $(this).data('date');
+
+			// Dynamiser l'URL d'action du formulaire du Modal d'édition
+			var updateUrl = "{{ url('projets/prorogation') }}/" + id;
+			$('#formEditProrogation').attr('action', updateUrl);
+
+			// Injecter la date actuelle dans le champ de saisie du pop-up
+			$('#edit_date_prorogation_field').val(dateVal);
+
+			// Afficher le modal d'édition
+			var editModal = new bootstrap.Modal(document.getElementById('modalEditProrogation'));
+			editModal.show();
+		});
+		
 		function calculerDureeMois() {
 			let dateDebut = null;
 			let dateFin = null;
@@ -673,6 +969,17 @@ $(document).ready(function() {
 				$('#date_prorogation, #date_cloture_prorogation, #duree_prorogation').val('');
 			}
 		});
+		//gestion du financement additionnel
+		$('input[name="financementAdditionnel_check"]').on('change', function () {
+			if ($(this).val() === 'Oui') {
+				$('#financementAdditionnel').removeClass('d-none').hide().slideDown();
+			} else {
+				$('#financementAdditionnel').slideUp(function() {
+					$(this).addClass('d-none');
+				});
+				
+			}
+		});
 
 		// Événement de changement de Statut corrigé
 		$('#statut_projet_id').change(function(){
@@ -687,21 +994,40 @@ $(document).ready(function() {
 			{
 				$('.initialisation').removeClass('d-none');
 				$('.execution,#prorogation_check, .prorogation, .formulation').addClass('d-none');
-				$("#div_cout").removeClass("col-md-3 col-md-4 col-md-12").addClass("col-md-6");
-				//$("#div_cout_devise").removeClass("col-md-3 col-md-4 col-md-6").addClass("col-md-12");
+				$("#div_cout")
+					.removeClass(function(index, className) {
+						return (className.match(/\bcol-md-\d+\b/g) || []).join(' ');
+					})
+					.addClass("col-md-6");
 			}
 			else if(statut == 2) // Formulation / Approuvé non exécuté
 			{
-				$("#div_cout").removeClass("col-md-4 col-md-6 col-md-12").addClass("col-md-3");
-				//$("#div_cout_devise").removeClass("col-md-3 col-md-4 col-md-6").addClass("col-md-12");
+				$("#div_cout")
+					.removeClass(function(index, className) {
+						return (className.match(/\bcol-md-\d+\b/g) || []).join(' ');
+					})
+					.addClass("col-md-12");
+	
+				$("#div_duree")
+					.removeClass(function(index, className) {
+						return (className.match(/\bcol-md-\d+\b/g) || []).join(' ');
+					})
+					.addClass("col-md-6");
 				$('.formulation').removeClass('d-none');
 				$('.execution,#prorogation_check, .prorogation, .initialisation').addClass('d-none');
 			}
 			else if(statut >= 3) // En exécution
 			{
-				$("#div_duree").removeClass("col-md-4 col-md-6 col-md-12").addClass("col-md-3");
-				//$("#div_cout_devise").removeClass("col-md-3 col-md-4 col-md-12").addClass("col-md-6");
-				$("#div_cout").removeClass("col-md-3 col-md-4 col-md-12").addClass("col-md-6");
+				$("#div_duree")
+					.removeClass(function(index, className) {
+						return (className.match(/\bcol-md-\d+\b/g) || []).join(' ');
+					})
+					.addClass("col-md-3");
+				$("#div_cout")
+					.removeClass(function(index, className) {
+						return (className.match(/\bcol-md-\d+\b/g) || []).join(' ');
+					})
+					.addClass("col-md-6");
 				$('.execution, #prorogation_check').removeClass('d-none');
 
 				// Si le radio prorogation est déjà sur "Oui", on affiche aussi les champs associés

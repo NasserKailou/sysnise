@@ -68,4 +68,33 @@ class NatureDonneeController extends Controller
 
         return redirect()->route('nature_donnees.index')->with('success', 'nature donnée supprimée avec succès');
     }
+	
+	public function showUploadForm()
+    {
+        return view('natureDonnees.upload');
+    }
+	
+	public function upload(Request $request)
+	{
+		$request->validate([
+			'file' => 'required|mimes:xlsx,csv,xls',
+		]);
+
+		$import = new NatureDonneesImport();
+
+		Excel::import($import, $request->file('file'));
+
+		// Récupération des indicateurs non insérés
+		$failedSources = $import->getFailedRows();
+		
+		
+		if (!empty($failedNatureDonnees)) {
+			return redirect()->back()->with([
+				'warning' => 'Certaines natures données n\'ont pas été importées.',
+				'failed_nature_donnees' => $failedNatureDonnees,
+			]);
+		}
+
+		return redirect()->back()->with('success', 'Tous les natures données ont été importées avec succès.');
+	}
 }

@@ -22,6 +22,8 @@ use App\Models\RechercheFinancement;
 use App\Models\Etude;
 use App\Models\PieceJointeProjet;
 use App\Models\Projet;
+use App\Models\ProjetProrogation;
+use App\Models\ProjetFinancementAdditionnel;
 use App\Models\StatutProjet;
 use App\Models\Zone;
 use App\Models\Priorite;
@@ -1310,6 +1312,71 @@ class ProjetController extends Controller
             'projet' => $projet,
 			'users' =>$users,
         ]);
+	}
+	
+	public function storeProrogation(Request $request, Projet $projet)
+	{
+		$request->validate(['date_prorogation' => 'required|date']);
+		
+		// Création de l'enregistrement lié
+		$projet->prorogations()->create([
+			'date_prorogation' => $request->date_prorogation
+		]);
+
+		return redirect()->back()->with('success', 'Prorogation ajoutée avec succès.');
+	}
+
+	public function updateProrogation(Request $request, $id)
+	{
+		$request->validate(['date_prorogation' => 'required|date']);
+		
+		$prorogation = ProjetProrogation::findOrFail($id);
+		$prorogation->update(['date_prorogation' => $request->date_prorogation]);
+
+		return redirect()->back()->with('success', 'Prorogation mise à jour avec succès.');
+	}
+
+	public function destroyProrogation($id)
+	{
+		$prorogation = ProjetProrogation::findOrFail($id);
+		$prorogation->delete();
+
+		return redirect()->back()->with('success', 'Prorogation supprimée avec succès.');
+	}
+	
+	public function storeFinancement(Request $request, Projet $projet)
+	{
+		$data = $request->validate([
+			'cout' => 'required|numeric',
+			'cout_devise' => 'nullable|numeric',
+			'devise_id' => 'nullable|exists:devises,id',
+		]);
+
+		$projet->financementsAdditionnels()->create($data);
+
+		return redirect()->back()->with('success', 'Financement additionnel ajouté avec succès.');
+	}
+
+	public function updateFinancement(Request $request, $id)
+	{
+		$data = $request->validate([
+			'cout' => 'required|numeric',
+			'cout_devise' => 'nullable|numeric',
+			'devise_id' => 'nullable|exists:devises,id',
+		]);
+
+		$financement = \App\Models\ProjetFinancementAdditionnel::findOrFail($id);
+		$financement->update($data);
+
+		return redirect()->back()->with('success', 'Financement additionnel mis à jour.');
+	}
+
+	public function destroyFinancement($id)
+	{
+		$financement = \App\Models\ProjetFinancementAdditionnel::findOrFail($id);
+		$financement->delete();
+
+		return redirect()->back()->with('success', 'Financement additionnel supprimé.');
 	}
 	
 	

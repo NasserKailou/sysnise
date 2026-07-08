@@ -18,6 +18,8 @@ Route::middleware(['auth'])->group(function () {
 
 	Route::resource('type_desagregations', App\Http\Controllers\TypeDesagregationController::class);
 	Route::resource('desagregations', App\Http\Controllers\DesagregationController::class);
+	Route::get('/nature_donnees/upload', [App\Http\Controllers\NatureDonneeController::class, 'showUploadForm'])->name('natureDonnees.showUploadForm');
+	Route::post('/nature_donnees/upload', [App\Http\Controllers\NatureDonneeController::class, 'upload'])->name('natureDonnees.upload');
 	Route::resource('nature_donnees', App\Http\Controllers\NatureDonneeController::class);
 	Route::get('/periodes/upload', [App\Http\Controllers\PeriodeController::class, 'showUploadForm'])->name('periodes.showUploadForm');
 	Route::post('/periodes/upload', [App\Http\Controllers\PeriodeController::class, 'upload'])->name('periodes.upload');
@@ -55,8 +57,20 @@ Route::middleware(['auth'])->group(function () {
 	Route::post('/projets/associer', [App\Http\Controllers\ProjetController::class, 'associer'])->name('projets.associer');
 	Route::delete('/projets/associations/{association}', [App\Http\Controllers\ProjetController::class, 'dissocier'])->name('projets.dissocier');
 
-
+	//update et delete prorogation
+	Route::put('projets/prorogation/{id}', [App\Http\Controllers\ProjetController::class, 'updateProrogation'])->name('projets.prorogation.update');
+	Route::get('projets/prorogation/delete/{id}', [App\Http\Controllers\ProjetController::class, 'destroyProrogation'])->name('projets.prorogation.destroy');
+	//update et delete financement additionnel 
+	Route::put('/projets/financement/{id}', [App\Http\Controllers\ProjetController::class, 'updateFinancement'])->name('projets.financement.update');
+	Route::get('/projets/financement/delete/{id}', [App\Http\Controllers\ProjetController::class, 'destroyFinancement'])->name('projets.financement.destroy');
+	
 	Route::prefix('projets/{projet}')->group(function () {
+		// Nouvelles routes dédiées à la gestion des prorogations depuis les pop-ups
+		Route::post('prorogation', [App\Http\Controllers\ProjetController::class, 'storeProrogation'])->name('projets.prorogation.store');
+		
+		// Gestion de l'historique des financements additionnels
+		Route::post('financement', [App\Http\Controllers\ProjetController::class, 'storeFinancement'])->name('projets.financement.store');
+		
 		// Enregistrer une nouvelle pièce jointe
 		Route::post('piece_jointe_projets', [App\Http\Controllers\PieceJointeProjetController::class, 'store'])->name('projets.piece_jointe_projets.store');
 		// Formulaire d'édition d'une pièce jointe

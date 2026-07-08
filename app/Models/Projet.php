@@ -224,7 +224,15 @@ class Projet extends Model
 		return $this->hasMany(ProjetPlanFinancement::class);
 	}
 
-
+	public function prorogations()
+	{
+		return $this->hasMany(ProjetProrogation::class)->orderBy('date_prorogation', 'desc');
+	}
+	
+	public function financementsAdditionnels()
+	{
+		return $this->hasMany(ProjetFinancementAdditionnel::class)->orderBy('created_at', 'desc');
+	}
 
 
     // Relation avec les associations
