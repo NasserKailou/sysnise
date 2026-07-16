@@ -109,9 +109,9 @@ class DashboardController extends Controller
             ->join('zones as z', 'pz.zone_id', '=', 'z.id')
             ->select('z.intitule as region', DB::raw('SUM(ppf.montant) as montant'))
             ->where('z.niveau', 2)
-            ->whereNull('ppf.deleted_on')
+            //->whereNull('ppf.deleted_on')
             ->whereNull('p.deleted_on')
-            ->whereNull('pz.deleted_on')
+            //->whereNull('pz.deleted_on')
             ->groupBy('z.id', 'z.intitule')
             ->orderBy('montant', 'desc')
             ->get();

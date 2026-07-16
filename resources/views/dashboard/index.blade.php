@@ -156,43 +156,6 @@
         </div>
     </div>
 
-    <!-- Répartition démographique (inspiré de l'image) -->
-    <div class="row mb-4">
-        <div class="col-lg-4 mb-4">
-            <div class="chart-card">
-                <div class="chart-header">
-                    <h5><i class="bi bi-people-fill"></i> Répartition par Sexe</h5>
-                </div>
-                <div class="chart-body">
-                    <canvas id="sexeChart"></canvas>
-                </div>
-                <div class="chart-footer">
-                    <div class="d-flex justify-content-around">
-                        <div class="text-center">
-                            <span class="badge bg-success">Homme</span>
-                            <div class="fw-bold">85%</div>
-                        </div>
-                        <div class="text-center">
-                            <span class="badge bg-warning">Femme</span>
-                            <div class="fw-bold">15%</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="col-lg-8 mb-4">
-            <div class="chart-card">
-                <div class="chart-header">
-                    <h5><i class="bi bi-bar-chart-fill"></i> Candidats par Tranche d'Âge</h5>
-                </div>
-                <div class="chart-body">
-                    <canvas id="ageChart"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Tableau des financements par projet -->
     <div class="row mb-4">
         <div class="col-12">
