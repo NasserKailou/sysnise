@@ -9,7 +9,13 @@ use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\UserRoleController;
 
 Route::middleware(['auth'])->group(function () {
-	Route::get('/', [App\Http\Controllers\ProjetController::class, 'index'])->name('projets.index');
+	// Tableau de bord
+	Route::get('/', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard.index');
+	Route::get('/dashboard/export/projets', [App\Http\Controllers\DashboardController::class, 'exportProjetsFichierPlat'])->name('dashboard.export.projets');
+	Route::get('/dashboard/export/cadres', [App\Http\Controllers\DashboardController::class, 'exportCadresFichierPlat'])->name('dashboard.export.cadres');
+	
+	// Projets
+	//Route::get('/', [App\Http\Controllers\ProjetController::class, 'index'])->name('projets.index');
 	//Route::get('/', [App\Http\Controllers\DonneeIndicateurController::class, 'extractionDonneesForm'])->name('donneeIndicateur.extractionDonnees.form');
 
 	Route::get('/zones/upload', [App\Http\Controllers\ZoneController::class, 'showUploadForm'])->name('zones.showUploadForm');

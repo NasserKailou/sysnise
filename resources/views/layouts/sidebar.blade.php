@@ -18,6 +18,16 @@
         <!-- Sidebar Menu -->
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+			  <!-- Tableau de Bord -->
+			  <li class="nav-item">
+                <a href="{{ route('dashboard.index') }}" class="nav-link {{ request()->routeIs('dashboard.index') ? 'active' : '' }}">
+                  <i class="nav-icon bi bi-speedometer2"></i>
+                  <p>Tableau de Bord</p>
+                </a>
+              </li>
+			  
+			  <li class="nav-header">GESTION</li>
+			  
 			  <li class="nav-item">
                 <a href="#" class="nav-link">
 				  <i class="nav-icon bi bi-list"></i>
