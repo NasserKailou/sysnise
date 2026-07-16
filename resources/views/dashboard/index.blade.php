@@ -193,6 +193,88 @@
         </div>
     </div>
 
+    <!-- Tableau des financements par projet -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-gradient-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-table"></i> Situation des Financements par Projet
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="projetsTable" class="table table-hover table-striped" style="width:100%">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Projet</th>
+                                    <th class="text-end">Financement Prévu</th>
+                                    <th class="text-end">Budget Budgétisé</th>
+                                    <th class="text-end">Montant Dépensé</th>
+                                    <th class="text-center" style="min-width: 200px;">Taux de Consommation</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($projetsFinancement as $projet)
+                                <tr>
+                                    <td>
+                                        <div class="projet-info">
+                                            <div class="fw-bold text-primary">{{ $projet->sigle }}</div>
+                                            <div class="small text-muted">{{ Str::limit($projet->intitule, 50) }}</div>
+                                            <div class="small">
+                                                <span class="badge bg-info text-dark">{{ $projet->secteurs ?: 'Non défini' }}</span>
+                                            </div>
+                                            <div class="small text-secondary">
+                                                <i class="bi bi-building"></i> {{ Str::limit($projet->institution_tutelle ?: 'Non défini', 40) }}
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="text-end">
+                                        <span class="fw-bold text-primary">
+                                            {{ number_format($projet->financement_prevu, 0, ',', ' ') }}
+                                        </span>
+                                        <div class="small text-muted">FCFA</div>
+                                    </td>
+                                    <td class="text-end">
+                                        <span class="fw-bold text-info">
+                                            {{ number_format($projet->budget_budgetise, 0, ',', ' ') }}
+                                        </span>
+                                        <div class="small text-muted">FCFA</div>
+                                    </td>
+                                    <td class="text-end">
+                                        <span class="fw-bold text-success">
+                                            {{ number_format($projet->budget_depense, 0, ',', ' ') }}
+                                        </span>
+                                        <div class="small text-muted">FCFA</div>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="d-flex align-items-center justify-content-center">
+                                            <div class="progress flex-grow-1" style="height: 25px;">
+                                                @php
+                                                    $taux = $projet->taux_consommation;
+                                                    $couleur = $taux >= 80 ? 'success' : ($taux >= 50 ? 'warning' : 'danger');
+                                                @endphp
+                                                <div class="progress-bar bg-{{ $couleur }}" 
+                                                     role="progressbar" 
+                                                     style="width: {{ min($taux, 100) }}%"
+                                                     aria-valuenow="{{ $taux }}" 
+                                                     aria-valuemin="0" 
+                                                     aria-valuemax="100">
+                                                    <span class="fw-bold">{{ number_format($taux, 1) }}%</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Boutons d'export -->
     <div class="row mb-4">
         <div class="col-12">
@@ -238,6 +320,7 @@
 </div>
 
 @push('css')
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
 <style>
     .dashboard-header {
         background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
@@ -422,11 +505,63 @@
     .stat-card, .chart-card {
         animation: fadeInUp 0.6s ease-out;
     }
+
+    /* Styles pour le tableau des projets */
+    .projet-info {
+        line-height: 1.6;
+    }
+
+    .projet-info .fw-bold {
+        font-size: 0.95rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .projet-info .small {
+        font-size: 0.85rem;
+        margin-bottom: 0.15rem;
+    }
+
+    #projetsTable tbody tr {
+        transition: all 0.3s ease;
+    }
+
+    #projetsTable tbody tr:hover {
+        background-color: rgba(59, 130, 246, 0.05) !important;
+        transform: translateX(5px);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    #projetsTable .progress {
+        background-color: rgba(0, 0, 0, 0.1);
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    #projetsTable .progress-bar {
+        font-size: 0.85rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: width 1s ease-in-out;
+    }
+
+    /* Responsive pour DataTables */
+    @media (max-width: 768px) {
+        #projetsTable_wrapper .dataTables_length,
+        #projetsTable_wrapper .dataTables_filter {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+    }
+
 </style>
 @endpush
 
 @push('js')
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
 <script>
     // Horloge en temps réel
     function updateClock() {
@@ -761,6 +896,38 @@
                 }
             }
         }
+    });
+
+    // Initialisation de DataTables pour le tableau des projets
+    $(document).ready(function() {
+        $('#projetsTable').DataTable({
+            language: {
+                url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/fr-FR.json'
+            },
+            pageLength: 10,
+            order: [[0, 'asc']],
+            columnDefs: [
+                {
+                    targets: [1, 2, 3],
+                    className: 'text-end'
+                },
+                {
+                    targets: 4,
+                    orderable: true,
+                    className: 'text-center'
+                }
+            ],
+            responsive: true,
+            dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>rtip',
+            drawCallback: function() {
+                // Animation des barres de progression après le rendu
+                $('.progress-bar').each(function() {
+                    $(this).css('width', '0%');
+                    const width = $(this).attr('aria-valuenow') + '%';
+                    $(this).animate({width: width}, 1000);
+                });
+            }
+        });
     });
 
     // Fonction pour rafraîchir un graphique

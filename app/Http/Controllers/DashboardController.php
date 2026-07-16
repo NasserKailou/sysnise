@@ -26,7 +26,10 @@ class DashboardController extends Controller
         // Données pour les graphiques
         $chartsData = $this->getChartsData();
         
-        return view('dashboard.index', compact('breadcrumb', 'stats', 'chartsData'));
+        // Données du tableau des projets avec financements
+        $projetsFinancement = $this->getProjetsFinancement();
+        
+        return view('dashboard.index', compact('breadcrumb', 'stats', 'chartsData', 'projetsFinancement'));
     }
     
     /**
@@ -186,6 +189,79 @@ class DashboardController extends Controller
             ['tranche' => '35-39 ans', 'nombre' => 635],
             ['tranche' => '40 ans et +', 'nombre' => 295],
         ]);
+    }
+    
+    /**
+     * Obtenir les données des projets avec leurs financements
+     */
+    private function getProjetsFinancement()
+    {
+        return DB::table('projets as p')
+            ->leftJoin('statut_projets as sp', 'p.statut_projet_id', '=', 'sp.id')
+            ->leftJoin('institution_tutelles as it', 'p.institution_tutelle_id', '=', 'it.id')
+            ->leftJoin('projet_secteur as ps', 'p.id', '=', 'ps.projet_id')
+            ->leftJoin('secteurs as s', 'ps.secteur_id', '=', 's.id')
+            ->select(
+                'p.id',
+                'p.sigle',
+                'p.intitule',
+                'sp.intitule as statut',
+                'it.intitule as institution_tutelle',
+                DB::raw('STRING_AGG(DISTINCT s.intitule, \', \') as secteurs'),
+                DB::raw('COALESCE(p.cout, 0) as financement_prevu'),
+                DB::raw('COALESCE((
+                    SELECT SUM(pba1.montant) 
+                    FROM projet_budget_annuels pba1 
+                    JOIN projet_plan_financements ppf1 ON pba1.plan_financement_id = ppf1.id
+                    WHERE ppf1.projet_id = p.id 
+                    AND pba1.statut_budget_id = 3
+                    AND pba1.deleted_on IS NULL 
+                    AND ppf1.deleted_on IS NULL
+                ), 0) as budget_budgetise'),
+                DB::raw('COALESCE((
+                    SELECT SUM(pba2.montant) 
+                    FROM projet_budget_annuels pba2 
+                    JOIN projet_plan_financements ppf2 ON pba2.plan_financement_id = ppf2.id
+                    WHERE ppf2.projet_id = p.id 
+                    AND pba2.statut_budget_id = 2
+                    AND pba2.deleted_on IS NULL 
+                    AND ppf2.deleted_on IS NULL
+                ), 0) as budget_depense'),
+                DB::raw('CASE 
+                    WHEN COALESCE((
+                        SELECT SUM(pba3.montant) 
+                        FROM projet_budget_annuels pba3 
+                        JOIN projet_plan_financements ppf3 ON pba3.plan_financement_id = ppf3.id
+                        WHERE ppf3.projet_id = p.id 
+                        AND pba3.statut_budget_id = 3
+                        AND pba3.deleted_on IS NULL 
+                        AND ppf3.deleted_on IS NULL
+                    ), 0) = 0 THEN 0
+                    ELSE ROUND((
+                        COALESCE((
+                            SELECT SUM(pba4.montant) 
+                            FROM projet_budget_annuels pba4 
+                            JOIN projet_plan_financements ppf4 ON pba4.plan_financement_id = ppf4.id
+                            WHERE ppf4.projet_id = p.id 
+                            AND pba4.statut_budget_id = 2
+                            AND pba4.deleted_on IS NULL 
+                            AND ppf4.deleted_on IS NULL
+                        ), 0) * 100.0 / NULLIF((
+                            SELECT SUM(pba5.montant) 
+                            FROM projet_budget_annuels pba5 
+                            JOIN projet_plan_financements ppf5 ON pba5.plan_financement_id = ppf5.id
+                            WHERE ppf5.projet_id = p.id 
+                            AND pba5.statut_budget_id = 3
+                            AND pba5.deleted_on IS NULL 
+                            AND ppf5.deleted_on IS NULL
+                        ), 0)
+                    ), 2)
+                END as taux_consommation')
+            )
+            ->whereNull('p.deleted_on')
+            ->groupBy('p.id', 'p.sigle', 'p.intitule', 'p.cout', 'sp.intitule', 'it.intitule')
+            ->orderBy('p.intitule')
+            ->get();
     }
     
     /**
