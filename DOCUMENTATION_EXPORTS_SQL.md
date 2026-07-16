@@ -1,16 +1,17 @@
-# Documentation des Requêtes SQL - Fichiers Plats
+# Documentation des Requêtes SQL - Fichiers Plats (PostgreSQL)
 
 ## 1. Fichier Plat des Projets
 
 ### Description
 Cette requête génère un fichier plat où chaque ligne représente un projet avec toutes ses informations consolidées.
+**Base de données** : PostgreSQL
 
 ### Colonnes exportées
-- **Informations projet** : ID, sigle, intitulé, dates, durée, coût
-- **Relations** : Statut, priorité, institution, cadre de développement
-- **Listes agrégées** : Secteurs, zones d'intervention, bailleurs (séparés par ";")
+- **Informations projet** : ID, sigle, intitulé, dates (démarrage, prévues, effectives, approbation, signature, mise en vigueur), durée, coût
+- **Relations** : Statut, priorité, institution, cadre de développement, devise
+- **Listes agrégées** : Secteurs, zones d'intervention, bailleurs (séparés par "; ")
 - **Finances** : Montant plan financement, budgets prévus et dépensés
-- **Pilotage** : Organe de pilotage, audits, problèmes et solutions
+- **Pilotage** : Organe de pilotage, audits, problèmes, solutions, recommandations, rapport
 
 ### Requête SQL
 
@@ -24,23 +25,27 @@ SELECT
     p.date_fin_prevue,
     p.date_debut_effective,
     p.date_fin_effective,
+    p.date_approbation,
+    p.date_signature,
+    p.date_mise_en_vigueur,
     p.duree,
     p.cout as cout_total,
-    d.sigle as devise,
+    p.cout_devise,
+    d.intitule as devise,
     sp.intitule as statut_projet,
     pr.intitule as priorite,
     it.intitule as institution_tutelle,
     cd.intitule as cadre_developpement,
-    GROUP_CONCAT(DISTINCT s.intitule SEPARATOR '; ') as secteurs,
-    GROUP_CONCAT(DISTINCT z.intitule SEPARATOR '; ') as zones_intervention,
-    GROUP_CONCAT(DISTINCT b.intitule SEPARATOR '; ') as bailleurs,
+    STRING_AGG(DISTINCT s.intitule, '; ') as secteurs,
+    STRING_AGG(DISTINCT z.intitule, '; ') as zones_intervention,
+    STRING_AGG(DISTINCT b.intitule, '; ') as bailleurs,
     COALESCE(SUM(ppf.montant), 0) as montant_plan_financement,
     COALESCE(
         (SELECT SUM(pba1.montant) 
          FROM projet_budget_annuels pba1 
          WHERE pba1.plan_financement_id IN (
              SELECT id FROM projet_plan_financements WHERE projet_id = p.id
-         ) AND pba1.statut_budget_id = 1), 
+         ) AND pba1.statut_budget_id = 1 AND pba1.deleted_on IS NULL), 
         0
     ) as budget_prevu_total,
     COALESCE(
@@ -48,14 +53,16 @@ SELECT
          FROM projet_budget_annuels pba2 
          WHERE pba2.plan_financement_id IN (
              SELECT id FROM projet_plan_financements WHERE projet_id = p.id
-         ) AND pba2.statut_budget_id = 2), 
+         ) AND pba2.statut_budget_id = 2 AND pba2.deleted_on IS NULL), 
         0
     ) as budget_depense_total,
     p.dispose_organe_pilotage,
     p.a_audit_regulier,
     p.problemes_rencontres,
     p.solutions_proposees,
-    p.recommandations
+    p.recommandations,
+    p.rapport_rempli_par,
+    p.rapport_date_remplissage
 FROM projets p
 LEFT JOIN statut_projets sp ON p.statut_projet_id = sp.id
 LEFT JOIN priorites pr ON p.priorite_id = pr.id
@@ -66,15 +73,24 @@ LEFT JOIN projet_secteur ps ON p.id = ps.projet_id
 LEFT JOIN secteurs s ON ps.secteur_id = s.id
 LEFT JOIN projet_zone pz ON p.id = pz.projet_id
 LEFT JOIN zones z ON pz.zone_id = z.id
-LEFT JOIN projet_plan_financements ppf ON p.id = ppf.projet_id
+LEFT JOIN projet_plan_financements ppf ON p.id = ppf.projet_id AND ppf.deleted_on IS NULL
 LEFT JOIN bailleurs b ON ppf.bailleur_id = b.id
+WHERE p.deleted_on IS NULL
 GROUP BY p.id, p.sigle, p.intitule, p.annee_demarrage, p.date_debut_prevue, 
          p.date_fin_prevue, p.date_debut_effective, p.date_fin_effective, 
-         p.duree, p.cout, d.sigle, sp.intitule, pr.intitule, it.intitule, 
-         cd.intitule, p.dispose_organe_pilotage, p.a_audit_regulier, 
-         p.problemes_rencontres, p.solutions_proposees, p.recommandations
+         p.date_approbation, p.date_signature, p.date_mise_en_vigueur,
+         p.duree, p.cout, p.cout_devise, d.intitule, sp.intitule, pr.intitule, 
+         it.intitule, cd.intitule, p.dispose_organe_pilotage, p.a_audit_regulier, 
+         p.problemes_rencontres, p.solutions_proposees, p.recommandations,
+         p.rapport_rempli_par, p.rapport_date_remplissage
 ORDER BY p.id;
 ```
+
+### Particularités PostgreSQL
+- **STRING_AGG** : Remplace GROUP_CONCAT de MySQL
+- **Soft Deletes** : Filtrage avec `deleted_on IS NULL`
+- **Types** : `BIGSERIAL` pour les ID, `NUMERIC(15,2)` pour les montants
+- **Colonnes supplémentaires** : cout_devise, dates additionnelles (approbation, signature, mise_en_vigueur)
 
 ### Utilisation
 - **Route** : `/dashboard/export/projets`

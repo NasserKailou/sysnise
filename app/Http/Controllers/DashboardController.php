@@ -35,19 +35,30 @@ class DashboardController extends Controller
     private function getGlobalStats()
     {
         return [
-            'total_projets' => Projet::count(),
-            'total_cadres' => CadreDeveloppement::where('type_cadre_developpement_id', 1)->count(),
-            'total_financement' => DB::table('projet_plan_financements')->sum('montant'),
+            'total_projets' => Projet::whereNull('deleted_on')->count(),
+            'total_cadres' => CadreDeveloppement::where('type_cadre_developpement_id', 1)
+                ->whereNull('deleted_on')
+                ->count(),
+            'total_financement' => DB::table('projet_plan_financements')
+                ->whereNull('deleted_on')
+                ->sum('montant'),
             'total_budget_prevu' => DB::table('projet_budget_annuels')
                 ->where('statut_budget_id', 1)
+                ->whereNull('deleted_on')
                 ->sum('montant'),
             'total_budget_depense' => DB::table('projet_budget_annuels')
                 ->where('statut_budget_id', 2)
+                ->whereNull('deleted_on')
                 ->sum('montant'),
-            'projets_actifs' => Projet::whereHas('statutProjet', function($q) {
-                $q->where('intitule', 'like', '%actif%')
-                    ->orWhere('intitule', 'like', '%cours%');
-            })->count(),
+            'projets_actifs' => Projet::join('statut_projets', 'projets.statut_projet_id', '=', 'statut_projets.id')
+                ->where(function($q) {
+                    $q->where('statut_projets.intitule', 'like', '%Exécution%')
+                      ->orWhere('statut_projets.intitule', 'like', '%exécution%')
+                      ->orWhere('statut_projets.intitule', 'like', '%En cours%')
+                      ->orWhere('statut_projets.intitule', 'like', '%en cours%');
+                })
+                ->whereNull('projets.deleted_on')
+                ->count(),
         ];
     }
     
@@ -77,6 +88,8 @@ class DashboardController extends Controller
             ->join('projet_secteur as ps', 'p.id', '=', 'ps.projet_id')
             ->join('secteurs as s', 'ps.secteur_id', '=', 's.id')
             ->select('s.intitule as secteur', DB::raw('SUM(ppf.montant) as montant'))
+            ->whereNull('ppf.deleted_on')
+            ->whereNull('p.deleted_on')
             ->groupBy('s.id', 's.intitule')
             ->orderBy('montant', 'desc')
             ->get();
@@ -92,7 +105,10 @@ class DashboardController extends Controller
             ->join('projet_zone as pz', 'p.id', '=', 'pz.projet_id')
             ->join('zones as z', 'pz.zone_id', '=', 'z.id')
             ->select('z.intitule as region', DB::raw('SUM(ppf.montant) as montant'))
-            ->where('z.type_zone', 'region')
+            ->where('z.niveau', 2)
+            ->whereNull('ppf.deleted_on')
+            ->whereNull('p.deleted_on')
+            ->whereNull('pz.deleted_on')
             ->groupBy('z.id', 'z.intitule')
             ->orderBy('montant', 'desc')
             ->get();
@@ -106,6 +122,7 @@ class DashboardController extends Controller
         return DB::table('projets as p')
             ->join('statut_projets as sp', 'p.statut_projet_id', '=', 'sp.id')
             ->select('sp.intitule as statut', DB::raw('COUNT(*) as nombre'))
+            ->whereNull('p.deleted_on')
             ->groupBy('sp.id', 'sp.intitule')
             ->get();
     }
@@ -118,6 +135,7 @@ class DashboardController extends Controller
         return DB::table('projet_plan_financements as ppf')
             ->join('bailleurs as b', 'ppf.bailleur_id', '=', 'b.id')
             ->select('b.intitule as bailleur', DB::raw('SUM(ppf.montant) as montant'))
+            ->whereNull('ppf.deleted_on')
             ->groupBy('b.id', 'b.intitule')
             ->orderBy('montant', 'desc')
             ->limit(10)
@@ -136,6 +154,7 @@ class DashboardController extends Controller
                 'sb.intitule as type',
                 DB::raw('SUM(pba.montant) as montant')
             )
+            ->whereNull('pba.deleted_on')
             ->groupBy('pba.annee', 'sb.id', 'sb.intitule')
             ->orderBy('pba.annee')
             ->get();
@@ -214,23 +233,27 @@ class DashboardController extends Controller
                 p.date_fin_prevue,
                 p.date_debut_effective,
                 p.date_fin_effective,
+                p.date_approbation,
+                p.date_signature,
+                p.date_mise_en_vigueur,
                 p.duree,
                 p.cout as cout_total,
-                d.sigle as devise,
+                p.cout_devise,
+                d.intitule as devise,
                 sp.intitule as statut_projet,
                 pr.intitule as priorite,
                 it.intitule as institution_tutelle,
                 cd.intitule as cadre_developpement,
-                GROUP_CONCAT(DISTINCT s.intitule SEPARATOR '; ') as secteurs,
-                GROUP_CONCAT(DISTINCT z.intitule SEPARATOR '; ') as zones_intervention,
-                GROUP_CONCAT(DISTINCT b.intitule SEPARATOR '; ') as bailleurs,
+                STRING_AGG(DISTINCT s.intitule, '; ') as secteurs,
+                STRING_AGG(DISTINCT z.intitule, '; ') as zones_intervention,
+                STRING_AGG(DISTINCT b.intitule, '; ') as bailleurs,
                 COALESCE(SUM(ppf.montant), 0) as montant_plan_financement,
                 COALESCE(
                     (SELECT SUM(pba1.montant) 
                      FROM projet_budget_annuels pba1 
                      WHERE pba1.plan_financement_id IN (
                          SELECT id FROM projet_plan_financements WHERE projet_id = p.id
-                     ) AND pba1.statut_budget_id = 1), 
+                     ) AND pba1.statut_budget_id = 1 AND pba1.deleted_on IS NULL), 
                     0
                 ) as budget_prevu_total,
                 COALESCE(
@@ -238,14 +261,16 @@ class DashboardController extends Controller
                      FROM projet_budget_annuels pba2 
                      WHERE pba2.plan_financement_id IN (
                          SELECT id FROM projet_plan_financements WHERE projet_id = p.id
-                     ) AND pba2.statut_budget_id = 2), 
+                     ) AND pba2.statut_budget_id = 2 AND pba2.deleted_on IS NULL), 
                     0
                 ) as budget_depense_total,
                 p.dispose_organe_pilotage,
                 p.a_audit_regulier,
                 p.problemes_rencontres,
                 p.solutions_proposees,
-                p.recommandations
+                p.recommandations,
+                p.rapport_rempli_par,
+                p.rapport_date_remplissage
             FROM projets p
             LEFT JOIN statut_projets sp ON p.statut_projet_id = sp.id
             LEFT JOIN priorites pr ON p.priorite_id = pr.id
@@ -256,13 +281,16 @@ class DashboardController extends Controller
             LEFT JOIN secteurs s ON ps.secteur_id = s.id
             LEFT JOIN projet_zone pz ON p.id = pz.projet_id
             LEFT JOIN zones z ON pz.zone_id = z.id
-            LEFT JOIN projet_plan_financements ppf ON p.id = ppf.projet_id
+            LEFT JOIN projet_plan_financements ppf ON p.id = ppf.projet_id AND ppf.deleted_on IS NULL
             LEFT JOIN bailleurs b ON ppf.bailleur_id = b.id
+            WHERE p.deleted_on IS NULL
             GROUP BY p.id, p.sigle, p.intitule, p.annee_demarrage, p.date_debut_prevue, 
                      p.date_fin_prevue, p.date_debut_effective, p.date_fin_effective, 
-                     p.duree, p.cout, d.sigle, sp.intitule, pr.intitule, it.intitule, 
-                     cd.intitule, p.dispose_organe_pilotage, p.a_audit_regulier, 
-                     p.problemes_rencontres, p.solutions_proposees, p.recommandations
+                     p.date_approbation, p.date_signature, p.date_mise_en_vigueur,
+                     p.duree, p.cout, p.cout_devise, d.intitule, sp.intitule, pr.intitule, 
+                     it.intitule, cd.intitule, p.dispose_organe_pilotage, p.a_audit_regulier, 
+                     p.problemes_rencontres, p.solutions_proposees, p.recommandations,
+                     p.rapport_rempli_par, p.rapport_date_remplissage
             ORDER BY p.id
         ";
     }
@@ -326,30 +354,31 @@ class DashboardController extends Controller
                 ind.methode_calcul,
                 ind.periodicite,
                 ind.unite,
-                GROUP_CONCAT(DISTINCT d.intitule SEPARATOR '; ') as desagregations,
-                GROUP_CONCAT(DISTINCT CONCAT(di.annee, ':', di.valeur) SEPARATOR '; ') as valeurs_annuelles,
+                STRING_AGG(DISTINCT d.intitule, '; ') as desagregations,
+                STRING_AGG(DISTINCT p.intitule || ':' || di.valeur::text, '; ') as valeurs_annuelles,
                 si.intitule as source_indicateur,
                 ui.intitule as unite_indicateur
             FROM cadre_developpements cd
             -- Récupérer les orientations (impacts - niveau 1)
-            INNER JOIN orientation_cadre_developpements ocd ON cd.id = ocd.cadre_developpement_id
-            INNER JOIN cadre_logiques cl_impact ON ocd.cadre_logique_id = cl_impact.id AND cl_impact.niveau = 1
+            INNER JOIN orientation_cadre_developpements ocd ON cd.id = ocd.cadre_developpement_id AND ocd.deleted_on IS NULL
+            INNER JOIN cadre_logiques cl_impact ON ocd.cadre_logique_id = cl_impact.id AND cl_impact.niveau = 1 AND cl_impact.deleted_on IS NULL
             -- Récupérer les effets (niveau 2)
-            LEFT JOIN cadre_logiques cl_effet ON cl_effet.cadre_logique_id = cl_impact.id AND cl_effet.niveau = 2
+            LEFT JOIN cadre_logiques cl_effet ON cl_effet.cadre_logique_id = cl_impact.id AND cl_effet.niveau = 2 AND cl_effet.deleted_on IS NULL
             -- Récupérer les produits (niveau 3)
-            LEFT JOIN cadre_logiques cl_produit ON cl_produit.cadre_logique_id = cl_effet.id AND cl_produit.niveau = 3
+            LEFT JOIN cadre_logiques cl_produit ON cl_produit.cadre_logique_id = cl_effet.id AND cl_produit.niveau = 3 AND cl_produit.deleted_on IS NULL
             -- Récupérer les indicateurs liés aux différents niveaux
-            LEFT JOIN cadre_mesure_resultats cmr ON cmr.cadre_logique_id IN (cl_impact.id, cl_effet.id, cl_produit.id)
-            LEFT JOIN indicateurs ind ON cmr.indicateur_id = ind.id
+            LEFT JOIN cadre_mesure_resultats cmr ON cmr.cadre_logique_id IN (cl_impact.id, cl_effet.id, cl_produit.id) AND cmr.deleted_on IS NULL
+            LEFT JOIN indicateurs ind ON cmr.indicateur_id = ind.id AND ind.deleted_on IS NULL
             -- Désagrégations
-            LEFT JOIN desagregation_indicateur di_rel ON ind.id = di_rel.indicateur_id
-            LEFT JOIN desagregations d ON di_rel.desagregation_id = d.id
+            LEFT JOIN desagregation_indicateur di_rel ON ind.id = di_rel.indicateur_id AND di_rel.deleted_on IS NULL
+            LEFT JOIN desagregations d ON di_rel.desagregation_id = d.id AND d.deleted_on IS NULL
             -- Données des indicateurs
-            LEFT JOIN donnee_indicateurs di ON ind.id = di.indicateur_id
+            LEFT JOIN donnee_indicateurs di ON ind.id = di.indicateur_id AND di.deleted_on IS NULL
+            LEFT JOIN periodes p ON di.periode_id = p.id AND p.deleted_on IS NULL
             -- Autres informations
-            LEFT JOIN source_indicateurs si ON ind.source = si.id
-            LEFT JOIN unite_indicateurs ui ON ind.unite = ui.id
-            WHERE cd.type_cadre_developpement_id = 1
+            LEFT JOIN source_indicateurs si ON ind.source = si.intitule
+            LEFT JOIN unite_indicateurs ui ON ind.unite = ui.intitule
+            WHERE cd.type_cadre_developpement_id = 1 AND cd.deleted_on IS NULL
             GROUP BY cd.id, cd.intitule, cd.structure_responsable, cd.annee_debut, cd.annee_fin,
                      cl_impact.id, cl_impact.intitule, cl_impact.niveau,
                      cl_effet.id, cl_effet.intitule, cl_effet.niveau,
