@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\hasOne;
 use Illuminate\Database\Eloquent\Relations\belongsToMany;
 
 class Projet extends Model
@@ -262,6 +263,11 @@ class Projet extends Model
 	public function rapports()
 	{
 		return $this->hasMany(ProjetRapport::class);
+	}
+	
+	public function gouvernance()
+	{
+		return $this->hasOne(ProjetGouvernance::class);
 	}
 
 

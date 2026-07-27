@@ -66,17 +66,17 @@
 									<p><strong>Année Démarrage :</strong> {{ $projet->annee_demarrage ?? '—' }}</p>
 									<p><strong>Durée du Projet (mois) :</strong> {{ $projet->duree }}</p>
 								@elseif ($projet->statutProjet->id == 2)
-									<p><strong>Date début prévue :</strong> {{ $projet->date_debut_prevue->format('d-m-Y') }}</p>
-									<p><strong>Date fin prévue :</strong> {{ $projet->date_fin_prevue->format('d-m-Y') }}</p>
+									<p><strong>Date début prévue :</strong> {{ $projet->date_debut_prevue?->format('d-m-Y') ?? '—' }}</p>
+									<p><strong>Date fin prévue :</strong> {{ $projet->date_fin_prevue?->format('d-m-Y') ?? '—' }}</p>
 									<p><strong>Durée du Projet (mois) :</strong> {{ $projet->duree }}</p>
 								@elseif ($projet->statutProjet->id == 3)
-									<p><strong>Date d'approbation :</strong> {{ $projet->date_approbation->format('d-m-Y') }}</p>
-									<p><strong>Date initiale de clôture :</strong> {{ $projet->date_fin_effective->format('d-m-Y') }}</p>
+									<p><strong>Date d'approbation :</strong> {{ $projet->date_approbation?->format('d-m-Y') ?? '—' }}</p>
+									<p><strong>Date initiale de clôture :</strong> {{ $projet->date_fin_effective?->format('d-m-Y') ?? '—' }}</p>
 									<p><strong>Durée initial du Projet (mois) :</strong> {{ $projet->duree }}</p>
 								@endif
 								
 								@if(!$projet->prorogations->isEmpty())
-									<p><strong>Nouvelle date de clôture :</strong> {{ $projet->prorogations->last()->date_prorogation->format('d/m/Y') }}</p>
+									<p><strong>Nouvelle date de clôture :</strong> {{ $projet->prorogations->last()->date_prorogation?->format('d/m/Y') ?? '—' }}</p>
 									<p><strong>Durée du Projet (mois) :</strong> {{ $projet->duree_prorogation }}</p>
 								@endif
 								

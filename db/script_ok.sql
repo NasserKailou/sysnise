@@ -2384,5 +2384,123 @@ SELECT
 FROM arborescence
 ORDER BY cadre_developpement_id, niveau, id;
   
-    
-  
+-- ============================================================
+-- 1. projet_gouvernances (fiche principale, une par projet)
+-- ============================================================
+CREATE TABLE projet_gouvernances (
+    id                              BIGSERIAL PRIMARY KEY,
+    projet_id                      BIGINT NOT NULL,
+
+    -- 3.1 Organe d'orientation / pilotage
+    organe_pilotage_existe         BOOLEAN NOT NULL DEFAULT FALSE,
+    nb_sessions_prevues            INTEGER,
+    nb_sessions_tenues             INTEGER,
+
+    -- 3.2 Audits
+    comptes_audites_regulierement  BOOLEAN NOT NULL DEFAULT FALSE,
+    commentaire_audit              TEXT,
+
+    -- Pied de fiche
+    rempli_par                     VARCHAR(255),
+    date_remplissage               DATE,
+
+    created_at                     TIMESTAMP(0) WITHOUT TIME ZONE,
+    updated_at                     TIMESTAMP(0) WITHOUT TIME ZONE,
+
+    CONSTRAINT projet_gouvernances_projet_id_unique UNIQUE (projet_id),
+    CONSTRAINT projet_gouvernances_projet_id_foreign
+        FOREIGN KEY (projet_id) REFERENCES projets (id) ON DELETE CASCADE
+);
+
+-- Contraintes CHECK équivalentes aux "unsigned integer" de Laravel
+ALTER TABLE projet_gouvernances
+    ADD CONSTRAINT projet_gouvernances_nb_sessions_prevues_check
+        CHECK (nb_sessions_prevues IS NULL OR nb_sessions_prevues >= 0),
+    ADD CONSTRAINT projet_gouvernances_nb_sessions_tenues_check
+        CHECK (nb_sessions_tenues IS NULL OR nb_sessions_tenues >= 0);
+
+
+-- ============================================================
+-- 2. gouvernance_sessions (tableau n°8 - détail des sessions)
+-- ============================================================
+CREATE TABLE gouvernance_sessions (
+    id                              BIGSERIAL PRIMARY KEY,
+    projet_gouvernance_id          BIGINT NOT NULL,
+
+    date_session                    DATE NOT NULL,
+    nb_recommandations_etablies    INTEGER NOT NULL DEFAULT 0,
+    nb_recommandations_realisees   INTEGER NOT NULL DEFAULT 0,
+
+    created_at                      TIMESTAMP(0) WITHOUT TIME ZONE,
+    updated_at                      TIMESTAMP(0) WITHOUT TIME ZONE,
+
+    CONSTRAINT gouvernance_sessions_projet_gouvernance_id_foreign
+        FOREIGN KEY (projet_gouvernance_id) REFERENCES projet_gouvernances (id) ON DELETE CASCADE,
+    CONSTRAINT gouvernance_sessions_nb_etablies_check
+        CHECK (nb_recommandations_etablies >= 0),
+    CONSTRAINT gouvernance_sessions_nb_realisees_check
+        CHECK (nb_recommandations_realisees >= 0)
+);
+
+
+-- ============================================================
+-- 3. gouvernance_audits (tableau n°9 - audits des comptes)
+-- ============================================================
+CREATE TABLE gouvernance_audits (
+    id                                  BIGSERIAL PRIMARY KEY,
+    projet_gouvernance_id              BIGINT NOT NULL,
+
+    nombre_audits_realises             INTEGER NOT NULL DEFAULT 0,
+    exercice_comptable                  VARCHAR(255) NOT NULL,
+    comptes_certifies_sans_reserves    BOOLEAN NOT NULL DEFAULT FALSE,
+    nb_recommandations_etablies        INTEGER NOT NULL DEFAULT 0,
+    nb_recommandations_realisees       INTEGER NOT NULL DEFAULT 0,
+
+    created_at                          TIMESTAMP(0) WITHOUT TIME ZONE,
+    updated_at                          TIMESTAMP(0) WITHOUT TIME ZONE,
+
+    CONSTRAINT gouvernance_audits_projet_gouvernance_id_foreign
+        FOREIGN KEY (projet_gouvernance_id) REFERENCES projet_gouvernances (id) ON DELETE CASCADE,
+    CONSTRAINT gouvernance_audits_nombre_realises_check
+        CHECK (nombre_audits_realises >= 0),
+    CONSTRAINT gouvernance_audits_nb_etablies_check
+        CHECK (nb_recommandations_etablies >= 0),
+    CONSTRAINT gouvernance_audits_nb_realisees_check
+        CHECK (nb_recommandations_realisees >= 0)
+);
+
+
+-- ============================================================
+-- 4. gouvernance_problems (IV.1 - problèmes / solutions)
+-- ============================================================
+CREATE TABLE gouvernance_problems (
+    id                          BIGSERIAL PRIMARY KEY,
+    projet_gouvernance_id      BIGINT NOT NULL,
+
+    probleme_rencontre          TEXT NOT NULL,
+    solution_proposee           TEXT,
+
+    created_at                  TIMESTAMP(0) WITHOUT TIME ZONE,
+    updated_at                  TIMESTAMP(0) WITHOUT TIME ZONE,
+
+    CONSTRAINT gouvernance_problems_projet_gouvernance_id_foreign
+        FOREIGN KEY (projet_gouvernance_id) REFERENCES projet_gouvernances (id) ON DELETE CASCADE
+);
+
+
+-- ============================================================
+-- 5. gouvernance_recommendations (IV.2 - recommandations)
+-- ============================================================
+CREATE TABLE gouvernance_recommendations (
+    id                          BIGSERIAL PRIMARY KEY,
+    projet_gouvernance_id      BIGINT NOT NULL,
+
+    destinataire                 VARCHAR(255) NOT NULL,
+    contenu                       TEXT NOT NULL,
+
+    created_at                   TIMESTAMP(0) WITHOUT TIME ZONE,
+    updated_at                   TIMESTAMP(0) WITHOUT TIME ZONE,
+
+    CONSTRAINT gouvernance_recommendations_projet_gouvernance_id_foreign
+        FOREIGN KEY (projet_gouvernance_id) REFERENCES projet_gouvernances (id) ON DELETE CASCADE
+);  
