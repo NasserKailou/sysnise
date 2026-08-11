@@ -14,8 +14,8 @@
 			  <a href="#" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Cadre de résultat</a>
 				<ul class="dropdown-menu">
 				  @if (!$projet->cadreDeveloppement)<li><a class="dropdown-item" href="{{ route('projets.cadreProjet', ['projet' => $projet->id]) }}">Initialisation du cadre</a></li>@endif
-				  @if ($projet->cadreDeveloppement)<li><a class="dropdown-item" href="{{ route('projets.editCadreProjet', ['projet' => $projet->id]) }}">Modification du cadre</a></li>@endif
-				  @if ($projet->cadreDeveloppement)<li><a class="dropdown-item" href="{{ route('cadre_developpements.cadres_logiques.index', ['cadre_developpement' => $projet->cadreDeveloppement->id]) }}">Edition du cadre logique</a></li>@endif
+				  {{--@if ($projet->cadreDeveloppement)<li><a class="dropdown-item" href="{{ route('projets.editCadreProjet', ['projet' => $projet->id]) }}">Modification du cadre</a></li>@endif--}}
+				  @if ($projet->cadreDeveloppement)<li><a class="dropdown-item" href="{{ route('cadre_developpements.cadres_logiques.index', ['cadre_developpement' => $projet->cadreDeveloppement->id]) }}">Edition du Cadre de Résultats</a></li>@endif
 				</ul>
 			  @if ($projet->cadreDeveloppement)<a href="{{ route('projets.composantes.index', ['projet' => $projet->id]) }}" class="btn btn-outline-secondary">Composantes et Produits</a>@endif
 			  <a href="#" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Situation Financière</a>
@@ -59,7 +59,7 @@
 								<p><strong>Statut :</strong> {{ $projet->statutProjet?->intitule  ?? '—' }}</p>
 								<p><strong>Coût initial:</strong> {{ number_format($projet->cout, 0, ',', ' ') }} FCFA</p>
 								<p><strong>Financement Additionnel :</strong> {{ number_format($projet->financementsAdditionnels->sum('cout'), 0, ',', ' ') }} FCFA</p>
-								<p><strong>Coût Total :</strong> {{ number_format($projet->financementsAdditionnels->sum('cout') + $projet->cout, 0, ',', ' ') }} FCFA</p>
+								<p><strong>Coût Total y.c. Financement(s) Additionnel(s) :</strong> {{ number_format($projet->financementsAdditionnels->sum('cout') + $projet->cout, 0, ',', ' ') }} FCFA</p>
 							</div>
 							<div class="col-md-6">
 								@if($projet->statutProjet?->id == 1)
