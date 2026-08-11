@@ -1,523 +1,119 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container-fluid">
-    <!-- En-tête avec horloge et statistiques clés -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="dashboard-header">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h2 class="dashboard-title">
-                            <i class="bi bi-speedometer2"></i> Tableau de Bord - SysNISE
-                        </h2>
-                        <p class="text-muted mb-0">Système National Intégré de Suivi Évaluation</p>
-                    </div>
-                    <div class="text-end">
-                        <div class="clock-container">
-                            <div class="clock-time" id="clock">{{ date('H:i:s') }}</div>
-                            <div class="clock-date">{{ date('l j F Y') }}</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<div class="sys-dashboard">
+    <div class="dashboard-header">
+        <div>
+            <div class="eyebrow"><i class="bi bi-bar-chart-fill"></i> SYSNISE • PILOTAGE NATIONAL</div>
+            <h1>Suivi des projets</h1>
+            <p>Système National Intégré de Suivi-Évaluation</p>
+        </div>
+        <div class="clock-box">
+            <div id="clock">--:--:--</div>
+            <span id="date-label">{{ now()->locale('fr')->translatedFormat('l d F Y') }}</span>
         </div>
     </div>
 
-    <!-- Cartes statistiques -->
-    <div class="row mb-4">
-        <div class="col-lg-3 col-md-6 mb-3">
-            <div class="stat-card stat-primary">
-                <div class="stat-icon">
-                    <i class="bi bi-folder-fill"></i>
-                </div>
-                <div class="stat-content">
-                    <div class="stat-label">Total Projets</div>
-                    <div class="stat-value">{{ number_format($stats['total_projets']) }}</div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="col-lg-3 col-md-6 mb-3">
-            <div class="stat-card stat-success">
-                <div class="stat-icon">
-                    <i class="bi bi-check-circle-fill"></i>
-                </div>
-                <div class="stat-content">
-                    <div class="stat-label">Projets Actifs</div>
-                    <div class="stat-value">{{ number_format($stats['projets_actifs']) }}</div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="col-lg-3 col-md-6 mb-3">
-            <div class="stat-card stat-info">
-                <div class="stat-icon">
-                    <i class="bi bi-diagram-3-fill"></i>
-                </div>
-                <div class="stat-content">
-                    <div class="stat-label">Cadres Stratégiques</div>
-                    <div class="stat-value">{{ number_format($stats['total_cadres']) }}</div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="col-lg-3 col-md-6 mb-3">
-            <div class="stat-card stat-warning">
-                <div class="stat-icon">
-                    <i class="bi bi-currency-dollar"></i>
-                </div>
-                <div class="stat-content">
-                    <div class="stat-label">Financement Total</div>
-                    <div class="stat-value">{{ number_format($stats['total_financement'], 0, ',', ' ') }}</div>
-                </div>
-            </div>
-        </div>
+    <div class="kpi-grid">
+        <div class="kpi kpi-blue"><div class="kpi-icon"><i class="bi bi-folder2-open"></i></div><div><span>PROJETS</span><strong>{{ number_format($stats['total_projets'], 0, ',', ' ') }}</strong><small>Portefeuille total</small></div></div>
+        <div class="kpi kpi-cyan"><div class="kpi-icon"><i class="bi bi-lightning-charge-fill"></i></div><div><span>EN COURS</span><strong>{{ number_format($stats['projets_actifs'], 0, ',', ' ') }}</strong><small>Projets en exécution</small></div></div>
+        <div class="kpi kpi-purple"><div class="kpi-icon"><i class="bi bi-cash-stack"></i></div><div><span>FINANCEMENT</span><strong>{{ number_format($stats['total_financement']/1000000000, 1, ',', ' ') }} <em>Mds</em></strong><small>FCFA mobilisés</small></div></div>
+        <div class="kpi kpi-green"><div class="kpi-icon"><i class="bi bi-graph-up-arrow"></i></div><div><span>EXÉCUTION</span><strong>{{ number_format($stats['taux_execution'], 1, ',', ' ') }}<em>%</em></strong><small>{{ number_format($stats['total_budget_depense']/1000000000, 1, ',', ' ') }} Mds dépensés</small></div></div>
     </div>
 
-    <!-- Graphiques principaux -->
-    <div class="row mb-4">
-        <!-- Financement par secteur -->
-        <div class="col-lg-6 mb-4">
-            <div class="chart-card">
-                <div class="chart-header">
-                    <h5><i class="bi bi-pie-chart-fill"></i> Financement par Secteur</h5>
-                    <button class="btn btn-sm btn-outline-primary" onclick="refreshChart('secteurChart')">
-                        <i class="bi bi-arrow-clockwise"></i>
-                    </button>
-                </div>
-                <div class="chart-body">
-                    <canvas id="secteurChart"></canvas>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Financement par région -->
-        <div class="col-lg-6 mb-4">
-            <div class="chart-card">
-                <div class="chart-header">
-                    <h5><i class="bi bi-geo-alt-fill"></i> Financement par Région</h5>
-                    <button class="btn btn-sm btn-outline-primary" onclick="refreshChart('regionChart')">
-                        <i class="bi bi-arrow-clockwise"></i>
-                    </button>
-                </div>
-                <div class="chart-body">
-                    <canvas id="regionChart"></canvas>
-                </div>
-            </div>
-        </div>
+    <div class="dashboard-grid grid-top">
+        <section class="panel">
+            <div class="panel-title"><div><i class="bi bi-diagram-3-fill"></i><h2>Financement par secteur</h2></div><span class="live-dot">DONNÉES RÉELLES</span></div>
+            <div class="chart-wrap"><canvas id="secteurChart"></canvas></div>
+        </section>
+        <section class="panel">
+            <div class="panel-title"><div><i class="bi bi-pie-chart-fill"></i><h2>État du portefeuille</h2></div></div>
+            <div class="chart-wrap doughnut-wrap"><canvas id="statutChart"></canvas></div>
+        </section>
     </div>
 
-    <div class="row mb-4">
-        <!-- Projets par statut -->
-        <div class="col-lg-4 mb-4">
-            <div class="chart-card">
-                <div class="chart-header">
-                    <h5><i class="bi bi-graph-up"></i> Projets par Statut</h5>
-                </div>
-                <div class="chart-body">
-                    <canvas id="statutChart"></canvas>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Financement par bailleur -->
-        <div class="col-lg-8 mb-4">
-            <div class="chart-card">
-                <div class="chart-header">
-                    <h5><i class="bi bi-building"></i> Top 10 Bailleurs</h5>
-                </div>
-                <div class="chart-body">
-                    <canvas id="bailleurChart"></canvas>
-                </div>
-            </div>
-        </div>
+    <div class="dashboard-grid grid-middle">
+        <section class="panel">
+            <div class="panel-title"><div><i class="bi bi-graph-up-arrow"></i><h2>Budget prévu vs dépensé</h2></div></div>
+            <div class="chart-wrap tall"><canvas id="budgetChart"></canvas></div>
+        </section>
+        <section class="panel">
+            <div class="panel-title"><div><i class="bi bi-geo-alt-fill"></i><h2>Financement par région</h2></div></div>
+            <div class="chart-wrap"><canvas id="regionChart"></canvas></div>
+        </section>
     </div>
 
-    <!-- Evolution des budgets -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="chart-card">
-                <div class="chart-header">
-                    <h5><i class="bi bi-graph-up-arrow"></i> Évolution des Budgets (Prévu vs Dépensé)</h5>
-                    <div class="btn-group btn-group-sm">
-                        <button class="btn btn-outline-success" onclick="toggleDataset(budgetChart, 0)">
-                            <i class="bi bi-eye"></i> Budget Prévu
-                        </button>
-                        <button class="btn btn-outline-danger" onclick="toggleDataset(budgetChart, 1)">
-                            <i class="bi bi-eye"></i> Budget Dépensé
-                        </button>
-                    </div>
-                </div>
-                <div class="chart-body" style="height: 400px;">
-                    <canvas id="budgetChart"></canvas>
-                </div>
-            </div>
+    <section class="panel alert-panel">
+        <div class="panel-title">
+            <div><i class="bi bi-exclamation-triangle-fill"></i><h2>Projets nécessitant une attention</h2></div>
+            <span class="alert-count">{{ $alertes->count() }} alerte(s)</span>
         </div>
-    </div>
+        @if($alertes->count())
+        <div class="alerts">
+            @foreach($alertes->take(6) as $alerte)
+            <div class="alert-row {{ $alerte['niveau'] }}">
+                <div class="alert-status"><i class="bi {{ $alerte['niveau'] === 'critique' ? 'bi-exclamation-octagon-fill' : 'bi-exclamation-circle-fill' }}"></i></div>
+                <div class="alert-project"><strong>{{ $alerte['sigle'] ?: 'Projet #'.$alerte['id'] }}</strong><span>{{ \Illuminate\Support\Str::limit($alerte['intitule'], 75) }}</span></div>
+                <div class="alert-msg">{{ $alerte['message'] }}</div>
+                <div class="alert-metric"><strong>{{ number_format($alerte['execution'], 1) }}%</strong><span>exécution</span></div>
+                @if($alerte['temps'] !== null)<div class="alert-metric"><strong>{{ number_format($alerte['temps'], 0) }}%</strong><span>temps écoulé</span></div>@endif
+            </div>
+            @endforeach
+        </div>
+        @else
+            <div class="empty-state"><i class="bi bi-check2-circle"></i><span>Aucune alerte critique détectée sur le portefeuille.</span></div>
+        @endif
+    </section>
 
-    <!-- Tableau des financements par projet -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="card border-0 shadow-sm">
-                <div class="card-header bg-gradient-primary text-white">
-                    <h5 class="mb-0">
-                        <i class="bi bi-table"></i> Situation des Financements par Projet
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table id="projetsTable" class="table table-hover table-striped" style="width:100%">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Projet</th>
-                                    <th class="text-end">Financement Prévu</th>
-                                    <th class="text-end">Budget Budgétisé</th>
-                                    <th class="text-end">Montant Dépensé</th>
-                                    <th class="text-center" style="min-width: 200px;">Taux de Consommation</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($projetsFinancement as $projet)
-                                <tr>
-                                    <td>
-                                        <div class="projet-info">
-                                            <div class="fw-bold text-primary">{{ $projet->sigle }}</div>
-                                            <div class="small text-muted">{{ Str::limit($projet->intitule, 50) }}</div>
-                                            <div class="small">
-                                                <span class="badge bg-info text-dark">{{ $projet->secteurs ?: 'Non défini' }}</span>
-                                            </div>
-                                            <div class="small text-secondary">
-                                                <i class="bi bi-building"></i> {{ Str::limit($projet->institution_tutelle ?: 'Non défini', 40) }}
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="text-end">
-                                        <span class="fw-bold text-primary">
-                                            {{ number_format($projet->financement_prevu, 0, ',', ' ') }}
-                                        </span>
-                                        <div class="small text-muted">FCFA</div>
-                                    </td>
-                                    <td class="text-end">
-                                        <span class="fw-bold text-info">
-                                            {{ number_format($projet->budget_budgetise, 0, ',', ' ') }}
-                                        </span>
-                                        <div class="small text-muted">FCFA</div>
-                                    </td>
-                                    <td class="text-end">
-                                        <span class="fw-bold text-success">
-                                            {{ number_format($projet->budget_depense, 0, ',', ' ') }}
-                                        </span>
-                                        <div class="small text-muted">FCFA</div>
-                                    </td>
-                                    <td class="text-center">
-                                        <div class="d-flex align-items-center justify-content-center">
-                                            <div class="progress flex-grow-1" style="height: 25px;">
-                                                @php
-                                                    $taux = $projet->taux_consommation;
-                                                    $couleur = $taux >= 80 ? 'success' : ($taux >= 50 ? 'warning' : 'danger');
-                                                @endphp
-                                                <div class="progress-bar bg-{{ $couleur }}" 
-                                                     role="progressbar" 
-                                                     style="width: {{ min($taux, 100) }}%"
-                                                     aria-valuenow="{{ $taux }}" 
-                                                     aria-valuemin="0" 
-                                                     aria-valuemax="100">
-                                                    <span class="fw-bold">{{ number_format($taux, 1) }}%</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+    <section class="panel">
+        <div class="panel-title">
+            <div><i class="bi bi-table"></i><h2>Situation financière des projets</h2></div>
+            <div class="exports">
+                <a href="{{ route('dashboard.export.projets') }}" class="btn-dashboard"><i class="bi bi-download"></i> Projets CSV</a>
+                <a href="{{ route('dashboard.export.cadres') }}" class="btn-dashboard"><i class="bi bi-download"></i> Cadres CSV</a>
             </div>
         </div>
-    </div>
+        <div class="table-responsive">
+            <table id="projetsTable" class="table dashboard-table">
+                <thead><tr><th>Projet</th><th>Statut</th><th>Financement</th><th>Budgété</th><th>Dépensé</th><th>Exécution</th></tr></thead>
+                <tbody>
+                @foreach($projetsFinancement as $projet)
+                    @php
+                        $taux = (float)($projet->taux_consommation ?? 0);
+                        $tone = $taux >= 70 ? 'good' : ($taux >= 40 ? 'warn' : 'bad');
+                    @endphp
+                    <tr>
+                        <td><div class="project-cell"><strong>{{ $projet->sigle ?: 'Projet #'.$projet->id }}</strong><span>{{ \Illuminate\Support\Str::limit($projet->intitule, 55) }}</span></div></td>
+                        <td><span class="status-badge">{{ $projet->statut ?: 'Non défini' }}</span></td>
+                        <td>{{ number_format((float)$projet->financement_prevu/1000000, 1, ',', ' ') }} M</td>
+                        <td>{{ number_format((float)$projet->budget_budgetise/1000000, 1, ',', ' ') }} M</td>
+                        <td>{{ number_format((float)$projet->budget_depense/1000000, 1, ',', ' ') }} M</td>
+                        <td><div class="progress-box"><div class="progress-track"><div class="progress-fill {{ $tone }}" style="width:{{ min(100,max(0,$taux)) }}%"></div></div><b>{{ number_format($taux, 1) }}%</b></div></td>
+                    </tr>
+                @endforeach
+                </tbody>
+            </table>
+        </div>
+    </section>
 
-    <!-- Boutons d'export -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="card border-0 shadow-sm">
-                <div class="card-header bg-gradient-primary text-white">
-                    <h5 class="mb-0"><i class="bi bi-download"></i> Exports de Données</h5>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <div class="export-item">
-                                <div class="export-icon">
-                                    <i class="bi bi-file-earmark-spreadsheet"></i>
-                                </div>
-                                <div class="export-content">
-                                    <h6>Fichier Plat - Projets</h6>
-                                    <p class="text-muted mb-2">Export complet des projets avec toutes les données associées</p>
-                                    <a href="{{ route('dashboard.export.projets') }}" class="btn btn-primary btn-sm">
-                                        <i class="bi bi-download"></i> Télécharger CSV
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <div class="export-item">
-                                <div class="export-icon">
-                                    <i class="bi bi-file-earmark-spreadsheet"></i>
-                                </div>
-                                <div class="export-content">
-                                    <h6>Fichier Plat - Cadres Stratégiques</h6>
-                                    <p class="text-muted mb-2">Export des indicateurs par niveau (Impact, Effet, Produit)</p>
-                                    <a href="{{ route('dashboard.export.cadres') }}" class="btn btn-primary btn-sm">
-                                        <i class="bi bi-download"></i> Télécharger CSV
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="dashboard-footer">
+        <span><i class="bi bi-circle-fill"></i> Données actualisées automatiquement</span>
+        <span>SYSNISE • INS Niger</span>
     </div>
 </div>
+@endsection
 
 @push('css')
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
 <style>
-    .dashboard-header {
-        background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
-        padding: 2rem;
-        border-radius: 15px;
-        color: white;
-        margin-bottom: 1.5rem;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    }
-
-    .dashboard-title {
-        font-size: 1.8rem;
-        font-weight: 700;
-        margin: 0;
-    }
-
-    .clock-container {
-        background: rgba(255, 255, 255, 0.1);
-        padding: 1rem 1.5rem;
-        border-radius: 10px;
-        backdrop-filter: blur(10px);
-    }
-
-    .clock-time {
-        font-size: 2rem;
-        font-weight: 700;
-        font-family: 'Courier New', monospace;
-        letter-spacing: 2px;
-    }
-
-    .clock-date {
-        font-size: 0.9rem;
-        opacity: 0.9;
-        text-transform: capitalize;
-    }
-
-    .stat-card {
-        background: white;
-        border-radius: 15px;
-        padding: 1.5rem;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-        transition: transform 0.3s, box-shadow 0.3s;
-        border-left: 4px solid;
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-    }
-
-    .stat-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-    }
-
-    .stat-primary { border-color: #3b82f6; }
-    .stat-success { border-color: #10b981; }
-    .stat-info { border-color: #06b6d4; }
-    .stat-warning { border-color: #f59e0b; }
-
-    .stat-icon {
-        width: 60px;
-        height: 60px;
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.8rem;
-    }
-
-    .stat-primary .stat-icon {
-        background: rgba(59, 130, 246, 0.1);
-        color: #3b82f6;
-    }
-
-    .stat-success .stat-icon {
-        background: rgba(16, 185, 129, 0.1);
-        color: #10b981;
-    }
-
-    .stat-info .stat-icon {
-        background: rgba(6, 182, 212, 0.1);
-        color: #06b6d4;
-    }
-
-    .stat-warning .stat-icon {
-        background: rgba(245, 158, 11, 0.1);
-        color: #f59e0b;
-    }
-
-    .stat-content {
-        flex: 1;
-    }
-
-    .stat-label {
-        font-size: 0.9rem;
-        color: #64748b;
-        font-weight: 500;
-        margin-bottom: 0.5rem;
-    }
-
-    .stat-value {
-        font-size: 1.8rem;
-        font-weight: 700;
-        color: #1e293b;
-    }
-
-    .chart-card {
-        background: white;
-        border-radius: 15px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-        overflow: hidden;
-        height: 100%;
-    }
-
-    .chart-header {
-        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-        padding: 1rem 1.5rem;
-        border-bottom: 2px solid #e2e8f0;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .chart-header h5 {
-        margin: 0;
-        font-weight: 600;
-        color: #1e293b;
-        font-size: 1.1rem;
-    }
-
-    .chart-body {
-        padding: 1.5rem;
-        position: relative;
-    }
-
-    .chart-footer {
-        padding: 1rem 1.5rem;
-        background: #f8fafc;
-        border-top: 1px solid #e2e8f0;
-    }
-
-    .export-item {
-        display: flex;
-        gap: 1rem;
-        align-items: center;
-        padding: 1.5rem;
-        background: #f8fafc;
-        border-radius: 10px;
-        transition: all 0.3s;
-    }
-
-    .export-item:hover {
-        background: #e0f2fe;
-        transform: translateX(5px);
-    }
-
-    .export-icon {
-        font-size: 2.5rem;
-        color: #3b82f6;
-    }
-
-    .export-content h6 {
-        font-weight: 600;
-        margin-bottom: 0.5rem;
-    }
-
-    .bg-gradient-primary {
-        background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
-    }
-
-    /* Animation pour les cartes */
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    .stat-card, .chart-card {
-        animation: fadeInUp 0.6s ease-out;
-    }
-
-    /* Styles pour le tableau des projets */
-    .projet-info {
-        line-height: 1.6;
-    }
-
-    .projet-info .fw-bold {
-        font-size: 0.95rem;
-        margin-bottom: 0.25rem;
-    }
-
-    .projet-info .small {
-        font-size: 0.85rem;
-        margin-bottom: 0.15rem;
-    }
-
-    #projetsTable tbody tr {
-        transition: all 0.3s ease;
-    }
-
-    #projetsTable tbody tr:hover {
-        background-color: rgba(59, 130, 246, 0.05) !important;
-        transform: translateX(5px);
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    #projetsTable .progress {
-        background-color: rgba(0, 0, 0, 0.1);
-        border-radius: 12px;
-        overflow: hidden;
-    }
-
-    #projetsTable .progress-bar {
-        font-size: 0.85rem;
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: width 1s ease-in-out;
-    }
-
-    /* Responsive pour DataTables */
-    @media (max-width: 768px) {
-        #projetsTable_wrapper .dataTables_length,
-        #projetsTable_wrapper .dataTables_filter {
-            text-align: center;
-            margin-bottom: 1rem;
-        }
-    }
-
+:root{--navy:#061a2b;--navy2:#0b2942;--card:#102f48;--card2:#123a59;--blue:#1683d8;--cyan:#27b7e8;--green:#27c47a;--orange:#f5a623;--red:#ef5350;--text:#f5faff;--muted:#9cb3c7;--line:rgba(255,255,255,.11)}
+.sys-dashboard{margin:-1rem;min-height:calc(100vh - 60px);padding:22px;background:radial-gradient(circle at 10% 0%,rgba(22,131,216,.18),transparent 30%),linear-gradient(145deg,var(--navy),#071f34 55%,#082944);color:var(--text)}
+.dashboard-header{display:flex;justify-content:space-between;align-items:center;padding:20px 24px;margin-bottom:12px;border-bottom:1px solid var(--line);background:linear-gradient(135deg,rgba(22,131,216,.23),rgba(12,48,75,.7));border-radius:18px;box-shadow:0 14px 35px rgba(0,0,0,.18)}
+.eyebrow{color:#7bdcff;font-size:.72rem;font-weight:800;letter-spacing:1.4px;margin-bottom:5px}.dashboard-header h1{margin:0;font-size:1.65rem;font-weight:800}.dashboard-header p{margin:3px 0 0;color:var(--muted);font-size:.82rem}.clock-box{text-align:right}.clock-box #clock{font-size:1.9rem;font-weight:900;color:#7ce1ff;line-height:1}.clock-box span{font-size:.72rem;color:#a9d4e7;text-transform:capitalize}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:12px}.kpi{display:flex;gap:14px;align-items:center;padding:15px 17px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(135deg,rgba(255,255,255,.075),rgba(255,255,255,.025));box-shadow:0 10px 25px rgba(0,0,0,.16);position:relative;overflow:hidden}.kpi:after{content:"";position:absolute;inset:auto -20px -35px auto;width:100px;height:100px;border-radius:50%;background:var(--accent);opacity:.12}.kpi-icon{width:48px;height:48px;border-radius:13px;display:grid;place-items:center;background:color-mix(in srgb,var(--accent) 18%,transparent);color:var(--accent);font-size:1.3rem}.kpi span{display:block;color:#9db8c9;font-size:.66rem;font-weight:800;letter-spacing:.8px}.kpi strong{display:block;font-size:1.55rem;line-height:1.15;color:#fff}.kpi em{font-style:normal;font-size:.72rem;color:#b4d4e4}.kpi small{color:#86a5b9;font-size:.67rem}.kpi-blue{--accent:#1683d8}.kpi-cyan{--accent:#27b7e8}.kpi-purple{--accent:#8b7cf6}.kpi-green{--accent:#27c47a}
+.dashboard-grid{display:grid;gap:12px;margin-bottom:12px}.grid-top{grid-template-columns:1.55fr 1fr}.grid-middle{grid-template-columns:1.45fr 1fr}.panel{background:linear-gradient(145deg,rgba(18,58,89,.84),rgba(8,37,58,.92));border:1px solid var(--line);border-radius:17px;overflow:hidden;box-shadow:0 12px 28px rgba(0,0,0,.17)}.panel-title{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.025)}.panel-title>div{display:flex;align-items:center;gap:9px}.panel-title i{color:#55cfff}.panel-title h2{font-size:.86rem;margin:0;font-weight:800}.live-dot,.alert-count{font-size:.62rem;font-weight:800;color:#7ee9b0}.live-dot:before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green);margin-right:6px;box-shadow:0 0 10px var(--green)}.alert-count{color:#ffc46b}.chart-wrap{height:285px;padding:15px}.chart-wrap.tall{height:310px}.doughnut-wrap{height:285px}.alert-panel{margin-bottom:12px}.alerts{padding:8px 12px}.alert-row{display:grid;grid-template-columns:34px 1.5fr 1.5fr 90px 90px;gap:10px;align-items:center;padding:10px 6px;border-bottom:1px solid rgba(255,255,255,.07)}.alert-row:last-child{border-bottom:0}.alert-status{font-size:1.1rem}.alert-row.critique .alert-status{color:var(--red)}.alert-row.attention .alert-status{color:var(--orange)}.alert-project strong,.alert-project span{display:block}.alert-project strong{font-size:.78rem}.alert-project span,.alert-msg{font-size:.68rem;color:var(--muted)}.alert-metric{text-align:right}.alert-metric strong{display:block;font-size:.82rem}.alert-metric span{font-size:.6rem;color:var(--muted)}.empty-state{padding:28px;text-align:center;color:#9ccbb4}.empty-state i{font-size:1.8rem;display:block;color:var(--green);margin-bottom:6px}.exports{display:flex;gap:7px}.btn-dashboard{font-size:.65rem;color:#bdeeff;border:1px solid rgba(39,183,232,.35);padding:6px 9px;border-radius:8px;text-decoration:none;background:rgba(39,183,232,.08)}.btn-dashboard:hover{background:rgba(39,183,232,.18);color:#fff}.table-responsive{padding:4px 10px 10px}.dashboard-table{color:#dbeaf3!important;margin:0!important;font-size:.72rem}.dashboard-table thead th{color:#82c8e7;border-bottom:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.12);font-size:.64rem;text-transform:uppercase;letter-spacing:.4px}.dashboard-table tbody td{border-color:rgba(255,255,255,.07);vertical-align:middle;padding:9px 7px}.dashboard-table tbody tr:hover{background:rgba(39,183,232,.07)}.project-cell strong,.project-cell span{display:block}.project-cell strong{color:#67d8ff}.project-cell span{color:#8da8ba;font-size:.64rem}.status-badge{border:1px solid rgba(39,183,232,.25);background:rgba(39,183,232,.08);padding:4px 7px;border-radius:7px;color:#a8dff2;font-size:.62rem}.progress-box{display:flex;align-items:center;gap:7px;min-width:135px}.progress-box b{font-size:.65rem;width:38px}.progress-track{height:6px;flex:1;background:rgba(255,255,255,.09);border-radius:8px;overflow:hidden}.progress-fill{height:100%;border-radius:8px}.progress-fill.good{background:var(--green)}.progress-fill.warn{background:var(--orange)}.progress-fill.bad{background:var(--red)}.dashboard-footer{display:flex;justify-content:space-between;padding:12px 5px 2px;color:#7595a9;font-size:.65rem}.dashboard-footer i{color:var(--green);font-size:.48rem;margin-right:4px}
+.dataTables_wrapper .dataTables_length,.dataTables_wrapper .dataTables_filter,.dataTables_wrapper .dataTables_info,.dataTables_wrapper .dataTables_paginate{color:#8faabc!important;font-size:.68rem}.dataTables_wrapper .form-control,.dataTables_wrapper select{background:#0a2941!important;color:#dcecf5!important;border-color:rgba(255,255,255,.13)!important;font-size:.68rem}.dataTables_wrapper .page-link{background:#0a2941;color:#9ed8ee;border-color:rgba(255,255,255,.1)}
+@media(max-width:1100px){.kpi-grid{grid-template-columns:repeat(2,1fr)}.grid-top,.grid-middle{grid-template-columns:1fr}}@media(max-width:650px){.sys-dashboard{padding:10px}.dashboard-header{padding:15px}.clock-box{display:none}.kpi-grid{grid-template-columns:1fr}.alert-row{grid-template-columns:28px 1fr 80px}.alert-msg{display:none}.alert-metric:last-child{display:none}.panel-title{padding:11px}.exports{display:none}}
 </style>
 @endpush
 
@@ -526,384 +122,31 @@
 <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
 <script>
-    // Horloge en temps réel
-    function updateClock() {
-        const now = new Date();
-        const timeString = now.toLocaleTimeString('fr-FR');
-        document.getElementById('clock').textContent = timeString;
-    }
-    setInterval(updateClock, 1000);
+(function(){
+    const colors={blue:'#1683d8',cyan:'#27b7e8',green:'#27c47a',orange:'#f5a623',red:'#ef5350',purple:'#8b7cf6',muted:'#7f9bad',grid:'rgba(255,255,255,.08)'};
+    Chart.defaults.font.family="'Segoe UI',Arial,sans-serif"; Chart.defaults.color='#9cb3c7';
+    Chart.defaults.plugins.legend.labels.usePointStyle=true;
+    Chart.defaults.plugins.legend.labels.boxWidth=8;
 
-    // Couleurs du thème
-    const colors = {
-        primary: '#3b82f6',
-        success: '#10b981',
-        warning: '#f59e0b',
-        danger: '#ef4444',
-        info: '#06b6d4',
-        purple: '#8b5cf6',
-        pink: '#ec4899'
-    };
+    function money(v){v=Number(v||0); if(Math.abs(v)>=1e9)return (v/1e9).toLocaleString('fr-FR',{maximumFractionDigits:1})+' Mds FCFA'; if(Math.abs(v)>=1e6)return (v/1e6).toLocaleString('fr-FR',{maximumFractionDigits:1})+' M FCFA'; return v.toLocaleString('fr-FR')+' FCFA';}
+    const secteurs=@json($chartsData['financement_par_secteur']);
+    const regions=@json($chartsData['financement_par_region']);
+    const statuts=@json($chartsData['projets_par_statut']);
+    const budgets=@json($chartsData['evolution_budgets']);
 
-    // Palette de couleurs pour les graphiques
-    const chartColors = [
-        '#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#06b6d4', 
-        '#8b5cf6', '#ec4899', '#f97316', '#84cc16', '#06b6d4'
-    ];
-
-    // Configuration globale Chart.js
-    Chart.defaults.font.family = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
-    Chart.defaults.color = '#64748b';
-
-    // Financement par secteur
-    const secteurData = @json($chartsData['financement_par_secteur']);
-    const secteurChart = new Chart(document.getElementById('secteurChart'), {
-        type: 'doughnut',
-        data: {
-            labels: secteurData.map(s => s.secteur),
-            datasets: [{
-                data: secteurData.map(s => s.montant),
-                backgroundColor: chartColors,
-                borderWidth: 2,
-                borderColor: '#fff'
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: true,
-            plugins: {
-                legend: {
-                    position: 'right',
-                    labels: {
-                        padding: 15,
-                        usePointStyle: true
-                    }
-                },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            let label = context.label || '';
-                            let value = new Intl.NumberFormat('fr-FR').format(context.parsed);
-                            return label + ': ' + value + ' FCFA';
-                        }
-                    }
-                }
-            }
-        }
-    });
-
-    // Financement par région
-    const regionData = @json($chartsData['financement_par_region']);
-    const regionChart = new Chart(document.getElementById('regionChart'), {
-        type: 'bar',
-        data: {
-            labels: regionData.map(r => r.region),
-            datasets: [{
-                label: 'Financement',
-                data: regionData.map(r => r.montant),
-                backgroundColor: colors.primary,
-                borderRadius: 8
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: true,
-            indexAxis: 'y',
-            plugins: {
-                legend: {
-                    display: false
-                },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            return new Intl.NumberFormat('fr-FR').format(context.parsed.x) + ' FCFA';
-                        }
-                    }
-                }
-            },
-            scales: {
-                x: {
-                    ticks: {
-                        callback: function(value) {
-                            return new Intl.NumberFormat('fr-FR', {
-                                notation: 'compact',
-                                compactDisplay: 'short'
-                            }).format(value);
-                        }
-                    }
-                }
-            }
-        }
-    });
-
-    // Projets par statut
-    const statutData = @json($chartsData['projets_par_statut']);
-    const statutChart = new Chart(document.getElementById('statutChart'), {
-        type: 'pie',
-        data: {
-            labels: statutData.map(s => s.statut),
-            datasets: [{
-                data: statutData.map(s => s.nombre),
-                backgroundColor: chartColors,
-                borderWidth: 2,
-                borderColor: '#fff'
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: true,
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: {
-                        padding: 15,
-                        usePointStyle: true
-                    }
-                }
-            }
-        }
-    });
-
-    // Financement par bailleur
-    const bailleurData = @json($chartsData['financement_par_bailleur']);
-    const bailleurChart = new Chart(document.getElementById('bailleurChart'), {
-        type: 'bar',
-        data: {
-            labels: bailleurData.map(b => b.bailleur),
-            datasets: [{
-                label: 'Financement',
-                data: bailleurData.map(b => b.montant),
-                backgroundColor: colors.success,
-                borderRadius: 8
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: true,
-            plugins: {
-                legend: {
-                    display: false
-                },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            return new Intl.NumberFormat('fr-FR').format(context.parsed.y) + ' FCFA';
-                        }
-                    }
-                }
-            },
-            scales: {
-                y: {
-                    ticks: {
-                        callback: function(value) {
-                            return new Intl.NumberFormat('fr-FR', {
-                                notation: 'compact',
-                                compactDisplay: 'short'
-                            }).format(value);
-                        }
-                    }
-                }
-            }
-        }
-    });
-
-    // Evolution des budgets
-    const evolutionData = @json($chartsData['evolution_budgets']);
-    const annees = [...new Set(evolutionData.map(e => e.annee))].sort();
-    const budgetPrevu = annees.map(annee => {
-        const item = evolutionData.find(e => e.annee === annee && e.type.toLowerCase().includes('prévu'));
-        return item ? item.montant : 0;
-    });
-    const budgetDepense = annees.map(annee => {
-        const item = evolutionData.find(e => e.annee === annee && e.type.toLowerCase().includes('dépensé'));
-        return item ? item.montant : 0;
-    });
-
-    const budgetChart = new Chart(document.getElementById('budgetChart'), {
-        type: 'line',
-        data: {
-            labels: annees,
-            datasets: [
-                {
-                    label: 'Budget Prévu',
-                    data: budgetPrevu,
-                    borderColor: colors.success,
-                    backgroundColor: colors.success + '20',
-                    fill: true,
-                    tension: 0.4
-                },
-                {
-                    label: 'Budget Dépensé',
-                    data: budgetDepense,
-                    borderColor: colors.danger,
-                    backgroundColor: colors.danger + '20',
-                    fill: true,
-                    tension: 0.4
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            interaction: {
-                intersect: false,
-                mode: 'index'
-            },
-            plugins: {
-                legend: {
-                    position: 'top',
-                    labels: {
-                        usePointStyle: true,
-                        padding: 20
-                    }
-                },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            return context.dataset.label + ': ' + 
-                                new Intl.NumberFormat('fr-FR').format(context.parsed.y) + ' FCFA';
-                        }
-                    }
-                }
-            },
-            scales: {
-                y: {
-                    ticks: {
-                        callback: function(value) {
-                            return new Intl.NumberFormat('fr-FR', {
-                                notation: 'compact',
-                                compactDisplay: 'short'
-                            }).format(value);
-                        }
-                    }
-                }
-            }
-        }
-    });
-
-    // Répartition par sexe
-    const sexeData = @json($chartsData['repartition_sexe']);
-    const sexeChart = new Chart(document.getElementById('sexeChart'), {
-        type: 'doughnut',
-        data: {
-            labels: sexeData.map(s => s.sexe),
-            datasets: [{
-                data: sexeData.map(s => s.nombre),
-                backgroundColor: [colors.success, colors.warning],
-                borderWidth: 2,
-                borderColor: '#fff'
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: true,
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: {
-                        padding: 15,
-                        usePointStyle: true
-                    }
-                },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            let total = context.dataset.data.reduce((a, b) => a + b, 0);
-                            let percentage = ((context.parsed / total) * 100).toFixed(0);
-                            return context.label + ': ' + 
-                                new Intl.NumberFormat('fr-FR').format(context.parsed) + 
-                                ' (' + percentage + '%)';
-                        }
-                    }
-                }
-            }
-        }
-    });
-
-    // Candidats par tranche d'âge
-    const ageData = @json($chartsData['tranches_age']);
-    const ageChart = new Chart(document.getElementById('ageChart'), {
-        type: 'bar',
-        data: {
-            labels: ageData.map(a => a.tranche),
-            datasets: [{
-                label: 'Nombre de candidats',
-                data: ageData.map(a => a.nombre),
-                backgroundColor: chartColors.slice(0, ageData.length),
-                borderRadius: 8
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: true,
-            plugins: {
-                legend: {
-                    display: false
-                },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            return new Intl.NumberFormat('fr-FR').format(context.parsed.y) + ' candidats';
-                        }
-                    }
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        callback: function(value) {
-                            return new Intl.NumberFormat('fr-FR').format(value);
-                        }
-                    }
-                }
-            }
-        }
-    });
-
-    // Initialisation de DataTables pour le tableau des projets
-    $(document).ready(function() {
-        $('#projetsTable').DataTable({
-            language: {
-                url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/fr-FR.json'
-            },
-            pageLength: 10,
-            order: [[0, 'asc']],
-            columnDefs: [
-                {
-                    targets: [1, 2, 3],
-                    className: 'text-end'
-                },
-                {
-                    targets: 4,
-                    orderable: true,
-                    className: 'text-center'
-                }
-            ],
-            responsive: true,
-            dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>rtip',
-            drawCallback: function() {
-                // Animation des barres de progression après le rendu
-                $('.progress-bar').each(function() {
-                    $(this).css('width', '0%');
-                    const width = $(this).attr('aria-valuenow') + '%';
-                    $(this).animate({width: width}, 1000);
-                });
-            }
-        });
-    });
-
-    // Fonction pour rafraîchir un graphique
-    function refreshChart(chartId) {
-        location.reload();
-    }
-
-    // Fonction pour basculer la visibilité d'un dataset
-    function toggleDataset(chart, index) {
-        const meta = chart.getDatasetMeta(index);
-        meta.hidden = !meta.hidden;
-        chart.update();
-    }
+    new Chart(document.getElementById('secteurChart'),{type:'bar',data:{labels:secteurs.map(x=>x.secteur),datasets:[{label:'Financement',data:secteurs.map(x=>Number(x.montant)),backgroundColor:colors.blue,borderRadius:7,barThickness:18}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>money(c.raw)}}},scales:{x:{grid:{color:colors.grid},ticks:{callback:v=>money(v)}},y:{grid:{display:false},ticks:{color:'#d3e5ee'}}}}});
+    new Chart(document.getElementById('regionChart'),{type:'bar',data:{labels:regions.map(x=>x.region),datasets:[{label:'Financement',data:regions.map(x=>Number(x.montant)),backgroundColor:colors.cyan,borderRadius:7,barThickness:22}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>money(c.raw)}}},scales:{x:{grid:{display:false},ticks:{color:'#a8c0cf'}},y:{grid:{color:colors.grid},ticks:{callback:v=>money(v)}}}}});
+    new Chart(document.getElementById('statutChart'),{type:'doughnut',data:{labels:statuts.map(x=>x.statut),datasets:[{data:statuts.map(x=>Number(x.nombre)),backgroundColor:[colors.blue,colors.cyan,colors.green,colors.orange,colors.red,colors.purple],borderColor:'#123a59',borderWidth:3}]},options:{responsive:true,maintainAspectRatio:false,cutout:'67%',plugins:{legend:{position:'bottom',labels:{padding:12,color:'#cfe1eb'}},tooltip:{callbacks:{label:c=>`${c.label}: ${Number(c.raw).toLocaleString('fr-FR')} projet(s)`}}}}});
+    const years=[...new Set(budgets.map(x=>x.annee))].sort();
+    const types=[...new Set(budgets.map(x=>String(x.type).toLowerCase()))];
+    const findType=(keys,year)=>{const r=budgets.find(x=>Number(x.annee)===Number(year)&&keys.some(k=>String(x.type).toLowerCase().includes(k)));return r?Number(r.montant):0};
+    new Chart(document.getElementById('budgetChart'),{type:'line',data:{labels:years,datasets:[
+        {label:'Prévu / budgété',data:years.map(y=>findType(['prévu','prevu','budgetisé','budgetise','budgété','budgete'],y)),borderColor:colors.blue,backgroundColor:'rgba(22,131,216,.14)',fill:true,tension:.35,pointRadius:3},
+        {label:'Dépensé',data:years.map(y=>findType(['dépens','depens'],y)),borderColor:colors.green,backgroundColor:'rgba(39,196,122,.08)',fill:true,tension:.35,pointRadius:3}
+    ]},options:{responsive:true,maintainAspectRatio:false,interaction:{intersect:false,mode:'index'},plugins:{legend:{position:'top'},tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${money(c.raw)}`}}},scales:{x:{grid:{color:colors.grid}},y:{grid:{color:colors.grid},ticks:{callback:v=>money(v)}}}}});
+    if(window.jQuery){jQuery('#projetsTable').DataTable({pageLength:10,order:[[5,'desc']],language:{search:'Rechercher :',lengthMenu:'_MENU_ lignes',info:'_START_ à _END_ sur _TOTAL_',paginate:{previous:'‹',next:'›'},zeroRecords:'Aucun projet trouvé'}});}
+    function clock(){const d=new Date();document.getElementById('clock').textContent=d.toLocaleTimeString('fr-FR');}
+    clock();setInterval(clock,1000);
+})();
 </script>
 @endpush
-@endsection
