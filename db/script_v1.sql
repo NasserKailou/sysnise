@@ -1,0 +1,2010 @@
+CREATE TABLE institution_tutelles
+(
+    id BIGSERIAL,
+    intitule character varying(255) NOT NULL,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    CONSTRAINT institution_tutelles_pkey PRIMARY KEY (id),
+    CONSTRAINT institution_tutelles_intitule_unique UNIQUE (intitule)
+);
+
+INSERT INTO institution_tutelles (intitule) VALUES 
+('Ministère des Affaires Etrangères, de la Coopération et des Nigériens à l''Extérieur'),
+('Ministère de la Défense Nationale'),
+('Ministère de l''Intérieur, de la Sécurité Publique et de l''Administration du Territoire'),
+('Ministère de l''Enseignement Supérieur, de la Recherche et de l''Innovation Technologique'),
+('Ministère de la Santé et de l''Hygiène Publiques'),
+('Ministère des Mines'),
+('Ministère de l''Agriculture et de l''Elevage'),
+('Ministère de la Justice et des Droits de l''Homme, Garde des Sceaux'),
+('Ministère de l''Economie et des Finances'),
+('Ministère du Commerce et de l''Industrie'),
+('Ministère de l''Energie'),
+('Ministère de l''Urbanisme et de l''Habitat'),
+('Ministère du Pétrole'),
+('Ministère du Tourisme et de l''Artisanat'),
+('Ministère de la Fonction publique, du Travail et de l''Emploi'),
+('Ministère de l''Environnement, de l''Hydraulique et de l''Assainissement'),
+('Ministère de la Jeunesse et des Sports'),
+('Ministère de la Communication et des Nouvelles Technologies de l''Information'),
+('Ministère de l''Enseignement et de la Formation Techniques et Professionnels'),
+('Ministère de la Population, de l''Action Sociale et de la Solidarité Nationale'),
+('Ministère des Transports et de l''Aviation Civile'),
+('Ministère de l''Équipement et des Infrastructures'),
+('Ministère de l''Éducation Nationale, de l''Alphabétisation et de la Promotion des Langues Nationales');
+
+CREATE TABLE users
+(
+    id BIGSERIAL,
+    name character varying(255)  NOT NULL,
+    email character varying(255) NOT NULL,
+    email_verified_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    password character varying(255) NOT NULL,
+	institution_tutelle_id BIGINT DEFAULT 1,
+    remember_token character varying(100),
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    CONSTRAINT users_pkey PRIMARY KEY (id),
+    CONSTRAINT users_email_unique UNIQUE (email),
+	CONSTRAINT user_institution_tutelle_id_fkey FOREIGN KEY (institution_tutelle_id)
+        REFERENCES institution_tutelles (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+
+CREATE TABLE nature_donnees
+(
+    id BIGSERIAL,
+    intitule character varying(255) NOT NULL,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    CONSTRAINT nature_donnees_pkey PRIMARY KEY (id),
+    CONSTRAINT nature_donnees_intitule_unique UNIQUE (intitule)
+);
+INSERT INTO nature_donnees (intitule) VALUES
+('Prévision'),
+('Réalisation'),
+('Valeur de référence');
+
+CREATE TABLE type_indicateurs
+(
+    id BIGSERIAL,
+    intitule character varying(255) NOT NULL,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    CONSTRAINT type_indicateurs_pkey PRIMARY KEY (id),
+    CONSTRAINT type_indicateurs_intitule_unique UNIQUE (intitule)
+);
+INSERT INTO type_indicateurs (intitule) VALUES
+('Strategie'),
+('Produit');
+
+
+CREATE TABLE nature_financements
+(
+    id BIGSERIAL,
+    intitule character varying(255) NOT NULL,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    CONSTRAINT nature_financements_pkey PRIMARY KEY (id),
+    CONSTRAINT nature_financements_intitule_unique UNIQUE (intitule)
+);
+INSERT INTO nature_financements (intitule) VALUES
+('ANR'),
+('EMPRUNT'),
+('FONDS PROPRES'),
+('FONDS DE CONTREPARTIE'),
+('BENEFICIAIRES'),
+('PPP'),
+('COLLECTIVITES'),
+('AUTRES A PRECISER');
+
+CREATE TABLE periodes
+(
+    id BIGSERIAL,
+    intitule character varying(255) NOT NULL,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    CONSTRAINT periodes_pkey PRIMARY KEY (id),
+    CONSTRAINT periodes_intitule_unique UNIQUE (intitule)
+);
+INSERT INTO periodes (intitule) VALUES
+('2000'),
+('2001'),
+('2002'),
+('2003'),
+('2004'),
+('2005'),
+('2006'),
+('2007'),
+('2008'),
+('2009'),
+('2010'),
+('2011'),
+('2012'),
+('2013'),
+('2014'),
+('2015'),
+('2016'),
+('2017'),
+('2018'),
+('2019'),
+('2020'),
+('2021'),
+('2022'),
+('2023'),
+('2024'),
+('2025'),
+('2026'),
+('2027'),
+('2028'),
+('2029'),
+('2030');
+
+CREATE TABLE population_cibles
+(
+    id BIGSERIAL,
+    intitule character varying(255) NOT NULL,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    CONSTRAINT population_cibles_pkey PRIMARY KEY (id),
+    CONSTRAINT population_cibles_intitule_unique UNIQUE (intitule)
+);
+INSERT INTO population_cibles (intitule) VALUES
+('Rurale Sédentaire'),
+('Rurale Nomade'),
+('Urbaine'),
+('Totale'),
+('Autre');
+
+CREATE TABLE priorites
+(
+    id BIGSERIAL,
+    intitule character varying(255) NOT NULL,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    CONSTRAINT priorites_pkey PRIMARY KEY (id),
+    CONSTRAINT priorites_intitule_unique UNIQUE (intitule)
+);
+INSERT INTO priorites (intitule) VALUES
+('Non précisé'),
+('Haute'),
+('Moyenne'),
+('Basse'),
+('A attribuer');
+
+CREATE TABLE bailleurs
+(
+    id BIGSERIAL,
+    intitule character varying(255) NOT NULL,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    CONSTRAINT bailleurs_pkey PRIMARY KEY (id),
+    CONSTRAINT bailleurs_intitule_unique UNIQUE (intitule)
+);
+INSERT INTO bailleurs (intitule) VALUES
+('Banque Mondiale'),
+('UNICEF'),
+('ETAT');
+
+CREATE TABLE source_financements
+(
+    id BIGSERIAL,
+    intitule character varying(255) NOT NULL,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    CONSTRAINT source_financements_pkey PRIMARY KEY (id),
+    CONSTRAINT source_financements_intitule_unique UNIQUE (intitule)
+);
+INSERT INTO source_financements (intitule) VALUES
+('PTFs'),
+('ETAT'),
+('Secteur/Promoteur Privé '),
+('Collectivité Territoriale '),
+('cofinancement Etat/PTFs');
+
+CREATE TABLE source_indicateurs
+(
+    id BIGSERIAL,
+    intitule character varying(255) NOT NULL,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    CONSTRAINT source_indicateurs_pkey PRIMARY KEY (id),
+    CONSTRAINT source_indicateurs_intitule_unique UNIQUE (intitule)
+);
+INSERT INTO source_indicateurs (intitule) VALUES
+('INS, 2021, EHCVM'),
+('INS, 2019, Rapport sur les projections démographiques'),
+('Rapport Ministère en charge de l''intérieur'),
+('Rapport Ministère en charge de l''intérieur 2022'),
+('HACP'),
+('MJDH, 2022, Rapport d''enquête sur les besoins et la satisfaction en matière de justice'),
+('MJDH'),
+('RAP du ministère en charge de la fonction publique'),
+('Cour des comptes, 2021, Rapport d''activité'),
+('Ministère de l''intérieur'),
+('MJCAS'),
+('Annuaire MJCAS'),
+('INS, 2024, comptes nationaux annuels (CNA) révisés 2015-2022 et provisoires 2023-2024'),
+('MEF/DGPPD-DGB'),
+('MEF/DGPPD'),
+('MEF'),
+('DGB'),
+('Ministère de l''Agriculture et l''Elevage'),
+('Rapport DS/MAG/EL, RAP et RAC du MAG/EL'),
+('MEq, 2022, RAP'),
+('INS, 2023, Bulletin des statistiques du commerce extérieur'),
+('Ministère du Commerce et de l''Industrie'),
+('INS, 2022, CEN'),
+('ME/ER, RAP 2022'),
+('MEq, 2024, RAP'),
+('MT, 2022, RAP'),
+('ARCEP, Rapport d''activités 2022'),
+('INS, 2021, Enquête ENAFEME'),
+('INS, 2015, ENISED'),
+('Annuaire MEN/A/EP/PLN 2023-2024'),
+('INS-RNDH,2020'),
+('Annuaire MESR 2023-2024'),
+('Annuaire MESRIT 2023-2024'),
+('Ministère du Commerce et d''Industrie'),
+('Ministère de l''Economie et des Finances'),
+('MESRIT'),
+('Annuaire Statistique MSP, 2024'),
+('Annuaire Santé'),
+('Rapport d''évaluation, 2024, du PGDISS 2016-2020'),
+('INS, 2022, Enquête SMART'),
+('PAP/MAHGC'),
+('Rapport ANPE'),
+('Rapport sur les indicateurs MH/A'),
+('Rapport sur les indicateurs MHA/E'),
+('Rapport MELCD'),
+('MU/ L, Rapport Annuel de Performance 2022'),
+('MU/H RAP');
+
+CREATE TABLE statut_activites
+(
+    id BIGSERIAL,
+    intitule character varying(255) NOT NULL,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    CONSTRAINT statut_activites_pkey PRIMARY KEY (id),
+    CONSTRAINT statut_activites_intitule_unique UNIQUE (intitule)
+);
+INSERT INTO statut_activites (intitule) VALUES
+('En cours'),
+('Non démarré'),
+('Terminé');
+
+CREATE TABLE statut_financements
+(
+    id BIGSERIAL,
+    intitule character varying(255) NOT NULL,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    CONSTRAINT statut_financements_pkey PRIMARY KEY (id),
+    CONSTRAINT statut_financements_intitule_unique UNIQUE (intitule)
+);
+INSERT INTO statut_financements (intitule) VALUES
+('A rechercher'),
+('Complément à rechercher'),
+('En négociation'),
+('Accord de principe'),
+('Acquis'),
+('Signé'),
+('Demande transmise');
+
+CREATE TABLE categorie_depenses
+(
+    id BIGSERIAL,
+    intitule character varying(255) NOT NULL,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    CONSTRAINT categorie_depenses_pkey PRIMARY KEY (id),
+    CONSTRAINT categorie_depenses_intitule_unique UNIQUE (intitule)
+);
+INSERT INTO categorie_depenses (intitule) VALUES
+('Biens'),
+('Travaux'),
+('Services'),
+('Fonctionnement');
+
+CREATE TABLE statut_projets
+(
+    id BIGSERIAL,
+    intitule character varying(255) NOT NULL,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    CONSTRAINT statut_projets_pkey PRIMARY KEY (id),
+    CONSTRAINT statut_projets_intitule_unique UNIQUE (intitule)
+);
+INSERT INTO statut_projets (intitule) VALUES
+('Identification'),
+('Formulation'),
+('Exécution'),
+('Cloture');
+
+CREATE TABLE type_desagregations
+(
+    id BIGSERIAL,
+    intitule character varying(255) NOT NULL,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    CONSTRAINT type_desagregations_pkey PRIMARY KEY (id),
+    CONSTRAINT type_desagregations_intitule_unique UNIQUE (intitule)
+);
+INSERT INTO type_desagregations (intitule) VALUES
+('Sexe'),
+('Milieu de résidence'),
+('Ensemble'),
+('NA');
+
+CREATE TABLE unite_indicateurs
+(
+    id BIGSERIAL,
+    intitule character varying(255) NOT NULL,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    CONSTRAINT unite_indicateurs_pkey PRIMARY KEY (id),
+    CONSTRAINT unite_indicateurs_intitule_unique UNIQUE (intitule)
+);
+INSERT INTO unite_indicateurs (intitule) VALUES
+('%'),
+('Ans'),
+('Jour'),
+('Encadrants pour 1000hbts'),
+('Nombre'),
+('Indice'),
+('Km/1000hbts'),
+('‰'),
+('100 000 naissances'),
+('Ratio');
+
+CREATE TABLE commentaire_valeur_indicateurs
+(
+    id BIGSERIAL,
+    intitule character varying(255) NOT NULL,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    CONSTRAINT commentaire_valeur_indicateurs_pkey PRIMARY KEY (id),
+    CONSTRAINT commentaire_valeur_indicateurs_intitule_unique UNIQUE (intitule)
+);
+INSERT INTO commentaire_valeur_indicateurs (intitule) VALUES
+('RAS'),
+('...'),
+('///');
+
+CREATE TABLE etudes
+(
+    id BIGSERIAL,
+    intitule character varying(255) NOT NULL,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    CONSTRAINT etudes_pkey PRIMARY KEY (id),
+    CONSTRAINT etudes_intitule_unique UNIQUE (intitule)
+);
+INSERT INTO etudes (intitule) VALUES
+('Document d''identification de projet'),
+('Etude pré-faisabilité'),
+('Document d''evaluation de projet'),
+('Etudes de faisabilité technique et financière'),
+('Etudes d’impact environnemental'),
+('Etudes d’analyse socioéconomique'),
+('Etudes géotechniques'),
+('Etudes architecturales et topographiques'),
+('Etudes bathymétriques'),
+('Etudes hydrauliques et hydro-morphiques'),
+('Etudes routières'),
+('Elaboration d’un plan d’affaires dans le cadre des PPP');
+
+CREATE TABLE devises
+(
+    id BIGSERIAL,
+    intitule character varying(255) NOT NULL,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    CONSTRAINT devises_pkey PRIMARY KEY (id),
+    CONSTRAINT devises_intitule_unique UNIQUE (intitule)
+);
+INSERT INTO devises (intitule) VALUES
+('USD'),
+('EUR');
+
+CREATE TABLE secteurs
+(
+    id BIGSERIAL,
+    intitule character varying(255) NOT NULL,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    CONSTRAINT secteurs_pkey PRIMARY KEY (id),
+    CONSTRAINT secteurs_intitule_unique UNIQUE (intitule)
+);
+INSERT INTO secteurs (intitule) VALUES
+('Agriculture');
+
+CREATE TABLE statut_budgets
+(
+    id BIGSERIAL,
+    intitule character varying(255) NOT NULL,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    CONSTRAINT statut_budgets_pkey PRIMARY KEY (id),
+    CONSTRAINT statut_budgets_intitule_unique UNIQUE (intitule)
+);
+INSERT INTO statut_budgets (intitule) VALUES
+('Prévu'),
+('Dépensé'),
+('Budgetisé');
+
+CREATE TABLE statut_montant_financements
+(
+    id BIGSERIAL,
+    intitule character varying(255) NOT NULL,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    CONSTRAINT statut_montant_financements_pkey PRIMARY KEY (id),
+    CONSTRAINT statut_montant_financements_intitule_unique UNIQUE (intitule)
+);
+INSERT INTO statut_montant_financements (intitule) VALUES
+('Mobilisé'),
+('Consommé'),
+('Recherché');
+
+
+CREATE TABLE zones
+(
+    id BIGSERIAL,
+    intitule character varying(255) NOT NULL,
+    code character varying(255),
+    latitude double precision,
+    longitude double precision,
+    zone_id bigint,
+    niveau integer NOT NULL,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+	CONSTRAINT zones_pkey PRIMARY KEY (id)
+);
+INSERT INTO zones (id, intitule, code, latitude, longitude, zone_id, niveau, created_at, updated_at) VALUES
+(1,	'NIGER',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL),
+(2,	'NIAMEY',	NULL,	NULL,	NULL,	1,	2,	NULL,	NULL),
+(3,	'DOSSO',	NULL,	NULL,	NULL,	1,	2,	NULL,	NULL),
+(4,	'AGADEZ',	NULL,	NULL,	NULL,	1,	2,	NULL,	NULL),
+(5,	'TAHOUA',	NULL,	NULL,	NULL,	1,	2,	NULL,	NULL),
+(6,	'MARADI',	NULL,	NULL,	NULL,	1,	2,	NULL,	NULL),
+(7,	'DIFFA',	NULL,	NULL,	NULL,	1,	2,	NULL,	NULL),
+(8,	'VILLE DE NIAMEY',	NULL,	NULL,	NULL,	2,	3,	NULL,	NULL),
+(9,	'DOGONDOUTCHI',	NULL,	NULL,	NULL,	3,	3,	NULL,	NULL),
+(10,	'INGALL',	NULL,	NULL,	NULL,	4,	3,	NULL,	NULL),
+(11,	'TAHOUA',	NULL,	NULL,	NULL,	5,	3,	NULL,	NULL),
+(13,	'BAGAROUA',	NULL,	NULL,	NULL,	5,	3,	NULL,	NULL),
+(14,	'ILLELA',	NULL,	NULL,	NULL,	5,	3,	NULL,	NULL),
+(15,	'MALBAZA',	NULL,	NULL,	NULL,	5,	3,	NULL,	NULL);
+CREATE TABLE indicateurs
+(
+    id BIGSERIAL,
+    code character varying(255),
+    intitule character varying(255) NOT NULL,
+	type_indicateur_id bigint DEFAULT 1,
+    definition character varying(255),
+    donnees_requises character varying(255),
+    methode_calcul character varying(255),
+    methode_collecte character varying(255),
+    source character varying(255),
+    commentaire_limite character varying(255),
+    niveau_desagregation character varying(255),
+    periodicite character varying(255),
+    unite character varying(255),
+    echelle character varying(255),
+    lien_avec_cadre_developpement character varying(255),
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    CONSTRAINT indicateurs_pkey PRIMARY KEY (id),
+    CONSTRAINT intitule_unique UNIQUE (intitule),
+	CONSTRAINT indicateur_type_indicateur_id_fkey FOREIGN KEY (type_indicateur_id)
+        REFERENCES type_indicateurs (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+
+CREATE TABLE type_cadre_developpements
+(
+    id BIGSERIAL,
+    intitule character varying(255) NOT NULL,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    CONSTRAINT type_cadre_developpements_pkey PRIMARY KEY (id),
+    CONSTRAINT type_cadre_developpements_intitule_unique UNIQUE (intitule)
+);
+INSERT INTO type_cadre_developpements (intitule) VALUES
+('cadre de développement'),
+('projet et programme');
+
+CREATE TABLE cadre_developpements
+(
+    id BIGSERIAL,
+    intitule character varying(255) NOT NULL,
+    structure_responsable character varying(255),
+    annee_debut integer,
+    annee_fin integer,
+    description text,
+	cout_total_financement bigint,
+    cadre_developpement_id bigint,
+	type_cadre_developpement_id bigint DEFAULT 1,
+	institution_tutelle_id BIGINT DEFAULT 1,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+	user_id bigint,
+    CONSTRAINT cadre_developpements_pkey PRIMARY KEY (id),
+	CONSTRAINT cadre_developpements_type_cadre_developpement_id_fkey FOREIGN KEY (type_cadre_developpement_id)
+        REFERENCES type_cadre_developpements (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+	CONSTRAINT cadre_developpement_user_id_fkey FOREIGN KEY (user_id)
+        REFERENCES users(id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE SET NULL,
+	CONSTRAINT cadre_developpement_institution_tutelle_id_fkey FOREIGN KEY (institution_tutelle_id)
+        REFERENCES institution_tutelles (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+	
+);
+
+CREATE TABLE cadre_logiques
+(
+    id BIGSERIAL,
+    intitule character varying(255) NOT NULL,
+    niveau integer,
+    cadre_logique_id bigint,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    CONSTRAINT cadre_logiques_pkey PRIMARY KEY (id)
+);
+CREATE TABLE orientation_cadre_developpements
+(
+    id BIGSERIAL,
+    intitule character varying(255),
+    cadre_developpement_id bigint NOT NULL,
+    cadre_logique_id bigint NOT NULL,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    CONSTRAINT orientation_cadre_developpements_pkey PRIMARY KEY (id),
+	CONSTRAINT orientation_cadre_developpements_cadre_developpement_id_fkey FOREIGN KEY (cadre_developpement_id)
+        REFERENCES cadre_developpements (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT orientation_cadre_developpements_cadre_logique_id_fkey FOREIGN KEY (cadre_logique_id)
+        REFERENCES cadre_logiques (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+
+);
+CREATE TABLE cadre_mesure_resultats
+(
+	id BIGSERIAL,
+    indicateur_id bigint NOT NULL,
+    cadre_logique_id bigint NOT NULL,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    CONSTRAINT cadre_mesure_resultats_pkey PRIMARY KEY (id),
+    CONSTRAINT cadre_mesure_resultat_unique UNIQUE (indicateur_id, cadre_logique_id),
+    CONSTRAINT cadre_mesure_resultat_cadre_logique_fkey FOREIGN KEY (cadre_logique_id)
+        REFERENCES cadre_logiques (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT cadre_mesure_resultat_indicateur_fkey FOREIGN KEY (indicateur_id)
+        REFERENCES indicateurs (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+
+CREATE TABLE alignement_strategiques
+(
+    id BIGSERIAL,
+    cadre_developpement_id bigint NOT NULL,
+    cadre_logique_id bigint NOT NULL,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    CONSTRAINT alignement_strategiques_pkey PRIMARY KEY (cadre_developpement_id, cadre_logique_id),
+    CONSTRAINT alignement_strategiques_unique UNIQUE (id),
+	CONSTRAINT alignement_strategiques_cadre_developpement_id_fkey FOREIGN KEY (cadre_developpement_id)
+        REFERENCES cadre_developpements (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT alignement_strategiques_cadre_logique_id_fkey FOREIGN KEY (cadre_logique_id)
+        REFERENCES cadre_logiques (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+
+CREATE TABLE hypothese_risques
+(
+    id BIGSERIAL,
+    cadre_logique_id integer NOT NULL,
+    hypothese text,
+    risque text,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    CONSTRAINT hypothese_risques_pkey PRIMARY KEY (id),
+    CONSTRAINT hypothese_risque_cadre_logique_fkey FOREIGN KEY (cadre_logique_id)
+        REFERENCES cadre_logiques (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+
+CREATE TABLE desagregations
+(
+    id BIGSERIAL,
+    intitule character varying(255) NOT NULL,
+    type_desagregation_id bigint NOT NULL,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    CONSTRAINT desagregations_pkey PRIMARY KEY (id),
+    CONSTRAINT desagregations_intitule_unique UNIQUE (intitule),
+	CONSTRAINT desagregations_type_desagregation_fkey FOREIGN KEY (type_desagregation_id)
+        REFERENCES type_desagregations (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+INSERT INTO desagregations (intitule, type_desagregation_id) VALUES
+('Femme',	1),
+('Homme',	1),
+('Urbain',	2),
+('Rural',	2),
+('Total',	3);
+
+CREATE TABLE desagregation_indicateur
+(
+    id BIGSERIAL,
+    desagregation_id bigint NOT NULL,
+    indicateur_id bigint NOT NULL,
+	deleted_on timestamp null,
+    CONSTRAINT desagregation_indicateur_pkey PRIMARY KEY (id),
+    CONSTRAINT desagregation_indicateur_unique UNIQUE (desagregation_id, indicateur_id),
+    CONSTRAINT desagregation_fkey FOREIGN KEY (desagregation_id)
+        REFERENCES desagregations (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT indicateur_fkey FOREIGN KEY (indicateur_id)
+        REFERENCES indicateurs (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+
+CREATE TABLE donnee_indicateurs
+(
+    id BIGSERIAL,
+    nature_donnee_id bigint NOT NULL,
+    indicateur_id bigint NOT NULL,
+    zone_id bigint NOT NULL,
+    periode_id bigint NOT NULL,
+    source_indicateur_id bigint NOT NULL,
+    unite_indicateur_id bigint NOT NULL,
+    commentaire_valeur_indicateur_id bigint NOT NULL,
+    valeur double precision NOT NULL,
+	statut character varying(50) null,
+	commentaire_rejet text null,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    CONSTRAINT donnee_indicateur_pkey PRIMARY KEY (nature_donnee_id, indicateur_id, zone_id, periode_id, source_indicateur_id, unite_indicateur_id, commentaire_valeur_indicateur_id),
+    CONSTRAINT donnee_indicateurs_id_unique UNIQUE (id),
+    CONSTRAINT donnee_indicateurs_nature_donnee_fkey FOREIGN KEY (nature_donnee_id)
+        REFERENCES nature_donnees (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT donnee_indicateurs_indicateur_fkey FOREIGN KEY (indicateur_id)
+        REFERENCES indicateurs (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+	CONSTRAINT donnee_indicateurs_zone_fkey FOREIGN KEY (zone_id)
+        REFERENCES zones (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+	CONSTRAINT donnee_indicateurs_periode_fkey FOREIGN KEY (periode_id)
+        REFERENCES periodes (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT donnee_indicateurs_source_fkey FOREIGN KEY (source_indicateur_id)
+        REFERENCES source_indicateurs (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT donnee_indicateurs_unite_fkey FOREIGN KEY (unite_indicateur_id)
+        REFERENCES unite_indicateurs (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT donnee_indicateurs_commentaire_fkey FOREIGN KEY (commentaire_valeur_indicateur_id)
+        REFERENCES commentaire_valeur_indicateurs (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+
+CREATE TABLE donnee_indicateur_desagregation
+(
+    id BIGSERIAL,
+    donnee_indicateur_id bigint NOT NULL,
+    desagregation_id bigint NOT NULL,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    CONSTRAINT donnee_indicateur_desagregation_pkey PRIMARY KEY (donnee_indicateur_id, desagregation_id),
+    CONSTRAINT donnee_indicateur_desagregation_unique UNIQUE (id),
+	CONSTRAINT did_desagregation_fkey FOREIGN KEY (desagregation_id)
+        REFERENCES desagregations (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT did_donnee_indicateur_fkey FOREIGN KEY (donnee_indicateur_id)
+        REFERENCES donnee_indicateurs (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+
+
+CREATE TABLE piece_jointes
+(
+    id BIGSERIAL,
+    intitule character varying(255) NOT NULL,
+    fichier character varying(255) NOT NULL,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    cadre_developpement_id bigint,
+    CONSTRAINT piece_jointes_pkey PRIMARY KEY (id),
+    CONSTRAINT fk_piece_jointes_cadre FOREIGN KEY (cadre_developpement_id)
+        REFERENCES cadre_developpements (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+
+CREATE TABLE projets
+(
+    id BIGSERIAL,
+    sigle character varying(255) NOT NULL,
+    intitule character varying(255) NOT NULL,
+	statut_projet_id bigint,
+    priorite_id bigint,
+    institution_tutelle_id bigint,
+    contact character varying(255),
+	annee_demarrage integer,
+    date_debut_prevue date,
+    date_fin_prevue date,
+	date_approbation date,
+    date_signature date,
+	date_mise_en_vigueur date,
+    date_debut_effective date,
+    date_fin_effective date,
+	duree integer,
+    cout double precision,
+	cout_devise DOUBLE PRECISION,
+	devise_id BIGINT,
+	date_prorogation date,
+	date_cloture_prorogation date,
+    duree_prorogation integer,
+    projet_id bigint,
+    cadre_developpement_id bigint,
+    user_id bigint,
+	dispose_organe_pilotage BOOLEAN DEFAULT NULL,
+	a_audit_regulier BOOLEAN DEFAULT NULL,
+	problemes_rencontres TEXT DEFAULT NULL,
+	solutions_proposees TEXT DEFAULT NULL,
+	recommandations TEXT DEFAULT NULL,
+	rapport_rempli_par VARCHAR(255) DEFAULT NULL,
+	rapport_date_remplissage DATE DEFAULT NULL,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+	CONSTRAINT projets_pkey PRIMARY KEY (id),
+	CONSTRAINT projets_priorite_fkey FOREIGN KEY (priorite_id)
+        REFERENCES priorites (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+	CONSTRAINT projets_institution_tutelle_fkey FOREIGN KEY (institution_tutelle_id)
+        REFERENCES institution_tutelles (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+	CONSTRAINT projets_statut_projet_fkey FOREIGN KEY (statut_projet_id)
+        REFERENCES statut_projets (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+	CONSTRAINT projets_cadre_developpement_fkey FOREIGN KEY (cadre_developpement_id)
+        REFERENCES cadre_developpements (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+	CONSTRAINT projet_user_id_fkey FOREIGN KEY (user_id)
+        REFERENCES users(id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE SET NULL,
+	CONSTRAINT projet_devise_id_fkey FOREIGN KEY (devise_id)
+        REFERENCES devises(id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+
+CREATE TABLE projet_prorogations (
+    id BIGSERIAL PRIMARY KEY,
+    projet_id BIGINT NOT NULL,
+    date_prorogation DATE NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_projet_prorogations_projet FOREIGN KEY (projet_id) 
+        REFERENCES projets(id) ON DELETE CASCADE
+);
+-- Création de la table pour l'historique des financements additionnels
+CREATE TABLE projet_financement_additionnels (
+    id BIGSERIAL PRIMARY KEY,
+    projet_id BIGINT NOT NULL,
+    cout NUMERIC(15, 2) NOT NULL,
+    cout_devise NUMERIC(15, 2) NULL,
+    devise_id BIGINT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_financement_additionnel_projet FOREIGN KEY (projet_id) 
+        REFERENCES projets(id) ON DELETE CASCADE,
+    CONSTRAINT fk_financement_additionnel_devise FOREIGN KEY (devise_id) 
+        REFERENCES devises(id) ON DELETE SET NULL
+);
+CREATE TABLE piece_jointe_projets
+(
+    id BIGSERIAL,
+    intitule character varying(255) NOT NULL,
+    fichier character varying(255) NOT NULL,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    projet_id bigint,
+    CONSTRAINT piece_jointe_projets_pkey PRIMARY KEY (id),
+    CONSTRAINT piece_jointes_projet_fkey FOREIGN KEY (projet_id)
+        REFERENCES projets (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+CREATE TABLE projet_zone
+(
+    id BIGSERIAL,
+    projet_id bigint NOT NULL,
+    zone_id bigint NOT NULL,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    CONSTRAINT projet_zone_pkey PRIMARY KEY (projet_id, zone_id),
+    CONSTRAINT projet_zone_unique UNIQUE (id),
+	CONSTRAINT projet_zone_projet_id_fkey FOREIGN KEY (projet_id)
+        REFERENCES projets (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT projet_zone_zone_id_fkey FOREIGN KEY (zone_id)
+        REFERENCES zones (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+
+CREATE TABLE projet_secteur
+(
+    id BIGSERIAL,
+    projet_id bigint NOT NULL,
+    secteur_id bigint NOT NULL,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    CONSTRAINT projet_secteur_pkey PRIMARY KEY (projet_id, secteur_id),
+    CONSTRAINT projet_secteur_unique UNIQUE (id),
+	CONSTRAINT projet_secteur_projet_id_fkey FOREIGN KEY (projet_id)
+        REFERENCES projets (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT projet_secteur_secteur_id_fkey FOREIGN KEY (secteur_id)
+        REFERENCES secteurs (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+
+CREATE TABLE projet_bailleur
+(
+    id BIGSERIAL,
+    projet_id bigint NOT NULL,
+    bailleur_id bigint NOT NULL,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    CONSTRAINT projet_bailleur_pkey PRIMARY KEY (projet_id, bailleur_id),
+    CONSTRAINT projet_bailleur_unique UNIQUE (id),
+	CONSTRAINT projet_bailleur_projet_id_fkey FOREIGN KEY (projet_id)
+        REFERENCES projets (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT projet_bailleur_bailleur_id_fkey FOREIGN KEY (bailleur_id)
+        REFERENCES bailleurs (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+
+CREATE TABLE projet_cadre_logique
+(
+    id BIGSERIAL,
+    projet_id bigint NOT NULL,
+    cadre_logique_id bigint NOT NULL,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    CONSTRAINT projet_cadre_logique_pkey PRIMARY KEY (projet_id, cadre_logique_id),
+    CONSTRAINT projet_cadre_logique_unique UNIQUE (id),
+	CONSTRAINT projet_cadre_logique_cadre_logique_id_fkey FOREIGN KEY (cadre_logique_id)
+        REFERENCES cadre_logiques (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT projet_cadre_logique_projet_id_fkey FOREIGN KEY (projet_id)
+        REFERENCES projets (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+CREATE TABLE projet_etude_disponible
+(
+    id BIGSERIAL,
+    projet_id bigint NOT NULL,
+    etude_id bigint NOT NULL,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    fichier character varying(255) NOT NULL,
+    CONSTRAINT projet_etude_disponible_pkey PRIMARY KEY (projet_id, etude_id),
+    CONSTRAINT projet_etude_disponible_unique UNIQUE (id),
+	CONSTRAINT projet_etude_disponible_projet_id_fkey FOREIGN KEY (projet_id)
+        REFERENCES projets (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT projet_etude_disponible_etude_id_fkey FOREIGN KEY (etude_id)
+        REFERENCES etudes (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+
+CREATE TABLE projet_etude_envisagee
+(
+    id BIGSERIAL,
+    projet_id bigint NOT NULL,
+    etude_id bigint NOT NULL,
+    source_financement_id bigint NOT NULL,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    CONSTRAINT projet_etude_envisagee_pkey PRIMARY KEY (projet_id, etude_id),
+    CONSTRAINT projet_etude_envisagee_unique UNIQUE (id),
+	CONSTRAINT projet_etude_envisagee_projet_id_fkey FOREIGN KEY (projet_id)
+        REFERENCES projets (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT projet_etude_envisagee_etude_id_fkey FOREIGN KEY (etude_id)
+        REFERENCES etudes (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+	CONSTRAINT projet_etude_envisagee_source_financement_id_fkey FOREIGN KEY (source_financement_id)
+        REFERENCES source_financements (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+
+CREATE TABLE recherche_financements
+(
+    id BIGSERIAL,
+    projet_id bigint NOT NULL,
+    source_financement_id bigint NOT NULL,
+    bailleur_id bigint,
+    statut_financement_id bigint,
+    nature_financement_id bigint,
+    montant numeric(15,2),
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    CONSTRAINT recherche_financement_pkey PRIMARY KEY (id),
+    CONSTRAINT recherche_financement_nature_financement_id_fkey FOREIGN KEY (nature_financement_id)
+        REFERENCES nature_financements (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT recherche_financement_projet_id_fkey FOREIGN KEY (projet_id)
+        REFERENCES projets (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT recherche_financement_bailleur_id_fkey FOREIGN KEY (bailleur_id)
+        REFERENCES bailleurs (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT recherche_financement_source_financement_id_fkey FOREIGN KEY (source_financement_id)
+        REFERENCES source_financements (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT recherche_financement_statut_financement_id_fkey FOREIGN KEY (statut_financement_id)
+        REFERENCES statut_financements (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+
+CREATE TABLE composantes
+(
+    id BIGSERIAL,
+    intitule character varying(255) NOT NULL,
+    composante_id bigint,
+	projet_id bigint,
+    niveau integer,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+	CONSTRAINT composantes_pkey PRIMARY KEY (id),
+	CONSTRAINT composante_projet_id_fkey FOREIGN KEY (projet_id)
+        REFERENCES projets (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+CREATE TABLE composante_produits
+(
+	id BIGSERIAL,
+    produit_id bigint NOT NULL,
+    composante_id bigint NOT NULL,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    CONSTRAINT composante_produits_pkey PRIMARY KEY (id),
+    CONSTRAINT composante_produit_unique UNIQUE (produit_id, composante_id),
+    CONSTRAINT composante_produit_composante_fkey FOREIGN KEY (composante_id)
+        REFERENCES composantes (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT composante_produit_produit_fkey FOREIGN KEY (produit_id)
+        REFERENCES cadre_logiques (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+
+CREATE TABLE projet_plan_financements
+(
+    id BIGSERIAL,
+    projet_id bigint NOT NULL,
+	composante_id bigint,
+    source_financement_id bigint,
+    bailleur_id bigint,
+    statut_financement_id bigint,
+    nature_financement_id bigint,
+	categorie_depense_id bigint,
+    montant numeric(15,2),
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    CONSTRAINT projet_plan_financement_pkey PRIMARY KEY (id),
+	CONSTRAINT projet_plan_financement_unique UNIQUE (projet_id, composante_id,source_financement_id,bailleur_id,statut_financement_id,nature_financement_id,categorie_depense_id),
+    CONSTRAINT projet_plan_financement_nature_financement_id_fkey FOREIGN KEY (nature_financement_id)
+        REFERENCES nature_financements (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT projet_plan_financement_projet_id_fkey FOREIGN KEY (projet_id)
+        REFERENCES projets (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+	CONSTRAINT projet_plan_financement_composante_id_fkey FOREIGN KEY (composante_id)
+        REFERENCES composantes (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT projet_plan_financement_bailleur_id_fkey FOREIGN KEY (bailleur_id)
+        REFERENCES bailleurs (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT projet_plan_financement_source_financement_id_fkey FOREIGN KEY (source_financement_id)
+        REFERENCES source_financements (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT projet_plan_financement_statut_financement_id_fkey FOREIGN KEY (statut_financement_id)
+        REFERENCES statut_financements (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+	CONSTRAINT projet_plan_financement_categorie_depense_id_fkey FOREIGN KEY (categorie_depense_id)
+        REFERENCES categorie_depenses (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+CREATE UNIQUE INDEX projet_plan_financements_unique_active ON projet_plan_financements (projet_id,composante_id,source_financement_id,bailleur_id,statut_financement_id,nature_financement_id,categorie_depense_id) WHERE deleted_on IS NULL;
+
+CREATE TABLE cd_financement_par_bailleurs
+(
+    id BIGSERIAL,
+    cadre_developpement_id bigint NOT NULL,
+	bailleur_id bigint,
+    montant numeric(15,2),
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    CONSTRAINT cd_financement_par_bailleur_pkey PRIMARY KEY (id),
+	CONSTRAINT cd_financement_par_bailleur_cadre_developpement_id_fkey FOREIGN KEY (cadre_developpement_id)
+        REFERENCES cadre_developpements (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT cd_financement_par_bailleur_bailleur_id_fkey FOREIGN KEY (bailleur_id)
+        REFERENCES bailleurs (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+CREATE UNIQUE INDEX cd_financement_par_bailleurs_unique_active ON cd_financement_par_bailleurs (cadre_developpement_id,bailleur_id) WHERE deleted_on IS NULL;
+
+CREATE TABLE cd_financement_annuel_par_bailleurs
+(
+    id BIGSERIAL,
+    plan_financement_id bigint NOT NULL,
+    annee int NOT NULL,
+	statut_montant_financement_id int NOT NULL,
+	montant numeric(15,2),
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    CONSTRAINT cd_financement_annuel_par_bailleurs_pkey PRIMARY KEY (id),
+	CONSTRAINT cd_financement_annuel_par_bailleurs_plan_financement_id_fkey FOREIGN KEY (plan_financement_id)
+        REFERENCES cd_financement_par_bailleurs (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+	CONSTRAINT cd_financement_annuel_par_bailleurs_statut_montant_financement_id_fkey FOREIGN KEY (statut_montant_financement_id)
+        REFERENCES statut_montant_financements (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+CREATE UNIQUE INDEX cd_financement_annuel_par_bailleurs_unique_active ON cd_financement_annuel_par_bailleurs (plan_financement_id, annee, statut_montant_financement_id) WHERE deleted_on IS NULL;
+
+CREATE TABLE cd_financement_par_resultats
+(
+    id BIGSERIAL,
+    cadre_developpement_id bigint NOT NULL,
+	cadre_logique_id bigint,
+    montant numeric(15,2),
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    CONSTRAINT cd_financement_par_resultat_pkey PRIMARY KEY (id),
+	CONSTRAINT cd_financement_par_resultat_cadre_developpement_id_fkey FOREIGN KEY (cadre_developpement_id)
+        REFERENCES cadre_developpements (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT cd_financement_par_resultat_cadre_logique_id_fkey FOREIGN KEY (cadre_logique_id)
+        REFERENCES cadre_logiques (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+CREATE UNIQUE INDEX cd_financement_par_resultats_unique_active ON cd_financement_par_resultats (cadre_developpement_id,cadre_logique_id) WHERE deleted_on IS NULL;
+
+CREATE TABLE cd_financement_annuel_par_resultats
+(
+    id BIGSERIAL,
+    plan_financement_id bigint NOT NULL,
+    annee int NOT NULL,
+	statut_montant_financement_id int NOT NULL,
+	montant numeric(15,2),
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    CONSTRAINT cd_financement_annuel_par_resultats_pkey PRIMARY KEY (id),
+	CONSTRAINT cd_financement_annuel_par_resultats_plan_financement_id_fkey FOREIGN KEY (plan_financement_id)
+        REFERENCES cd_financement_par_resultats (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+	CONSTRAINT cd_financement_annuel_par_resultats_statut_montant_financement_id_fkey FOREIGN KEY (statut_montant_financement_id)
+        REFERENCES statut_montant_financements (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+CREATE UNIQUE INDEX cd_financement_annuel_par_resultats_unique_active ON cd_financement_annuel_par_resultats (plan_financement_id, annee, statut_montant_financement_id) WHERE deleted_on IS NULL;
+
+CREATE TABLE projet_budget_annuels
+(
+    id BIGSERIAL,
+    plan_financement_id bigint NOT NULL,
+    annee int NOT NULL,
+	statut_budget_id int NOT NULL,
+	montant numeric(15,2),
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    CONSTRAINT projet_budget_annuel_pkey PRIMARY KEY (id),
+	CONSTRAINT projet_budget_annuel_unique UNIQUE (plan_financement_id,annee,statut_budget_id,deleted_on),
+    CONSTRAINT projet_budget_annuel_plan_financement_id_fkey FOREIGN KEY (plan_financement_id)
+        REFERENCES projet_plan_financements (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+	CONSTRAINT projet_budget_annuel_statut_budget_id_fkey FOREIGN KEY (statut_budget_id)
+        REFERENCES statut_budgets (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+CREATE UNIQUE INDEX projet_budget_annuels_unique_active ON projet_budget_annuels (plan_financement_id,annee,statut_budget_id) WHERE deleted_on IS NULL;
+
+
+CREATE TABLE projet_population_cible
+(
+    id BIGSERIAL,
+    projet_id bigint NOT NULL,
+    population_cible_id bigint NOT NULL,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    effectif bigint,
+    CONSTRAINT projet_population_cible_pkey PRIMARY KEY (id),
+	CONSTRAINT projet_population_cible_projet_id_fkey FOREIGN KEY (projet_id)
+        REFERENCES projets (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT projet_population_population_cible_id_fkey FOREIGN KEY (population_cible_id)
+        REFERENCES population_cibles (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+
+CREATE TABLE projet_pilotage_annees (
+    id BIGSERIAL PRIMARY KEY,
+    projet_id BIGINT NOT NULL,
+    annee INTEGER NOT NULL,
+    nb_sessions_prevues INTEGER NOT NULL DEFAULT 0,
+    nb_sessions_tenues INTEGER NOT NULL DEFAULT 0,
+    nb_recommandations_formulees INTEGER NOT NULL DEFAULT 0,
+    nb_recommandations_mises_oeuvre INTEGER NOT NULL DEFAULT 0,
+    created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL,
+    updated_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL,
+    CONSTRAINT projet_pilotage_annees_projet_id_foreign 
+        FOREIGN KEY (projet_id) REFERENCES projets(id) ON DELETE CASCADE,
+    CONSTRAINT projet_pilotage_annees_projet_id_annee_unique 
+        UNIQUE (projet_id, annee)
+);
+
+CREATE TABLE projet_pilotage_sessions (
+    id BIGSERIAL PRIMARY KEY,
+    projet_pilotage_annee_id BIGINT NOT NULL,
+    date_session DATE NOT NULL,
+    created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL,
+    updated_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL,
+    CONSTRAINT projet_pilotage_sessions_projet_pilotage_annee_id_foreign 
+        FOREIGN KEY (projet_pilotage_annee_id) REFERENCES projet_pilotage_annees(id) ON DELETE CASCADE
+);
+
+CREATE TABLE projet_audits_exercices (
+    id BIGSERIAL PRIMARY KEY,
+    projet_id BIGINT NOT NULL,
+    exercice INTEGER NOT NULL,
+    comptes_certifies BOOLEAN DEFAULT NULL,
+    nb_recommandations_formulees INTEGER NOT NULL DEFAULT 0,
+    nb_recommandations_mises_oeuvre INTEGER NOT NULL DEFAULT 0,
+    created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL,
+    updated_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL,
+    CONSTRAINT projet_audits_exercices_projet_id_foreign 
+        FOREIGN KEY (projet_id) REFERENCES projets(id) ON DELETE CASCADE,
+    CONSTRAINT projet_audits_exercices_projet_id_exercice_unique 
+        UNIQUE (projet_id, exercice)
+);
+
+CREATE TABLE projet_rapports (
+    id BIGSERIAL PRIMARY KEY,
+    projet_id BIGINT NOT NULL,
+    type VARCHAR(255) NOT NULL,
+    fichier VARCHAR(255) NOT NULL,
+    date_rapport DATE DEFAULT NULL,
+    description TEXT DEFAULT NULL,
+    created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL,
+    updated_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL,
+    CONSTRAINT projet_rapports_projet_id_foreign 
+        FOREIGN KEY (projet_id) REFERENCES projets(id) ON DELETE CASCADE
+);
+
+CREATE TABLE cloture_projets (
+    id BIGSERIAL,
+    projet_id BIGINT NOT NULL,
+    cout_effectif DOUBLE PRECISION,
+    date_debut_effectif DATE,
+    date_fin_effectif DATE,
+    duree_effectif INTEGER,
+    rapport_achevement TEXT,
+    conclusion_rapport_achevement TEXT,
+    date_rapport_achevement DATE,
+    rapport_cloture TEXT,
+    conclusion_rapport_cloture TEXT,
+    date_rapport_cloture DATE,
+    date_fermeture_comptes DATE,
+	reference_document_fermeture_comptes TEXT,
+	created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT cloture_projets_pkey PRIMARY KEY (id),
+    CONSTRAINT cloture_projets_projet_id_fkey 
+        FOREIGN KEY (projet_id)
+        REFERENCES projets (id)
+        MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS cadre_developpement_users
+(
+    id  bigserial,
+    cadre_developpement bigint NOT NULL,
+    userr bigint NOT NULL,
+    user_id bigint NOT NULL,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    CONSTRAINT cadre_developpement_user_pkey PRIMARY KEY (id),
+    CONSTRAINT cadre_developpement_user_cadre_developpement_user_key UNIQUE (cadre_developpement, userr),
+    CONSTRAINT cadre_developpement_user_cadre_developpement_fkey FOREIGN KEY (cadre_developpement)
+        REFERENCES cadre_developpements (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT cadre_developpement_user_user_fkey FOREIGN KEY (userr)
+        REFERENCES users (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID,
+    CONSTRAINT cadre_developpement_user_user_id_fkey FOREIGN KEY (user_id)
+        REFERENCES users (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+);
+
+
+CREATE TABLE IF NOT EXISTS projet_users
+(
+    id  bigserial,
+    projet bigint NOT NULL,
+    userr bigint NOT NULL,
+    user_id bigint NOT NULL,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    CONSTRAINT projet_user_pkey PRIMARY KEY (id),
+    CONSTRAINT projet_user_projet_user_key UNIQUE (projet, userr),
+    CONSTRAINT projet_user_projet_fkey FOREIGN KEY (projet)
+        REFERENCES projets (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT projet_user_user_fkey FOREIGN KEY (userr)
+        REFERENCES users (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID,
+    CONSTRAINT projet_user_user_id_fkey FOREIGN KEY (user_id)
+        REFERENCES users (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+);
+
+CREATE TABLE roles
+(
+    id BIGSERIAL,
+    name character varying(255) NOT NULL,
+    label character varying(255),
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    CONSTRAINT roles_pkey PRIMARY KEY (id),
+    CONSTRAINT roles_name_unique UNIQUE (name)
+);
+INSERT INTO roles (id, name, label, created_at, updated_at) VALUES
+(1,	'admin',	'admin',	NULL,	NULL);
+
+CREATE TABLE role_user
+(
+    role_id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    CONSTRAINT role_user_pkey PRIMARY KEY (role_id, user_id),
+    CONSTRAINT role_user_role_id_foreign FOREIGN KEY (role_id)
+        REFERENCES roles (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT role_user_user_id_foreign FOREIGN KEY (user_id)
+        REFERENCES users (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+INSERT INTO role_user (role_id, user_id) VALUES
+(1,	1);
+
+CREATE TABLE permissions
+(
+    id BIGSERIAL,
+    name character varying(255) NOT NULL,
+    label character varying(255),
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+	deleted_on timestamp null,
+    CONSTRAINT permissions_pkey PRIMARY KEY (id),
+    CONSTRAINT permissions_name_unique UNIQUE (name)
+);
+INSERT INTO permissions (id, name, label, created_at, updated_at) VALUES
+(1,	'administration',	'administration',	NULL,	NULL);
+
+CREATE TABLE permission_role
+(
+    permission_id bigint NOT NULL,
+    role_id bigint NOT NULL,
+    CONSTRAINT permission_role_pkey PRIMARY KEY (permission_id, role_id),
+    CONSTRAINT permission_role_permission_id_foreign FOREIGN KEY (permission_id)
+        REFERENCES permissions (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT permission_role_role_id_foreign FOREIGN KEY (role_id)
+        REFERENCES roles (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+
+CREATE TABLE password_reset_tokens
+(
+    email character varying(255) NOT NULL,
+    token character varying(255) NOT NULL,
+    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT password_reset_tokens_pkey PRIMARY KEY (email)
+);
+
+CREATE TABLE sessions
+(
+    id character varying(255) NOT NULL,
+    user_id bigint,
+    ip_address character varying(45),
+    user_agent text,
+    payload text NOT NULL,
+    last_activity integer NOT NULL,
+    CONSTRAINT sessions_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE migrations
+(
+    id BIGSERIAL,
+    migration character varying(255) NOT NULL,
+    batch integer NOT NULL,
+    CONSTRAINT migrations_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE jobs
+(
+    id BIGSERIAL,
+    queue character varying(255) NOT NULL,
+    payload text NOT NULL,
+    attempts smallint NOT NULL,
+    reserved_at integer,
+    available_at integer NOT NULL,
+    created_at integer NOT NULL,
+    CONSTRAINT jobs_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE job_batches
+(
+    id character varying(255) NOT NULL,
+    name character varying(255) NOT NULL,
+    total_jobs integer NOT NULL,
+    pending_jobs integer NOT NULL,
+    failed_jobs integer NOT NULL,
+    failed_job_ids text NOT NULL,
+    options text,
+    cancelled_at integer,
+    created_at integer NOT NULL,
+    finished_at integer,
+    CONSTRAINT job_batches_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE failed_jobs
+(
+    id BIGSERIAL,
+    uuid character varying(255) NOT NULL,
+    connection text NOT NULL,
+    queue text NOT NULL,
+    payload text NOT NULL,
+    exception text NOT NULL,
+    failed_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT failed_jobs_pkey PRIMARY KEY (id),
+    CONSTRAINT failed_jobs_uuid_unique UNIQUE (uuid)
+);
+
+CREATE TABLE cache
+(
+    key character varying(255),
+    value text NOT NULL,
+    expiration integer NOT NULL,
+    CONSTRAINT cache_pkey PRIMARY KEY (key)
+);
+
+CREATE TABLE cache_locks
+(
+    key character varying(255) NOT NULL,
+    owner character varying(255) NOT NULL,
+    expiration integer NOT NULL,
+    CONSTRAINT cache_locks_pkey PRIMARY KEY (key)
+);
+
+CREATE OR REPLACE VIEW view_extraction_donnees
+ AS
+ SELECT di.id,
+    di.nature_donnee_id,
+    nd.intitule AS nature_donnee_intitule,
+    di.indicateur_id,
+    i.intitule AS indicateur_intitule,
+    di.zone_id,
+    z.intitule AS zone_intitule,
+    di.source_indicateur_id,
+    si.intitule AS source_indicateur_intitule,
+    di.unite_indicateur_id,
+    ui.intitule AS unite_indicateur_intitule,
+    di.commentaire_valeur_indicateur_id,
+    cvi.intitule AS commentaire_intitule,
+    di.periode_id,
+    p.intitule AS periode_intitule,
+    di.valeur,
+    string_agg(DISTINCT d.id::text, ', '::text) AS desagregation_ids,
+    string_agg(DISTINCT d.intitule::text, ', '::text) AS desagregations
+   FROM donnee_indicateurs di
+     LEFT JOIN nature_donnees nd ON di.nature_donnee_id = nd.id
+     LEFT JOIN indicateurs i ON di.indicateur_id = i.id
+     LEFT JOIN zones z ON di.zone_id = z.id
+     LEFT JOIN periodes p ON di.periode_id = p.id
+     LEFT JOIN source_indicateurs si ON di.source_indicateur_id = si.id
+     LEFT JOIN unite_indicateurs ui ON di.unite_indicateur_id = ui.id
+     LEFT JOIN commentaire_valeur_indicateurs cvi ON di.commentaire_valeur_indicateur_id = cvi.id
+     LEFT JOIN donnee_indicateur_desagregation did ON di.id = did.donnee_indicateur_id
+     LEFT JOIN desagregations d ON did.desagregation_id = d.id
+  GROUP BY di.id, di.nature_donnee_id, nd.intitule, di.indicateur_id, i.intitule, di.zone_id, z.intitule, di.source_indicateur_id, si.intitule, di.unite_indicateur_id, ui.intitule, di.commentaire_valeur_indicateur_id, cvi.intitule, di.periode_id, p.intitule, di.valeur
+  ORDER BY i.intitule, z.intitule, p.intitule;
+
+CREATE OR REPLACE VIEW view_cmr
+ AS
+ WITH RECURSIVE nodes AS (
+         SELECT cd.id AS cadre_id,
+            cd.intitule,
+            NULL::bigint AS parent_id,
+            1 AS niveau,
+            cd.id AS cadre_developpement_id
+           FROM cadre_developpements cd
+        UNION ALL
+         SELECT cl.id AS cadre_id,
+            cl.intitule,
+            ocd.cadre_developpement_id AS parent_id,
+            2 AS niveau,
+            ocd.cadre_developpement_id
+           FROM orientation_cadre_developpements ocd
+             JOIN cadre_logiques cl ON cl.id = ocd.cadre_logique_id
+        UNION ALL
+         SELECT cl_child.id AS cadre_id,
+            cl_child.intitule,
+            cl_child.cadre_logique_id AS parent_id,
+            n_1.niveau + 1 AS niveau,
+            n_1.cadre_developpement_id
+           FROM cadre_logiques cl_child
+             JOIN nodes n_1 ON cl_child.cadre_logique_id = n_1.cadre_id
+        )
+ SELECT n.cadre_developpement_id,
+    n.cadre_id,
+    n.intitule AS cadre_intitule,
+    n.parent_id,
+    n.niveau,
+    i.id AS indicateur_id,
+    i.intitule AS indicateur_intitule,
+    di.valeur,
+    z.intitule AS zone_intitule,
+    u.intitule AS unite_intitule,
+    s.intitule AS source_intitule,
+    nd.intitule AS nature_donnee_intitule,
+    p.intitule AS periode_intitule,
+    string_agg(DISTINCT dsg.intitule::text, ', '::text) AS desagregations
+   FROM nodes n
+     LEFT JOIN cadre_mesure_resultats cmr ON cmr.cadre_logique_id = n.cadre_id
+     LEFT JOIN indicateurs i ON i.id = cmr.indicateur_id
+     LEFT JOIN donnee_indicateurs di ON di.indicateur_id = i.id
+     LEFT JOIN zones z ON z.id = di.zone_id
+     LEFT JOIN unite_indicateurs u ON u.id = di.unite_indicateur_id
+     LEFT JOIN source_indicateurs s ON s.id = di.source_indicateur_id
+     LEFT JOIN nature_donnees nd ON nd.id = di.nature_donnee_id
+     LEFT JOIN periodes p ON p.id = di.periode_id
+     LEFT JOIN donnee_indicateur_desagregation did ON did.donnee_indicateur_id = di.id
+     LEFT JOIN desagregations dsg ON dsg.id = did.desagregation_id
+  WHERE n.niveau >= 2
+  GROUP BY n.cadre_developpement_id, n.cadre_id, n.intitule, n.parent_id, n.niveau, i.id, i.intitule, di.valeur, z.intitule, u.intitule, s.intitule, nd.intitule, p.intitule
+  ORDER BY n.cadre_developpement_id, n.parent_id NULLS FIRST, n.cadre_id, i.id;
+
+CREATE OR REPLACE VIEW view_arborescence_cadre_developpement AS
+WITH RECURSIVE arborescence AS (
+
+    /* ===============================
+       NIVEAU 0 : Cadre de développement
+       =============================== */
+    SELECT
+        ('cd_' || cd.id)::text     AS id,
+        cd.intitule                AS intitule,
+        NULL::text                 AS parent_id,
+        0                          AS niveau,
+        cd.id                      AS cadre_developpement_id
+    FROM cadre_developpements cd
+
+
+    UNION ALL
+
+
+    /* =======================================
+       NIVEAU 1 : Orientations stratégiques
+       ======================================= */
+    SELECT
+        cl.id::text                                   AS id,
+        cl.intitule                                   AS intitule,
+        ('cd_' || ocd.cadre_developpement_id)::text   AS parent_id,
+        1                                             AS niveau,
+        ocd.cadre_developpement_id
+    FROM orientation_cadre_developpements ocd
+    JOIN cadre_logiques cl
+        ON cl.id = ocd.cadre_logique_id
+
+
+    UNION ALL
+
+
+    /* =======================================
+       NIVEAU >= 2 : Hiérarchie cadre logique
+       ======================================= */
+    SELECT
+        cl.id::text                AS id,
+        cl.intitule                AS intitule,
+        cl.cadre_logique_id::text  AS parent_id,
+        a.niveau + 1               AS niveau,
+        a.cadre_developpement_id
+    FROM cadre_logiques cl
+    JOIN arborescence a
+        ON cl.cadre_logique_id::text = a.id
+    WHERE a.niveau >= 1
+)
+
+SELECT *
+FROM arborescence order by niveau,id;
+
+CREATE OR REPLACE VIEW public.view_cadre_logique
+ AS
+ WITH RECURSIVE hierarchy AS (
+         SELECT cl.id,
+            cl.intitule,
+            cl.cadre_logique_id AS parent_id,
+            1 AS niveau
+           FROM cadre_logiques cl
+          WHERE (cl.id IN ( SELECT ocd.cadre_logique_id
+                   FROM orientation_cadre_developpements ocd))
+        UNION ALL
+         SELECT child.id,
+            child.intitule,
+            child.cadre_logique_id AS parent_id,
+            h.niveau + 1 AS niveau
+           FROM cadre_logiques child
+             JOIN hierarchy h ON child.cadre_logique_id = h.id
+        )
+ SELECT id,
+    intitule,
+    parent_id,
+    niveau
+   FROM hierarchy
+  ORDER BY niveau, parent_id NULLS FIRST, id;
+
+CREATE OR REPLACE FUNCTION get_produit_from_cmr(parent_node_id BIGINT)
+RETURNS TABLE (
+    id BIGINT,
+    intitule VARCHAR,
+    parent_id BIGINT
+)
+LANGUAGE sql
+AS $$
+WITH RECURSIVE descendants AS (
+    SELECT
+        id,
+        intitule,
+        parent_id
+    FROM view_cadre_logique
+    WHERE id = parent_node_id
+
+    UNION ALL
+
+    SELECT
+        v.id,
+        v.intitule,
+        v.parent_id
+    FROM view_cadre_logique v
+    INNER JOIN descendants d
+        ON v.parent_id = d.id
+)
+SELECT
+    d.id,
+    d.intitule,
+    d.parent_id
+FROM descendants d
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM view_cadre_logique c
+    WHERE c.parent_id = d.id
+);
+$$;
+
+-----------------ok
+CREATE OR REPLACE VIEW public.view_cadre_logique
+ AS
+ WITH RECURSIVE arborescence AS (
+         SELECT 'cd_'::text || cd.id AS id,
+            cd.intitule,
+            NULL::text AS parent_id,
+            0 AS niveau,
+            cd.id AS cadre_developpement_id
+           FROM cadre_developpements cd
+        UNION ALL
+         SELECT cl.id::text AS id,
+            cl.intitule,
+            'cd_'::text || ocd.cadre_developpement_id AS parent_id,
+            1 AS niveau,
+            ocd.cadre_developpement_id
+           FROM orientation_cadre_developpements ocd
+             JOIN cadre_logiques cl ON cl.id = ocd.cadre_logique_id
+        UNION ALL
+         SELECT cl.id::text AS id,
+            cl.intitule,
+            cl.cadre_logique_id::text AS parent_id,
+            a.niveau + 1 AS niveau,
+            a.cadre_developpement_id
+           FROM cadre_logiques cl
+             JOIN arborescence a ON cl.cadre_logique_id::text = a.id
+          WHERE a.niveau >= 1
+        )
+ SELECT id,
+    intitule,
+    parent_id,
+    niveau,
+    cadre_developpement_id
+   FROM arborescence
+  ORDER BY niveau, id;
+  
+-----------------ok cadre logique des cadre stratégique_uniquement
+CREATE OR REPLACE VIEW public.view_cadre_logique_des_cadres_strategiques AS
+WITH RECURSIVE arborescence AS (
+
+    -- Racines : uniquement les cadres stratégiques
+    SELECT 
+        'cd_'::text || cd.id AS id,
+        cd.intitule,
+        NULL::text AS parent_id,
+        0 AS niveau,
+        cd.id AS cadre_developpement_id
+    FROM cadre_developpements cd
+    WHERE cd.type_cadre_developpement_id = 1
+
+    UNION ALL
+
+    -- Premier niveau des cadres logiques liés aux cadres stratégiques
+    SELECT 
+        cl.id::text AS id,
+        cl.intitule,
+        'cd_'::text || ocd.cadre_developpement_id AS parent_id,
+        1 AS niveau,
+        ocd.cadre_developpement_id
+    FROM orientation_cadre_developpements ocd
+    JOIN cadre_logiques cl 
+        ON cl.id = ocd.cadre_logique_id
+    JOIN cadre_developpements cd
+        ON cd.id = ocd.cadre_developpement_id
+    WHERE cd.type_cadre_developpement_id = 1
+
+    UNION ALL
+
+    -- Descendance des cadres logiques
+    SELECT 
+        cl.id::text AS id,
+        cl.intitule,
+        cl.cadre_logique_id::text AS parent_id,
+        a.niveau + 1 AS niveau,
+        a.cadre_developpement_id
+    FROM cadre_logiques cl
+    JOIN arborescence a 
+        ON cl.cadre_logique_id::text = a.id
+    WHERE a.niveau >= 1
+)
+
+SELECT 
+    id,
+    intitule,
+    parent_id,
+    niveau,
+    cadre_developpement_id
+FROM arborescence
+ORDER BY cadre_developpement_id, niveau, id;
+
+-----------------ok cadre logique projet
+CREATE OR REPLACE VIEW public.view_cadre_logique_des_projets AS
+WITH RECURSIVE arborescence AS (
+
+    -- Racines : uniquement les cadres stratégiques
+    SELECT 
+        'cd_'::text || cd.id AS id,
+        cd.intitule,
+        NULL::text AS parent_id,
+        0 AS niveau,
+        cd.id AS cadre_developpement_id
+    FROM cadre_developpements cd
+    WHERE cd.type_cadre_developpement_id = 2
+
+    UNION ALL
+
+    -- Premier niveau des cadres logiques liés aux cadres stratégiques
+    SELECT 
+        cl.id::text AS id,
+        cl.intitule,
+        'cd_'::text || ocd.cadre_developpement_id AS parent_id,
+        1 AS niveau,
+        ocd.cadre_developpement_id
+    FROM orientation_cadre_developpements ocd
+    JOIN cadre_logiques cl 
+        ON cl.id = ocd.cadre_logique_id
+    JOIN cadre_developpements cd
+        ON cd.id = ocd.cadre_developpement_id
+    WHERE cd.type_cadre_developpement_id = 2
+
+    UNION ALL
+
+    -- Descendance des cadres logiques
+    SELECT 
+        cl.id::text AS id,
+        cl.intitule,
+        cl.cadre_logique_id::text AS parent_id,
+        a.niveau + 1 AS niveau,
+        a.cadre_developpement_id
+    FROM cadre_logiques cl
+    JOIN arborescence a 
+        ON cl.cadre_logique_id::text = a.id
+    WHERE a.niveau >= 1
+)
+
+SELECT 
+    id,
+    intitule,
+    parent_id,
+    niveau,
+    cadre_developpement_id
+FROM arborescence
+ORDER BY cadre_developpement_id, niveau, id;
+  
+-- ============================================================
+-- 1. projet_gouvernances (fiche principale, une par projet)
+-- ============================================================
+CREATE TABLE projet_gouvernances (
+    id                              BIGSERIAL PRIMARY KEY,
+    projet_id                      BIGINT NOT NULL,
+
+    -- 3.1 Organe d'orientation / pilotage
+    organe_pilotage_existe         BOOLEAN NOT NULL DEFAULT FALSE,
+    nb_sessions_prevues            INTEGER,
+    nb_sessions_tenues             INTEGER,
+
+    -- 3.2 Audits
+    comptes_audites_regulierement  BOOLEAN NOT NULL DEFAULT FALSE,
+    commentaire_audit              TEXT,
+
+    -- Pied de fiche
+    rempli_par                     VARCHAR(255),
+    date_remplissage               DATE,
+
+    created_at                     TIMESTAMP(0) WITHOUT TIME ZONE,
+    updated_at                     TIMESTAMP(0) WITHOUT TIME ZONE,
+
+    CONSTRAINT projet_gouvernances_projet_id_unique UNIQUE (projet_id),
+    CONSTRAINT projet_gouvernances_projet_id_foreign
+        FOREIGN KEY (projet_id) REFERENCES projets (id) ON DELETE CASCADE
+);
+
+-- Contraintes CHECK équivalentes aux "unsigned integer" de Laravel
+ALTER TABLE projet_gouvernances
+    ADD CONSTRAINT projet_gouvernances_nb_sessions_prevues_check
+        CHECK (nb_sessions_prevues IS NULL OR nb_sessions_prevues >= 0),
+    ADD CONSTRAINT projet_gouvernances_nb_sessions_tenues_check
+        CHECK (nb_sessions_tenues IS NULL OR nb_sessions_tenues >= 0);
+
+
+-- ============================================================
+-- 2. gouvernance_sessions (tableau n°8 - détail des sessions)
+-- ============================================================
+CREATE TABLE gouvernance_sessions (
+    id                              BIGSERIAL PRIMARY KEY,
+    projet_gouvernance_id          BIGINT NOT NULL,
+
+    date_session                    DATE NOT NULL,
+    nb_recommandations_etablies    INTEGER NOT NULL DEFAULT 0,
+    nb_recommandations_realisees   INTEGER NOT NULL DEFAULT 0,
+
+    created_at                      TIMESTAMP(0) WITHOUT TIME ZONE,
+    updated_at                      TIMESTAMP(0) WITHOUT TIME ZONE,
+
+    CONSTRAINT gouvernance_sessions_projet_gouvernance_id_foreign
+        FOREIGN KEY (projet_gouvernance_id) REFERENCES projet_gouvernances (id) ON DELETE CASCADE,
+    CONSTRAINT gouvernance_sessions_nb_etablies_check
+        CHECK (nb_recommandations_etablies >= 0),
+    CONSTRAINT gouvernance_sessions_nb_realisees_check
+        CHECK (nb_recommandations_realisees >= 0)
+);
+
+
+-- ============================================================
+-- 3. gouvernance_audits (tableau n°9 - audits des comptes)
+-- ============================================================
+CREATE TABLE gouvernance_audits (
+    id                                  BIGSERIAL PRIMARY KEY,
+    projet_gouvernance_id              BIGINT NOT NULL,
+
+    nombre_audits_realises             INTEGER NOT NULL DEFAULT 0,
+    exercice_comptable                  VARCHAR(255) NOT NULL,
+    comptes_certifies_sans_reserves    BOOLEAN NOT NULL DEFAULT FALSE,
+    nb_recommandations_etablies        INTEGER NOT NULL DEFAULT 0,
+    nb_recommandations_realisees       INTEGER NOT NULL DEFAULT 0,
+
+    created_at                          TIMESTAMP(0) WITHOUT TIME ZONE,
+    updated_at                          TIMESTAMP(0) WITHOUT TIME ZONE,
+
+    CONSTRAINT gouvernance_audits_projet_gouvernance_id_foreign
+        FOREIGN KEY (projet_gouvernance_id) REFERENCES projet_gouvernances (id) ON DELETE CASCADE,
+    CONSTRAINT gouvernance_audits_nombre_realises_check
+        CHECK (nombre_audits_realises >= 0),
+    CONSTRAINT gouvernance_audits_nb_etablies_check
+        CHECK (nb_recommandations_etablies >= 0),
+    CONSTRAINT gouvernance_audits_nb_realisees_check
+        CHECK (nb_recommandations_realisees >= 0)
+);
+
+
+-- ============================================================
+-- 4. gouvernance_problems (IV.1 - problèmes / solutions)
+-- ============================================================
+CREATE TABLE gouvernance_problems (
+    id                          BIGSERIAL PRIMARY KEY,
+    projet_gouvernance_id      BIGINT NOT NULL,
+
+    probleme_rencontre          TEXT NOT NULL,
+    solution_proposee           TEXT,
+
+    created_at                  TIMESTAMP(0) WITHOUT TIME ZONE,
+    updated_at                  TIMESTAMP(0) WITHOUT TIME ZONE,
+
+    CONSTRAINT gouvernance_problems_projet_gouvernance_id_foreign
+        FOREIGN KEY (projet_gouvernance_id) REFERENCES projet_gouvernances (id) ON DELETE CASCADE
+);
+
+
+-- ============================================================
+-- 5. gouvernance_recommendations (IV.2 - recommandations)
+-- ============================================================
+CREATE TABLE gouvernance_recommendations (
+    id                          BIGSERIAL PRIMARY KEY,
+    projet_gouvernance_id      BIGINT NOT NULL,
+
+    destinataire                 VARCHAR(255) NOT NULL,
+    contenu                       TEXT NOT NULL,
+
+    created_at                   TIMESTAMP(0) WITHOUT TIME ZONE,
+    updated_at                   TIMESTAMP(0) WITHOUT TIME ZONE,
+
+    CONSTRAINT gouvernance_recommendations_projet_gouvernance_id_foreign
+        FOREIGN KEY (projet_gouvernance_id) REFERENCES projet_gouvernances (id) ON DELETE CASCADE
+);  
