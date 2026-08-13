@@ -1,5 +1,7 @@
 <?php
-use App\Http\Controllers\ProjetPilotageController;
+//use App\Http\Controllers\ProjetPilotageController;
+use App\Http\Controllers\ProjetGovernanceController;
+
 use Illuminate\Support\Facades\Route;
 use App\Exports\DataTemplateExport;
 use Maatwebsite\Excel\Facades\Excel;
@@ -14,7 +16,38 @@ Route::middleware(['auth'])->group(function () {
 	Route::get('/dashboard/export/projets', [App\Http\Controllers\DashboardController::class, 'exportProjetsFichierPlat'])->name('dashboard.export.projets');
 	Route::get('/dashboard/export/cadres', [App\Http\Controllers\DashboardController::class, 'exportCadresFichierPlat'])->name('dashboard.export.cadres');
 	
-	Route::prefix('projets/{projet}/gouvernance')
+	Route::prefix('projets/{projet}/governance')
+    ->name('projets.governance.')
+    ->group(function () {
+        Route::get('/', [ProjetGovernanceController::class, 'index'])->name('index');
+
+        // 3.1 Pilotage
+        Route::put('/pilotage', [ProjetGovernanceController::class, 'updatePilotage'])->name('pilotage.update');
+        Route::post('/pilotage/sessions', [ProjetGovernanceController::class, 'storeSession'])->name('sessions.store');
+        Route::delete('/pilotage/sessions/{session}', [ProjetGovernanceController::class, 'destroySession'])->name('sessions.destroy');
+        Route::post('/pilotage/sessions/{session}/recommandations', [ProjetGovernanceController::class, 'storeSessionRecommandation'])->name('sessions.recommandations.store');
+        Route::patch('/pilotage/recommandations/{recommandation}/toggle', [ProjetGovernanceController::class, 'toggleSessionRecommandation'])->name('sessions.recommandations.toggle');
+        Route::delete('/pilotage/recommandations/{recommandation}', [ProjetGovernanceController::class, 'destroySessionRecommandation'])->name('sessions.recommandations.destroy');
+
+        // 3.2 Audits
+        Route::put('/audit', [ProjetGovernanceController::class, 'updateAudit'])->name('audit.update');
+        Route::post('/audit/exercices', [ProjetGovernanceController::class, 'storeAuditExercice'])->name('audit.exercices.store');
+        Route::delete('/audit/exercices/{exercice}', [ProjetGovernanceController::class, 'destroyAuditExercice'])->name('audit.exercices.destroy');
+        Route::post('/audit/exercices/{exercice}/recommandations', [ProjetGovernanceController::class, 'storeAuditRecommandation'])->name('audit.recommandations.store');
+        Route::patch('/audit/recommandations/{recommandation}/toggle', [ProjetGovernanceController::class, 'toggleAuditRecommandation'])->name('audit.recommandations.toggle');
+        Route::delete('/audit/recommandations/{recommandation}', [ProjetGovernanceController::class, 'destroyAuditRecommandation'])->name('audit.recommandations.destroy');
+
+        // IV.1 Problèmes rencontrés et solutions proposées
+        Route::post('/problemes', [ProjetGovernanceController::class, 'storeProbleme'])->name('problemes.store');
+        Route::delete('/problemes/{probleme}', [ProjetGovernanceController::class, 'destroyProbleme'])->name('problemes.destroy');
+        Route::post('/problemes/{probleme}/solutions', [ProjetGovernanceController::class, 'storeSolution'])->name('problemes.solutions.store');
+        Route::delete('/solutions/{solution}', [ProjetGovernanceController::class, 'destroySolution'])->name('solutions.destroy');
+
+        // IV.2 Recommandations
+        Route::post('/recommandations', [ProjetGovernanceController::class, 'storeRecommandation'])->name('recommandations.store');
+        Route::delete('/recommandations/{recommandation}', [ProjetGovernanceController::class, 'destroyRecommandation'])->name('recommandations.destroy');
+    });
+	/*Route::prefix('projets/{projet}/gouvernance')
     ->name('projets.gouvernance.')
     // ->middleware(['auth']) // à activer selon votre logique d'authentification
     ->group(function () {
@@ -24,7 +57,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/edit', [App\Http\Controllers\ProjetGouvernanceController::class, 'edit'])->name('edit');
         Route::put('/', [App\Http\Controllers\ProjetGouvernanceController::class, 'update'])->name('update');
         Route::delete('/', [App\Http\Controllers\ProjetGouvernanceController::class, 'destroy'])->name('destroy');
-    });
+    });*/
 	
 	// Projets
 	//Route::get('/', [App\Http\Controllers\ProjetController::class, 'index'])->name('projets.index');

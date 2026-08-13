@@ -23,7 +23,7 @@
 
     <div class="dashboard-grid grid-top">
         <section class="panel">
-            <div class="panel-title"><i class="bi bi-diagram-3-fill"></i><h2>Financement par secteur</h2></div>
+            <div class="panel-title"><div><i class="bi bi-diagram-3-fill"></i><h2>Financement par secteur</h2></div><span class="live-dot">DONNÉES RÉELLES</span></div>
             <div class="chart-wrap"><canvas id="secteurChart"></canvas></div>
         </section>
         <section class="panel">
@@ -96,7 +96,10 @@
         </div>
     </section>
 
-    
+    <div class="dashboard-footer">
+        <span><i class="bi bi-circle-fill"></i> Données actualisées automatiquement</span>
+        <span>SYSNISE • INS Niger</span>
+    </div>
 </div>
 @endsection
 

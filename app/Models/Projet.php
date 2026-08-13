@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\hasOne;
 use Illuminate\Database\Eloquent\Relations\belongsToMany;
 
+
 class Projet extends Model
 {
     use HasFactory;
@@ -269,6 +270,26 @@ class Projet extends Model
 	{
 		return $this->hasOne(ProjetGouvernance::class);
 	}
+
+public function governancePilotage(): HasOne
+{
+    return $this->hasOne(GovernancePilotage::class);
+}
+
+public function governanceAudit(): HasOne
+{
+    return $this->hasOne(GovernanceAudit::class);
+}
+
+public function governanceProblemes(): HasMany
+{
+    return $this->hasMany(GovernanceProbleme::class);
+}
+
+public function governanceRecommandations(): HasMany
+{
+    return $this->hasMany(GovernanceRecommandation::class);
+}
 
 
 

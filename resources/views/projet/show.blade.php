@@ -29,7 +29,7 @@
 				</ul>
 			  <a href="#" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Gouvernance</a>
 				<ul class="dropdown-menu">
-				  <li><a class="dropdown-item" href="{{ route('projets.pilotage.show', ['projet' => $projet->id]) }}">Pilotage</a></li>
+				  <li><a class="dropdown-item" href="{{ route('projets.governance.index', ['projet' => $projet->id]) }}">Pilotage</a></li>
 				  <li><a class="dropdown-item" href="{{ route('projets.clotureProjets', ['projet' => $projet->id]) }}">Clôture</a></li>
 				  
 				</ul>
